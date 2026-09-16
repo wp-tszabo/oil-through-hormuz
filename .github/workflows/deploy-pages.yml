@@ -1,14 +1,11 @@
 name: Deploy site to GitHub Pages
 
-# NOTE: GitHub Pages isn't available on this repo yet - it's private, and
-# Pages for private repos needs a paid GitHub plan. The owner chose to stay
-# private and defer hosting rather than upgrade or go public (see
-# company-memory/decisions-log.md, 2026-09-16). Trigger is manual-only for
-# now so this doesn't fail loudly on every push; switch back to the `push`
-# trigger once a hosting decision is made (public repo, paid plan, or a
-# different host like Vercel/Netlify - in which case this whole workflow
-# would be swapped out).
 on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/deploy-pages.yml"
   workflow_dispatch: {}
 
 permissions:
