@@ -1,9 +1,12 @@
 # site/
 
 Static site source, deployed via GitHub Pages (see
-`.github/workflows/deploy-pages.yml`). Live at
-https://wp-tszabo.github.io/oil-through-hormuz/ — auto-deploys on every push
-to this directory on `main`.
+`.github/workflows/deploy-pages.yml`). Live at https://oilthroughhormuz.com
+(falls back to https://wp-tszabo.github.io/oil-through-hormuz/ until DNS
+propagates) — auto-deploys on every push to this directory on `main`.
+
+`CNAME` is the GitHub Pages custom-domain file — don't delete it or the
+custom domain reverts to the `github.io` subdomain on the next deploy.
 
 `index.html` right now is a placeholder created during initial repo
 scaffolding (not by the CEO agent) — it states plainly that it's under
