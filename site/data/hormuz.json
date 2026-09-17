@@ -1,0 +1,46 @@
+{
+  "_comment": "Cleared source data for the Hormuz tracker. Only licence-cleared inputs may appear in this file. See ../../company-memory/methodology.md.",
+  "source": {
+    "publisher": "U.S. Energy Information Administration",
+    "dataset": "Global Energy Security Data",
+    "url": "https://www.eia.gov/outlooks/steo/report/energysecurity/article.php",
+    "table": "Table 4. Volume of crude oil, condensate, petroleum products, and liquefied natural gas transported through the Strait of Hormuz",
+    "release_date": "2026-08-12",
+    "next_release_date": null,
+    "next_release_note": "EIA does not publish a specific next-release date for the Global Energy Security Data supplement. Do not copy the parent STEO's next-release date here - they are different schedules. Derive staleness from release_date and the coverage end of the latest series row.",
+    "cadence": "quarterly",
+    "licence": "U.S. federal government work, public domain; free to use and distribute with acknowledgement",
+    "attribution": "Source: U.S. Energy Information Administration, Global Energy Security Data, released 12 August 2026. EIA volumes are based on Vortexa tanker tracking data with additional EIA analysis.",
+    "provenance_caveat": "EIA analysis based on Vortexa tanker tracking data. We republish EIA's published analysis; we do not hold or license Vortexa data.",
+    "publisher_caveat": "Since the end of February 2026, AIS signal data for ships transiting the Strait of Hormuz have become especially unreliable. For 2026 Hormuz volumes, tanker tracking data are being revised frequently based on the best available information."
+  },
+  "retrieved_utc": "2026-09-17T14:00:00Z",
+  "units": "million barrels per day",
+  "series": [
+    { "period": "1Q25", "start": "2025-01-01", "end": "2025-03-31", "total_oil": 20.9, "crude_and_condensate": 14.8, "products": 6.2 },
+    { "period": "2Q25", "start": "2025-04-01", "end": "2025-06-30", "total_oil": 21.0, "crude_and_condensate": 14.9, "products": 6.2 },
+    { "period": "3Q25", "start": "2025-07-01", "end": "2025-09-30", "total_oil": 21.3, "crude_and_condensate": 15.0, "products": 6.3 },
+    { "period": "4Q25", "start": "2025-10-01", "end": "2025-12-31", "total_oil": 21.6, "crude_and_condensate": 15.9, "products": 5.7 },
+    { "period": "1Q26", "start": "2026-01-01", "end": "2026-03-31", "total_oil": 14.9, "crude_and_condensate": 10.9, "products": 4.0 },
+    { "period": "2Q26", "start": "2026-04-01", "end": "2026-06-30", "total_oil": 4.9, "crude_and_condensate": 3.7, "products": 1.1 }
+  ],
+  "model": {
+    "regime": "disrupted",
+    "regime_rule": "disrupted if latest quarter-on-quarter change exceeds +/-10%, or fewer than two consecutive quarters within +/-10%",
+    "daily_estimate_published": true,
+    "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
+    "shape_function": "persistence - the latest measured quarterly average is carried forward unchanged; no licence-cleared higher-frequency input exists to justify any within-quarter shape",
+    "estimate": {
+      "for_date": "2026-09-16",
+      "point": 4.9,
+      "band_low": 1.5,
+      "band_high": 6.9,
+      "band_basis": "Back-tested one-quarter-ahead error of the persistence model across the disrupted regime: roughly -70% to +40% of the anchor (1Q26 error +45%, 2Q26 error +204%; calm-regime error max 1.4%). Applied to the 4.9 anchor and rounded to 1 d.p.",
+      "anchor_period": "2Q26",
+      "anchor_value": 4.9,
+      "is_measurement": false,
+      "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6."
+    },
+    "staleness_note": "This file is hand-maintained. estimate.for_date must be refreshed whenever the page is republished; a dated estimate left frozen is stale data under GOVERNANCE.md critical-issue category 1. Automating the refresh is the top open Build item."
+  }
+}
