@@ -248,10 +248,95 @@ in conflict, and that is not what shipped.
 | Shape function | persistence, `shape(d) = 1` (§3) |
 | Regime | disrupted (§5) |
 
-**Consequence the owner should know about:** the page now carries a *dated*
+**Consequence the owner should know about — see also §11:** the page now carries a *dated*
 figure, so it goes stale by construction — a page still reading "16 September
 2026" a week later is stale data under GOVERNANCE.md category 1, even though
 every word on it is true. Until the refresh is automated, the estimate date is
 hand-maintained in `site/data/hormuz.json`. Automating it is now the top Build
 item; because `shape(d) = 1`, the daily job only has to re-date the estimate,
 widen the band with distance from the anchor, and re-anchor when EIA publishes.
+
+## 11. Standing mandate, 2026-09-17 — the method is the product, and the CEO owns improving it
+
+This section is **standing**, not a cycle note. It is the reason the rest of
+this document exists.
+
+Owner, 2026-09-17:
+
+> "The whole purpose of the site is to develop a proprietary method for
+> calculating/estimating the flow by aggregating different data sources, news,
+> reports, etc... It is the CEO's responsibility to keep improving this
+> proprietary methodology."
+
+### What this changes
+
+The company's product is no longer "republish the freshest cleared number with
+a model on top". It is **the estimation method itself**, and the method is
+expected to get better over time by widening what feeds it. The CEO owns that
+improvement — it is not a backlog item that can be completed and closed.
+
+Concretely, every cycle the CEO must do one of three things and record which:
+
+1. **Add a cleared input** to the model, and re-derive the band with it in.
+2. **Improve the model or its calibration** without a new input — e.g. a better
+   shape function, a better regime detector, a scored recalibration against a
+   newly published quarter.
+3. **Record a specific, evidenced reason neither was possible this cycle.**
+   Silence is not an acceptable third option. "Nothing found" is only
+   acceptable with the list of what was checked and why each failed.
+
+Tracked as `okrs.md` Phase 1 **KR6**.
+
+### The bar a new input must clear — unchanged, and restated here on purpose
+
+A mandate to add inputs is exactly the pressure under which a licence rule gets
+quietly relaxed, so it is repeated at the point of temptation:
+
+- GOVERNANCE.md's **guilty-until-checked** rule applies to every candidate. An
+  unread licence is not a permissive licence.
+- **No uncleared source may be used "just to calibrate" or "just to
+  sanity-check."** §2.2's rule is absolute: if it moves the number, it is an
+  input and it needs a licence.
+- Adding an input **widens or narrows the published band** and therefore
+  changes a published figure. It requires a fresh rubric run before it ships,
+  and the page copy describing the inputs is user-facing copy, so it goes
+  through the standing owner copy checkpoint like everything else.
+- The public `sources.html` page must always state **what is actually in the
+  model today**, not what is aspired to. As of this writing that is one cleared
+  dataset, and the page says so in those words.
+
+### First pass — written, undispatched
+
+A Research brief for the first scouting pass was written this cycle and could
+not be dispatched (Agent tool unavailable for a fifth consecutive cycle). It is
+preserved verbatim in `backlog.md`. Its shape, for whoever picks it up:
+
+- **Quantitative, free, licence-clear.** Producer-side seaborne export series
+  for Saudi Arabia, Iraq, Kuwait, UAE, Qatar, Iran and Bahrain are the most
+  promising direction, because almost all Hormuz flow *is* those exports — a
+  cleared export series could give a genuine **second anchor at better than
+  quarterly cadence**, which is the single biggest weakness of the current
+  model. Candidates to check: JODI-Oil, OPEC's Monthly Oil Market Report, UN
+  Comtrade, EIA's other international series and API, Eurostat, national
+  customs and port authorities.
+- **Qualitative / event signals for the regime detector.** The detector is
+  currently a purely mechanical ±10% quarter-on-quarter test on a quarterly
+  series, which means it can only notice a disruption a quarter or more after
+  it starts. Public-domain official notices — UKMTO, IMO, MARAD advisories,
+  sanctions notices, producer announcements — could let it react in the right
+  week rather than the right quarter. This is the highest-value improvement
+  available that needs no new *numeric* licence, and it is the most direct
+  reading of the owner's "news, reports" wording.
+- **Out of bounds**: anything paid, anything AIS-vendor-derived, anything whose
+  terms could not be read.
+
+### Presentation decision, same date
+
+The owner also directed that the *visible* trend copy not name an exact source,
+because the product is the proprietary method rather than a pass-through. The
+CEO's resolution — primary copy speaks of "our model", full attribution moves
+intact to a linked `sources.html`, and the page states plainly that one cleared
+dataset is what is in the model today — is recorded in `decisions-log.md` and
+put to the owner on PR #6. Nothing about that change alters this document's
+substance: the inputs, the licences and the rejections are unchanged, and the
+company must never let "proprietary" come to mean "unattributed".

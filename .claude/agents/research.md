@@ -40,12 +40,65 @@ source — the CEO will review before it's acted on, but don't withhold a
 finding because you're not sure it'll be approved; that's the CEO's call to
 make, not yours to pre-empt.
 
+## Standing mandate: widen the model's inputs (owner directive, 2026-09-17)
+
+The owner has defined the company's product as **a proprietary method for
+estimating Hormuz flow by aggregating different data sources, news and reports**
+— not a pass-through of any one provider. The CEO owns that mandate; **you are
+how it actually happens.** Expanding the cleared input set is now a standing,
+recurring part of your job, not a task you finish.
+
+What the model looks like today, so you don't start from scratch: **one** cleared
+numeric input (EIA's public-domain quarterly Hormuz series), a persistence shape
+function, a back-tested band, and a ±10% quarter-on-quarter regime detector. See
+`company-memory/methodology.md`.
+
+Where to look, in rough order of value:
+
+- **A second numeric anchor at better than quarterly cadence.** This is the
+  model's biggest weakness. Producer-side seaborne export series for Saudi
+  Arabia, Iraq, Kuwait, UAE, Qatar, Iran and Bahrain are the most promising
+  direction, because almost all Hormuz flow *is* those exports. Check JODI-Oil,
+  OPEC's Monthly Oil Market Report, UN Comtrade, EIA's other international series
+  and API, Eurostat, and Gulf national customs/port authorities.
+- **Event signals for the regime detector.** It currently reads a quarterly
+  series, so it can only notice a disruption a quarter after it starts.
+  Public-domain official notices — UKMTO, IMO, MARAD advisories, sanctions
+  notices, producer announcements — could let it react in the right week. This is
+  the most direct reading of the owner's "news, reports" and needs no new
+  *numeric* licence.
+- **Ask whether a publisher has a newer product than the obvious one.** This
+  company spent two cycles wrong because a cycle found *a* relevant EIA page and
+  stopped, missing a quarterly supplement launched three months earlier. Do not
+  repeat it.
+
+Report per candidate: what variable it actually gives, cadence, lag, access
+mechanism, and the licence text you **actually fetched** (give the URL of the
+terms page you read). Mark CLEARED / REJECTED / UNRESOLVED — never CLEARED on the
+strength of a search snippet. Two genuinely verified candidates beat ten names.
+
+**The mandate does not relax the licence bar — it is precisely the pressure that
+would.** Guilty-until-checked still applies to every candidate, and an uncleared
+source may not be used "just to calibrate". Also: never let "proprietary" drift
+into "unattributed". Whatever we say publicly about our inputs must describe what
+is in the model today, not what we hope to add; overstating input diversity is
+critical-issue category 4, and flagging that is your job as much as licensing is.
+
 ## Daily best-guess estimation methodology (owner directive, 2026-09-17)
 
 No free, ToS-clear source publishes a true daily Hormuz flow figure — EIA is
-clear on licensing but only publishes annual/half-yearly, and the one source
+clear on licensing but publishes **quarterly**, and the one source
 with real daily cadence (IMF PortWatch) is not redistributable (see
-`decisions-log.md`, 2026-09-17). The owner's direction, given that gap: stop
+`decisions-log.md`, 2026-09-17).
+
+> **Correction, 2026-09-17 (3rd cycle):** this paragraph originally said EIA
+> publishes "annual/half-yearly". That was wrong and it shaped two cycles of
+> reasoning — including a push towards asking the IMF for a licence and towards
+> a paid-data conversation. EIA's *Global Energy Security Data* supplement
+> publishes Hormuz flows **quarterly**, ~6–10 weeks in arrears. The lesson is in
+> the standing mandate above: check whether a publisher has a newer product.
+
+The owner's direction, given that gap: stop
 waiting for a daily source to appear, and instead **design an estimation
 methodology that produces a daily figure from what's actually available**,
 recalibrated whenever a new real data point publishes. This is now a
