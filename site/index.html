@@ -3,50 +3,168 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Oil Through Hormuz</title>
+  <title>Oil through the Strait of Hormuz</title>
+  <meta name="description" content="How much oil moves through the Strait of Hormuz, from the most recent publicly available measurement.">
   <style>
-    :root { color-scheme: light dark; }
+    :root { color-scheme: light dark; --ink: #1a1a1a; --bg: #fafaf8; --muted: #5c5c58; --rule: #dcdcd6; --bar: #3d5a80; --bar-latest: #b4451f; }
+    @media (prefers-color-scheme: dark) {
+      :root { --ink: #e8e8e6; --bg: #16181a; --muted: #9a9a96; --rule: #2e3236; --bar: #7f9fc4; --bar-latest: #e0784a; }
+    }
+    * { box-sizing: border-box; }
     body {
-      margin: 0;
-      padding: 2rem 1rem;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #fafaf8;
-      color: #1a1a1a;
-      max-width: 640px;
-      margin-inline: auto;
+      margin: 0 auto; padding: 3rem 1.25rem 2rem; max-width: 46rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--ink); line-height: 1.55;
     }
-    @media (prefers-color-scheme: dark) {
-      body { background: #16181a; color: #e8e8e6; }
-    }
-    h1 { font-size: 1.5rem; }
-    p { line-height: 1.5; }
-    .status {
-      display: inline-block;
-      font-size: 0.8rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      background: #eee;
-      color: #555;
-    }
-    @media (prefers-color-scheme: dark) {
-      .status { background: #2a2d31; color: #aaa; }
-    }
+    h1 { font-size: 1.35rem; font-weight: 600; margin: 0 0 1.75rem; letter-spacing: -0.01em; }
+    .figure { font-size: clamp(3rem, 12vw, 4.75rem); font-weight: 650; line-height: 1; letter-spacing: -0.03em; margin: 0; }
+    .unit { font-size: 1.05rem; font-weight: 500; color: var(--muted); margin: 0.6rem 0 0; }
+    .period { font-size: 0.95rem; color: var(--muted); margin: 1.1rem 0 0; }
+    .note { font-size: 0.9rem; color: var(--muted); margin: 0.5rem 0 0; }
+    figure { margin: 3rem 0 0; }
+    figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 0.6rem; }
+    svg { width: 100%; height: auto; display: block; }
+    .grid-line { stroke: var(--rule); stroke-width: 1; }
+    .grid-label, .x-label { fill: var(--muted); font-size: 11px; font-family: inherit; }
+    .bar { fill: var(--bar); }
+    .bar-latest { fill: var(--bar-latest); }
+    .bar-value { fill: var(--ink); font-size: 11px; font-weight: 600; font-family: inherit; text-anchor: middle; }
+    footer { margin-top: 3.5rem; padding-top: 1.5rem; border-top: 1px solid var(--rule); font-size: 0.82rem; color: var(--muted); }
+    footer h2 { font-size: 0.82rem; font-weight: 600; color: var(--ink); margin: 1.5rem 0 0.4rem; text-transform: uppercase; letter-spacing: 0.06em; }
+    footer p { margin: 0 0 0.7rem; }
+    footer ul { margin: 0 0 0.7rem; padding-left: 1.1rem; }
+    footer li { margin-bottom: 0.3rem; }
+    a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 2px; }
+    a:hover { text-decoration-color: currentColor; }
   </style>
 </head>
 <body>
-  <span class="status">Phase 1 — under construction</span>
-  <h1>Oil Through Hormuz</h1>
-  <p>
-    This site will track oil-flow volume through the Strait of Hormuz using
-    free, publicly available data, with sources and retrieval times shown
-    for every figure.
+
+  <h1>Oil through the Strait of Hormuz</h1>
+
+  <p class="figure">4.9</p>
+  <p class="unit">million barrels per day</p>
+  <p class="period">
+    Average for <strong>April&ndash;June 2026</strong> &mdash; the most recent
+    period for which a public measurement exists. Published by the U.S. Energy
+    Information Administration on 12 August 2026, and updated quarterly.
   </p>
-  <p>
-    It's being built and operated by an autonomous agent system on a
-    weekly, human-approved cadence — see the project's
-    <a href="https://github.com/wp-tszabo/oil-through-hormuz">GitHub repo</a>
-    for the governance model and current status. Real data and finished
-    copy are pending owner review before they go live here.
+  <p class="note">
+    This is not yesterday&rsquo;s figure, and we will not pretend otherwise. No
+    source we are permitted to republish measures this strait daily &mdash; the
+    fastest one that exists publishes a quarterly average, several weeks after
+    the quarter ends.
   </p>
+
+  <figure>
+    <svg viewBox="0 0 600 240" role="img" aria-label="Quarterly average oil flow through the Strait of Hormuz, in million barrels per day: first quarter 2025, 20.9; second quarter 2025, 21.0; third quarter 2025, 21.3; fourth quarter 2025, 21.6; first quarter 2026, 14.9; second quarter 2026, 4.9.">
+      <line class="grid-line" x1="40" y1="190" x2="590" y2="190"></line>
+      <line class="grid-line" x1="40" y1="149.09" x2="590" y2="149.09"></line>
+      <line class="grid-line" x1="40" y1="108.18" x2="590" y2="108.18"></line>
+      <line class="grid-line" x1="40" y1="67.27" x2="590" y2="67.27"></line>
+      <line class="grid-line" x1="40" y1="26.36" x2="590" y2="26.36"></line>
+      <text class="grid-label" x="32" y="193" text-anchor="end">0</text>
+      <text class="grid-label" x="32" y="152" text-anchor="end">5</text>
+      <text class="grid-label" x="32" y="111" text-anchor="end">10</text>
+      <text class="grid-label" x="32" y="70" text-anchor="end">15</text>
+      <text class="grid-label" x="32" y="29" text-anchor="end">20</text>
+
+      <rect class="bar" x="55.83" y="19.00" width="60" height="171.00"></rect>
+      <rect class="bar" x="147.50" y="18.18" width="60" height="171.82"></rect>
+      <rect class="bar" x="239.17" y="15.73" width="60" height="174.27"></rect>
+      <rect class="bar" x="330.83" y="13.27" width="60" height="176.73"></rect>
+      <rect class="bar" x="422.50" y="68.09" width="60" height="121.91"></rect>
+      <rect class="bar-latest" x="514.17" y="149.91" width="60" height="40.09"></rect>
+
+      <text class="bar-value" x="85.83" y="13">20.9</text>
+      <text class="bar-value" x="177.50" y="12">21.0</text>
+      <text class="bar-value" x="269.17" y="10">21.3</text>
+      <text class="bar-value" x="360.83" y="8">21.6</text>
+      <text class="bar-value" x="452.50" y="62">14.9</text>
+      <text class="bar-value" x="544.17" y="144">4.9</text>
+
+      <text class="x-label" x="85.83" y="208" text-anchor="middle">Jan&ndash;Mar 25</text>
+      <text class="x-label" x="177.50" y="208" text-anchor="middle">Apr&ndash;Jun 25</text>
+      <text class="x-label" x="269.17" y="208" text-anchor="middle">Jul&ndash;Sep 25</text>
+      <text class="x-label" x="360.83" y="208" text-anchor="middle">Oct&ndash;Dec 25</text>
+      <text class="x-label" x="452.50" y="208" text-anchor="middle">Jan&ndash;Mar 26</text>
+      <text class="x-label" x="544.17" y="208" text-anchor="middle">Apr&ndash;Jun 26</text>
+      <text class="x-label" x="40" y="232">Quarterly average, million barrels per day</text>
+    </svg>
+    <figcaption>
+      Total oil flows &mdash; crude oil, condensate and petroleum products
+      combined. Figures for 2026 are provisional and have been revised between
+      releases.
+    </figcaption>
+  </figure>
+
+  <footer>
+    <h2>Terms</h2>
+    <p>
+      This site is published for general information only. It is not
+      investment, trading, shipping, insurance or legal advice, and nothing on
+      it should be relied on for any operational or commercial decision. The
+      figures are third-party estimates that are revised over time and may be
+      wrong. No warranty of accuracy, completeness or fitness for any purpose
+      is given, and no liability is accepted for any loss arising from use of
+      this site.
+    </p>
+    <p>
+      This is an independent project. It is not affiliated with, endorsed by or
+      connected to the U.S. Energy Information Administration, any government
+      or intergovernmental body, or any shipping or data company.
+    </p>
+
+    <h2>Copyright</h2>
+    <p>
+      Site design and text &copy; 2026 the site operator. The underlying flow
+      figures are works of the U.S. federal government and are in the public
+      domain. The chart above is our own rendering of those figures, not a
+      reproduction of anyone else&rsquo;s graphic.
+    </p>
+
+    <h2>Sources</h2>
+    <p>
+      Source: U.S. Energy Information Administration,
+      <a href="https://www.eia.gov/outlooks/steo/report/energysecurity/article.php">Global
+      Energy Security Data</a>, released 12 August 2026, Table 4. EIA volumes
+      are based on Vortexa tanker tracking data with additional EIA analysis.
+      We republish EIA&rsquo;s published analysis; we do not hold or license
+      Vortexa&rsquo;s underlying data.
+    </p>
+    <p>
+      EIA notes that since the end of February 2026, AIS signal data for ships
+      transiting the Strait of Hormuz have become especially unreliable, and
+      that 2026 Hormuz volumes are being revised frequently as better
+      information arrives. Treat the 2026 figures accordingly.
+    </p>
+
+    <h2>Methodology</h2>
+    <p>
+      The headline number is not modelled, smoothed or adjusted. It is the most
+      recent quarterly average EIA has published, shown as published, with the
+      period it covers stated next to it.
+    </p>
+    <p>
+      We do not currently publish a daily figure. We would like to, and the
+      reason we don&rsquo;t is worth stating plainly: the sources that do track
+      this strait daily are all commercially licensed or otherwise closed to
+      republication, so the best cadence legally available to us is quarterly.
+      Estimating a single day from a quarterly average is possible, but during
+      the disruption that began in early 2026 the honest error range on such an
+      estimate would be wider than the number itself &mdash; roughly one and a
+      half to seven million barrels per day. A figure that uncertain, printed
+      under a date, would mislead more than it informs. If flows return to a
+      steady pattern, a daily estimate becomes meaningful and we will publish
+      one &mdash; always with its range shown, never as a bare number.
+    </p>
+    <p>
+      The full working method, including the sources we checked and rejected on
+      licensing grounds and the back-test behind that error range, is in the
+      <a href="https://github.com/wp-tszabo/oil-through-hormuz/blob/main/company-memory/methodology.md">project
+      repository</a>, which is public.
+    </p>
+  </footer>
+
 </body>
 </html>

@@ -1,0 +1,33 @@
+{
+  "_comment": "Cleared source data for the Hormuz tracker. Only licence-cleared inputs may appear in this file. See ../../company-memory/methodology.md.",
+  "source": {
+    "publisher": "U.S. Energy Information Administration",
+    "dataset": "Global Energy Security Data",
+    "url": "https://www.eia.gov/outlooks/steo/report/energysecurity/article.php",
+    "table": "Table 4. Volume of crude oil, condensate, petroleum products, and liquefied natural gas transported through the Strait of Hormuz",
+    "release_date": "2026-08-12",
+    "next_release_date": null,
+    "next_release_note": "EIA does not publish a specific next-release date for the Global Energy Security Data supplement. Do not copy the parent STEO's next-release date here - they are different schedules. Derive staleness from release_date and the coverage end of the latest series row.",
+    "cadence": "quarterly",
+    "licence": "U.S. federal government work, public domain; free to use and distribute with acknowledgement",
+    "attribution": "Source: U.S. Energy Information Administration, Global Energy Security Data, released 12 August 2026. EIA volumes are based on Vortexa tanker tracking data with additional EIA analysis.",
+    "provenance_caveat": "EIA analysis based on Vortexa tanker tracking data. We republish EIA's published analysis; we do not hold or license Vortexa data.",
+    "publisher_caveat": "Since the end of February 2026, AIS signal data for ships transiting the Strait of Hormuz have become especially unreliable. For 2026 Hormuz volumes, tanker tracking data are being revised frequently based on the best available information."
+  },
+  "retrieved_utc": "2026-09-17T14:00:00Z",
+  "units": "million barrels per day",
+  "series": [
+    { "period": "1Q25", "start": "2025-01-01", "end": "2025-03-31", "total_oil": 20.9, "crude_and_condensate": 14.8, "products": 6.2 },
+    { "period": "2Q25", "start": "2025-04-01", "end": "2025-06-30", "total_oil": 21.0, "crude_and_condensate": 14.9, "products": 6.2 },
+    { "period": "3Q25", "start": "2025-07-01", "end": "2025-09-30", "total_oil": 21.3, "crude_and_condensate": 15.0, "products": 6.3 },
+    { "period": "4Q25", "start": "2025-10-01", "end": "2025-12-31", "total_oil": 21.6, "crude_and_condensate": 15.9, "products": 5.7 },
+    { "period": "1Q26", "start": "2026-01-01", "end": "2026-03-31", "total_oil": 14.9, "crude_and_condensate": 10.9, "products": 4.0 },
+    { "period": "2Q26", "start": "2026-04-01", "end": "2026-06-30", "total_oil": 4.9, "crude_and_condensate": 3.7, "products": 1.1 }
+  ],
+  "model": {
+    "regime": "disrupted",
+    "regime_rule": "disrupted if latest quarter-on-quarter change exceeds +/-10%, or fewer than two consecutive quarters within +/-10%",
+    "daily_estimate_published": false,
+    "daily_estimate_reason": "No licence-cleared source measures Hormuz flow daily. In the current disrupted regime the honest uncertainty band (approx 1.5-7 m b/d) is wider than the quantity estimated, so no daily point figure is published. See methodology.md section 6."
+  }
+}
