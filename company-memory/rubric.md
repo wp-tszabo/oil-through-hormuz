@@ -17,6 +17,11 @@ critical-issue log entry.
 - [ ] Any estimate, derived figure, or extrapolation is clearly labeled as
       such (not presented as a direct measurement).
 - [ ] Known data gaps or staleness are surfaced to the reader, not hidden.
+- [ ] If the figure comes from the daily best-guess model (see
+      `research.md`), its methodology is published and linked, its inputs
+      are all independently cleared sources (never an uncleared source used
+      "just for calibration"), and it carries a visible uncertainty range —
+      not a falsely precise single number.
 
 ## 2. No copied text
 
