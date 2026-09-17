@@ -11,11 +11,11 @@ monetization.
 
 | Key Result | Target | Status |
 |---|---|---|
-| KR1: Identify and validate a free, ToS-clear daily/periodic Hormuz flow data source | 1 primary source documented in `backlog.md` research findings, with a licensing check logged in `decisions-log.md` | Not started |
-| KR2: Publish a working site on GitHub Pages showing that data | Live URL, auto-updating, uptime tracked in `metrics.md` | Not started |
-| KR3: Zero unreviewed copy reaches the live site | 100% of published copy has an owner-approval record | Not started |
-| KR4: Run the self-check rubric on every publish | 100% of publishes have a `self-check-log.md` entry | Not started |
-| KR5: First weekly spend ceiling stays at ~$0 | Actual spend = $0 unless owner explicitly raises the ceiling | Not started |
+| KR1: Identify and validate a free, ToS-clear daily/periodic Hormuz flow data source | 1 primary source documented in `backlog.md` research findings, with a licensing check logged in `decisions-log.md` | **At risk** (2026-09-17) — candidates identified and logged, but zero cleared. The daily-cadence candidate (IMF PortWatch) has an unread bespoke licence; the licence-clear candidate (EIA) is quarterly-to-biennial. Blocked on critical issue #1. |
+| KR2: Publish a working site on GitHub Pages showing that data | Live URL, auto-updating, uptime tracked in `metrics.md` | **Partial / blocked** — site is deployed at `oilthroughhormuz.com` with placeholder content; no data shown (KR1 blocked) and uptime is currently unmeasurable by the CEO. |
+| KR3: Zero unreviewed copy reaches the live site | 100% of published copy has an owner-approval record | **On track** — 1 draft produced, 1 held for review (issue #2), 0 published. No unreviewed copy has reached the site. |
+| KR4: Run the self-check rubric on every publish | 100% of publishes have a `self-check-log.md` entry | **On track** — 0 publishes, 2 rubric runs logged (1 pre-publish draft check, 1 inconclusive live-site check). Note the rubric's accuracy spot-check is currently impossible to perform; this KR is only meaningful again once #1 resolves. |
+| KR5: First weekly spend ceiling stays at ~$0 | Actual spend = $0 unless owner explicitly raises the ceiling | **On track** — $0 agent-committed. Separately, the owner bought `oilthroughhormuz.com` directly; logged 2026-09-16 as an explicit owner-approved exception, not agent spend. |
 
 ## Phase 2 — Graduation (not started)
 
