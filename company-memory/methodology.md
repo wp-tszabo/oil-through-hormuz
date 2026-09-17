@@ -1,7 +1,10 @@
 # Daily Best-Guess Estimation Methodology — design v1
 
-**Status**: DRAFT — awaiting CEO sign-off, then owner decision on the
-publication question in §6. Nothing here is wired into the site.
+**Status**: ACTIVE — the publication question in §6 was **decided by the owner
+on 2026-09-17** (see §10). The model's daily estimate is now the site's
+headline figure, labelled as an estimate and shown with its band. §6 records
+the CEO's original recommendation and is retained for the record; **§10
+supersedes it.**
 
 **Directed by**: owner, 2026-09-17 (see `decisions-log.md`) — "build a daily
 best-guess estimation methodology rather than waiting for a true daily
@@ -152,6 +155,10 @@ Regime is displayed to the reader, not just used internally.
 
 ## 6. The publication question — for the owner, not the CEO
 
+> **SUPERSEDED 2026-09-17 by the owner's decision in §10.** Kept unedited
+> because it is the argument the owner overruled, and hiding it would make the
+> record useless. The recommendation below is no longer what the site does.
+
 The model above is buildable today. The question is whether its **output is
 publishable today**, and the honest answer is:
 
@@ -206,3 +213,45 @@ publish, and it is recorded here rather than left implicit.
 > Source: U.S. Energy Information Administration, Global Energy Security
 > Data, released 12 August 2026. EIA volumes are based on Vortexa tanker
 > tracking data with additional EIA analysis.
+
+## 10. Owner decision, 2026-09-17 — the daily estimate is the headline
+
+The CEO escalated §6 rather than deciding it (critical issue #5, PR #4). The
+owner answered on PR #4 (comment `5716791659`, 2026-09-17T15:16:58Z):
+
+> "The daily figure is the estimate. That is the real value of the whole page
+> thta we develop a model that make that estimate. So let's add 'estimated '
+> keyword to the title but let's keep the daily figure"
+
+**Decision, as implemented:** the model's daily point estimate is the headline
+number; the title and the figure are explicitly labelled as an estimate; the
+band is shown next to the number, not buried in the methodology.
+
+This resolves §6's question in favour of publishing. It does **not** waive
+`rubric.md` §1.6, which the owner has not been asked to and should not have to
+waive: a modelled figure publishes only with its methodology linked, all inputs
+licence-cleared, and **a visible uncertainty range**. So the page shows both —
+the point estimate the owner asked for *and* the range the rubric requires,
+with the copy telling the reader to treat the range as the answer. The two
+requirements are compatible; only "a bare number with no range" would have been
+in conflict, and that is not what shipped.
+
+**Published parameters as of 2026-09-17:**
+
+| Field | Value |
+|---|---|
+| Estimate date | 2026-09-16 |
+| Point estimate | 4.9 m b/d |
+| Band | 1.5 – 6.9 m b/d |
+| Band derivation | −70% / +40% of anchor (disrupted-regime back-test, §4), applied to 4.9, rounded to 1 d.p. |
+| Anchor | 2Q26 = 4.9 m b/d, EIA release 2026-08-12 |
+| Shape function | persistence, `shape(d) = 1` (§3) |
+| Regime | disrupted (§5) |
+
+**Consequence the owner should know about:** the page now carries a *dated*
+figure, so it goes stale by construction — a page still reading "16 September
+2026" a week later is stale data under GOVERNANCE.md category 1, even though
+every word on it is true. Until the refresh is automated, the estimate date is
+hand-maintained in `site/data/hormuz.json`. Automating it is now the top Build
+item; because `shape(d) = 1`, the daily job only has to re-date the estimate,
+widen the band with distance from the anchor, and re-anchor when EIA publishes.
