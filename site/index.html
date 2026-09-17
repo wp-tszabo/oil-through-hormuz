@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Oil through the Strait of Hormuz</title>
-  <meta name="description" content="How much oil moves through the Strait of Hormuz, from the most recent publicly available measurement.">
+  <title>Estimated oil flow through the Strait of Hormuz</title>
+  <meta name="description" content="A daily model estimate of how much oil moves through the Strait of Hormuz, shown with its uncertainty range. An estimate, not a measurement.">
   <style>
     :root { color-scheme: light dark; --ink: #1a1a1a; --bg: #fafaf8; --muted: #5c5c58; --rule: #dcdcd6; --bar: #3d5a80; --bar-latest: #b4451f; }
     @media (prefers-color-scheme: dark) {
@@ -16,9 +16,14 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg); color: var(--ink); line-height: 1.55;
     }
-    h1 { font-size: 1.35rem; font-weight: 600; margin: 0 0 1.75rem; letter-spacing: -0.01em; }
+    h1 { font-size: 1.35rem; font-weight: 600; margin: 0 0 1.5rem; letter-spacing: -0.01em; }
+    .est-label {
+      font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.09em; color: var(--bar-latest); margin: 0 0 0.55rem;
+    }
     .figure { font-size: clamp(3rem, 12vw, 4.75rem); font-weight: 650; line-height: 1; letter-spacing: -0.03em; margin: 0; }
     .unit { font-size: 1.05rem; font-weight: 500; color: var(--muted); margin: 0.6rem 0 0; }
+    .band { font-size: 1rem; color: var(--ink); margin: 1rem 0 0; }
     .period { font-size: 0.95rem; color: var(--muted); margin: 1.1rem 0 0; }
     .note { font-size: 0.9rem; color: var(--muted); margin: 0.5rem 0 0; }
     figure { margin: 3rem 0 0; }
@@ -40,20 +45,34 @@
 </head>
 <body>
 
-  <h1>Oil through the Strait of Hormuz</h1>
+  <h1>
+    Estimated oil flow through the Strait of Hormuz on
+    <strong>Wednesday 16 September 2026</strong>
+  </h1>
 
+  <p class="est-label">Estimate &mdash; not a measurement</p>
   <p class="figure">4.9</p>
-  <p class="unit">million barrels per day</p>
+  <p class="unit">million barrels per day, estimated</p>
+  <p class="band">
+    Realistically, somewhere between <strong>1.5</strong> and
+    <strong>6.9</strong> million barrels per day.
+  </p>
   <p class="period">
-    Average for <strong>April&ndash;June 2026</strong> &mdash; the most recent
-    period for which a public measurement exists. Published by the U.S. Energy
-    Information Administration on 12 August 2026, and updated quarterly.
+    Nobody measures this strait daily in a way we are allowed to republish, so
+    this figure is produced by our own model rather than observed. It carries
+    forward the most recent measured value &mdash; an average of
+    <strong>4.9</strong> million barrels per day for <strong>April&ndash;June
+    2026</strong>, published by the U.S. Energy Information Administration on
+    12 August 2026 &mdash; because no source we may use shows what has happened
+    since. Treat the range as the answer and the single number as its midpoint.
   </p>
   <p class="note">
-    This is not yesterday&rsquo;s figure, and we will not pretend otherwise. No
-    source we are permitted to republish measures this strait daily &mdash; the
-    fastest one that exists publishes a quarterly average, several weeks after
-    the quarter ends.
+    The range is wide deliberately. Flows fell from 21.6 to 14.9 to 4.9 million
+    barrels per day over three quarters, and back-testing this model across that
+    collapse produced errors of +45% and +204%; across the calm quarters before
+    it, the same model was accurate to within 1.4%. Our regime test currently
+    reads <strong>disrupted</strong>, which is why the band is this wide. It
+    narrows to about &plusmn;3% when flows steady.
   </p>
 
   <figure>
@@ -92,9 +111,10 @@
       <text class="x-label" x="40" y="232">Quarterly average, million barrels per day</text>
     </svg>
     <figcaption>
-      Total oil flows &mdash; crude oil, condensate and petroleum products
-      combined. Figures for 2026 are provisional and have been revised between
-      releases.
+      Measured quarterly averages, published by EIA &mdash; these are the real
+      figures the estimate above is anchored on, not model output. Total oil
+      flows: crude oil, condensate and petroleum products combined. Figures for
+      2026 are provisional and have been revised between releases.
     </figcaption>
   </figure>
 
@@ -104,8 +124,10 @@
       This site is published for general information only. It is not
       investment, trading, shipping, insurance or legal advice, and nothing on
       it should be relied on for any operational or commercial decision. The
-      figures are third-party estimates that are revised over time and may be
-      wrong. No warranty of accuracy, completeness or fitness for any purpose
+      headline figure is our own model estimate, not a measurement; the
+      quarterly figures it is anchored on are third-party estimates that are
+      revised over time. Both may be wrong, and the estimate may be wrong by a
+      wide margin. No warranty of accuracy, completeness or fitness for any purpose
       is given, and no liability is accepted for any loss arising from use of
       this site.
     </p>
@@ -117,10 +139,11 @@
 
     <h2>Copyright</h2>
     <p>
-      Site design and text &copy; 2026 the site operator. The underlying flow
-      figures are works of the U.S. federal government and are in the public
-      domain. The chart above is our own rendering of those figures, not a
-      reproduction of anyone else&rsquo;s graphic.
+      Site design, text and the estimation model &copy; 2026 the site operator.
+      The underlying quarterly flow figures are works of the U.S. federal
+      government and are in the public domain. The chart above is our own
+      rendering of those figures, not a reproduction of anyone else&rsquo;s
+      graphic.
     </p>
 
     <h2>Sources</h2>
@@ -141,26 +164,50 @@
 
     <h2>Methodology</h2>
     <p>
-      The headline number is not modelled, smoothed or adjusted. It is the most
-      recent quarterly average EIA has published, shown as published, with the
-      period it covers stated next to it.
+      <strong>The headline figure is an estimate produced by us. It is not a
+      measurement, and no government or official body stands behind it.</strong>
+      Every source that tracks this strait daily is commercially licensed or
+      otherwise closed to republication, so the fastest cadence legally
+      available to us is a quarterly average, published roughly six weeks after
+      the quarter ends. The estimate exists to bridge that gap honestly, not to
+      disguise it.
     </p>
     <p>
-      We do not currently publish a daily figure. We would like to, and the
-      reason we don&rsquo;t is worth stating plainly: the sources that do track
-      this strait daily are all commercially licensed or otherwise closed to
-      republication, so the best cadence legally available to us is quarterly.
-      Estimating a single day from a quarterly average is possible, but during
-      the disruption that began in early 2026 the honest error range on such an
-      estimate would be wider than the number itself &mdash; roughly one and a
-      half to seven million barrels per day. A figure that uncertain, printed
-      under a date, would mislead more than it informs. If flows return to a
-      steady pattern, a daily estimate becomes meaningful and we will publish
-      one &mdash; always with its range shown, never as a bare number.
+      How it is built: we take the most recent quarterly average EIA has
+      actually measured and published &mdash; currently 4.9 million barrels per
+      day for April&ndash;June 2026 &mdash; and carry it forward unchanged to
+      the day being estimated. We do not smooth, curve-fit or interpolate,
+      because we have no licensed higher-frequency input that would justify
+      inventing a shape within the quarter; a more elaborate curve would be
+      false precision rather than better information.
+    </p>
+    <p>
+      The range around it is not a guess about a guess. It comes from
+      back-testing the same method against the six quarters EIA has published:
+      predicting each quarter from the one before was accurate to within 1.4%
+      while flows were steady, then overshot by 45% and by 204% as flows
+      collapsed through 2026. A band wide enough to have contained that
+      collapse runs from about 70% below the anchor to about 40% above it,
+      which on today&rsquo;s anchor is the 1.5&ndash;6.9 million barrels per day
+      shown above. A mechanical test decides which regime we are in &mdash;
+      flagged &ldquo;disrupted&rdquo; whenever the latest quarter-on-quarter
+      change exceeds &plusmn;10% &mdash; and the band is set accordingly. Each
+      time EIA publishes a new quarter, the estimate is re-anchored, the
+      previous estimate is scored against the new actual, and that error is
+      added to the record the band is derived from.
+    </p>
+    <p>
+      Two honest caveats. The anchor itself is provisional: EIA reports that AIS
+      signal data for ships transiting the strait has been especially unreliable
+      since the end of February 2026, and its 2026 figures have already been
+      revised between releases. And the estimate cannot see inside the quarter
+      it is anchored on &mdash; if flows moved sharply after June 2026, this
+      page has no way of knowing, which is exactly what the range is there to
+      tell you.
     </p>
     <p>
       The full working method, including the sources we checked and rejected on
-      licensing grounds and the back-test behind that error range, is in the
+      licensing grounds and the back-test behind that range, is in the
       <a href="https://github.com/wp-tszabo/oil-through-hormuz/blob/main/company-memory/methodology.md">project
       repository</a>, which is public.
     </p>

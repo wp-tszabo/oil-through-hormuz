@@ -27,7 +27,20 @@
   "model": {
     "regime": "disrupted",
     "regime_rule": "disrupted if latest quarter-on-quarter change exceeds +/-10%, or fewer than two consecutive quarters within +/-10%",
-    "daily_estimate_published": false,
-    "daily_estimate_reason": "No licence-cleared source measures Hormuz flow daily. In the current disrupted regime the honest uncertainty band (approx 1.5-7 m b/d) is wider than the quantity estimated, so no daily point figure is published. See methodology.md section 6."
+    "daily_estimate_published": true,
+    "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
+    "shape_function": "persistence - the latest measured quarterly average is carried forward unchanged; no licence-cleared higher-frequency input exists to justify any within-quarter shape",
+    "estimate": {
+      "for_date": "2026-09-16",
+      "point": 4.9,
+      "band_low": 1.5,
+      "band_high": 6.9,
+      "band_basis": "Back-tested one-quarter-ahead error of the persistence model across the disrupted regime: roughly -70% to +40% of the anchor (1Q26 error +45%, 2Q26 error +204%; calm-regime error max 1.4%). Applied to the 4.9 anchor and rounded to 1 d.p.",
+      "anchor_period": "2Q26",
+      "anchor_value": 4.9,
+      "is_measurement": false,
+      "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6."
+    },
+    "staleness_note": "This file is hand-maintained. estimate.for_date must be refreshed whenever the page is republished; a dated estimate left frozen is stale data under GOVERNANCE.md critical-issue category 1. Automating the refresh is the top open Build item."
   }
 }
