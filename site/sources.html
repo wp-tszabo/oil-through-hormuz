@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sources &amp; methodology &mdash; Estimated oil flow through the Strait of Hormuz</title>
+  <meta name="description" content="What goes into our Strait of Hormuz flow estimate, what we have deliberately left out, and how the estimate and its range are built.">
+  <style>
+    :root { color-scheme: light dark; --ink: #1a1a1a; --bg: #fafaf8; --muted: #5c5c58; --rule: #dcdcd6; --bar-latest: #b4451f; }
+    @media (prefers-color-scheme: dark) {
+      :root { --ink: #e8e8e6; --bg: #16181a; --muted: #9a9a96; --rule: #2e3236; --bar-latest: #e0784a; }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0 auto; padding: 3rem 1.25rem 2rem; max-width: 42rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--ink); line-height: 1.6;
+    }
+    .back { font-size: 0.85rem; color: var(--muted); margin: 0 0 2rem; }
+    h1 { font-size: 1.35rem; font-weight: 600; margin: 0 0 1.75rem; letter-spacing: -0.01em; }
+    h2 { font-size: 1rem; font-weight: 600; margin: 2.25rem 0 0.7rem; letter-spacing: -0.005em; }
+    p { margin: 0 0 1rem; }
+    footer {
+      margin-top: 3.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+      font-size: 0.85rem; color: var(--muted);
+    }
+    footer nav { display: flex; flex-wrap: wrap; gap: 0.5rem 1.15rem; align-items: baseline; }
+    footer nav span { color: var(--muted); }
+    a { color: inherit; text-decoration-color: var(--rule); text-underline-offset: 2px; }
+    a:hover { text-decoration-color: currentColor; }
+  </style>
+</head>
+<body>
+
+  <p class="back"><a href="index.html">&larr; Back to the estimate</a></p>
+
+  <h1>Sources &amp; methodology</h1>
+
+  <h2>What the model is</h2>
+  <p>
+    A proprietary estimate of how much crude oil, condensate and petroleum
+    products are moving through the Strait of Hormuz on a given day, expressed
+    in million barrels per day, built only from inputs we are legally permitted
+    to republish.
+  </p>
+
+  <h2>What is in it today</h2>
+  <p>
+    One cleared dataset, and we say so rather than implying a wider net: the
+    <strong>U.S. Energy Information Administration</strong>&rsquo;s
+    <a href="https://www.eia.gov/outlooks/steo/report/energysecurity/article.php">Global
+    Energy Security Data</a>, Table 4, released <strong>12 August 2026</strong>,
+    covering quarters through April&ndash;June 2026. It is a work of the U.S.
+    federal government and is in the public domain. EIA&rsquo;s volumes are
+    based on Vortexa tanker tracking data with additional EIA analysis; we
+    republish EIA&rsquo;s published analysis and do not hold or license
+    Vortexa&rsquo;s underlying data.
+  </p>
+  <p>
+    EIA notes that since the end of February 2026, AIS signal data for ships
+    transiting the strait has become especially unreliable, and that 2026
+    Hormuz volumes are being revised frequently as better information arrives.
+    We treat the anchor as provisional for exactly that reason.
+  </p>
+
+  <h2>What is deliberately not in it</h2>
+  <p>
+    Several daily trackers exist. We have checked their terms and rejected
+    them: IMF PortWatch and the WTO/AXSMarine Hormuz tracker are both closed to
+    redistribution. We do not use an uncleared source &ldquo;just to
+    calibrate&rdquo; &mdash; if it moves the number, it needs a licence.
+  </p>
+
+  <h2>How the estimate is built</h2>
+  <p>
+    The latest published quarterly average is the anchor. With no cleared
+    higher-frequency input, we carry it forward unchanged rather than inventing
+    a shape inside the quarter that we cannot observe &mdash; a smoother curve
+    would be false precision, not better information.
+  </p>
+  <p>
+    The range is not a guess about a guess. We back-tested the same method
+    against the published record: predicting each quarter from the one before
+    was accurate to within 1.4% while flows were steady, then overshot by 45%
+    and by 204% as flows collapsed through 2026. A range wide enough to have
+    contained that collapse runs from about 70% below the anchor to about 40%
+    above it &mdash; today, 1.5 to 6.9 million barrels per day. A mechanical
+    test decides which regime we are in: anything beyond &plusmn;10%
+    quarter-on-quarter is &ldquo;disrupted&rdquo;, and the range widens
+    accordingly. Every time a new quarter publishes, the anchor resets, the
+    previous estimate is scored against the actual, and that error joins the
+    record the range is derived from.
+  </p>
+
+  <h2>Where this is going</h2>
+  <p>
+    The method is the product, and it is not finished. Expanding the set of
+    inputs &mdash; additional public datasets, official reports, credible
+    reporting &mdash; is standing, continuous work. Each addition has to clear
+    the same bar: we must be legally permitted to use and republish it. When
+    the set changes, this page changes with it.
+  </p>
+  <p>
+    The full working method, including the back-test and every source checked
+    and rejected on licensing grounds, is in the
+    <a href="https://github.com/wp-tszabo/oil-through-hormuz/blob/main/company-memory/methodology.md">public
+    project repository</a>.
+  </p>
+
+  <footer>
+    <nav>
+      <a href="index.html">The estimate</a>
+      <a href="terms.html">Terms</a>
+      <a href="https://github.com/wp-tszabo/oil-through-hormuz">Project repository</a>
+      <span>&copy; 2026 the site operator</span>
+    </nav>
+  </footer>
+
+</body>
+</html>
