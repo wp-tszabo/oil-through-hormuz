@@ -1,0 +1,59 @@
+name: Refresh daily estimate
+
+# The site headlines a DATED model estimate. A dated figure left unattended
+# is stale data under GOVERNANCE.md critical-issue category 1 -- which is
+# exactly what happened on 2026-09-18 (issue #7). This job is the durable fix.
+#
+# It is deliberately narrow. It re-dates the estimate, re-derives the band,
+# re-anchors when EIA publishes a new quarter, and refuses to publish anything
+# at all if the source fetch or parse fails, or if we are past the horizon the
+# model has actually been back-tested over. It never touches prose: it writes
+# only inside the <!-- GENERATED:estimate --> markers in site/index.html.
+
+on:
+  schedule:
+    # 05:10 UTC daily -- after midnight everywhere that matters, so
+    # "yesterday" is unambiguous for the reader.
+    - cron: "10 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-estimate
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh the estimate
+        # No `continue-on-error`, on purpose. If this step fails the run goes
+        # red and the site keeps serving the last reviewed content. A loud
+        # failure is the correct outcome; a quietly frozen date is not.
+        run: python scripts/refresh_estimate.py
+
+      - name: Commit if anything changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- site/; then
+            echo "No change to publish."
+            exit 0
+          fi
+          git config user.name  "hormuz-refresh-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/
+          git commit -m "Refresh daily estimate ($(date -u +%Y-%m-%d))
+
+          Automated re-date of the model estimate. Values derive only from the
+          licence-cleared EIA Global Energy Security Data supplement; no prose
+          was changed. See scripts/refresh_estimate.py and
+          company-memory/methodology.md."
+          git push
