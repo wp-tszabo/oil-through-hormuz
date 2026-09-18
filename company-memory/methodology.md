@@ -340,3 +340,110 @@ dataset is what is in the model today — is recorded in `decisions-log.md` and
 put to the owner on PR #6. Nothing about that change alters this document's
 substance: the inputs, the licences and the rejections are unchanged, and the
 company must never let "proprietary" come to mean "unattributed".
+
+## 12. KR6 cycle 1 — 2026-09-18: a second cleared input, regime detector v2, and a horizon guard
+
+**Which of the three KR6 options this cycle delivered: (1) a cleared input AND
+(2) a model improvement.** Both, and neither was found by the Research
+specialist — the Agent tool was unavailable for a **sixth** consecutive cycle
+(§8's provenance caveat applies to this section in full).
+
+### 12.1 The input: EIA Global Energy Security Data, Table 2
+
+The first scouting pass was supposed to hunt for producer-side export series.
+It found something better by applying this document's own process lesson first:
+**ask whether the publisher already has more than the obvious product.** Two
+earlier cycles asserted EIA's Hormuz data was annual and 14 months stale
+because they found one page and stopped. This cycle re-inventoried the
+supplement and found it contains **ten tables**, not one.
+
+| | |
+|---|---|
+| **What it gives** | Quarterly volumes for every other world maritime chokepoint (Malacca, Suez/SUMED, Bab el-Mandeb, Danish Straits, Turkish Straits, Panama) plus the Cape of Good Hope and **world total oil supply** |
+| **Cadence / lag** | Quarterly, same release as Table 4 — no cadence gain |
+| **Licence** | **Already cleared.** Same publication, same release, same US federal public-domain status, same attribution string (§9). Zero new licence surface. |
+| **Verdict** | **CLEARED** — and worth stating plainly that this required no new licence risk whatsoever, which is the cheapest possible way to satisfy a mandate whose main hazard is licence-rule erosion |
+
+### 12.2 The improvement: regime detector v2
+
+v1 was "Hormuz moved more than ±10% quarter-on-quarter → disrupted". That
+cannot distinguish a blockade from a global demand collapse, which matters
+because the two have different persistence behaviour.
+
+v2 adds a **control group**: the Danish Straits, the Turkish Straits and the
+Panama Canal. These three carry **no Gulf barrels at all**, so they measure
+world oil movement independent of Hormuz. (Malacca, Bab el-Mandeb, Suez and the
+Cape are deliberately *excluded* from the control — they carry Hormuz barrels
+downstream, so using them would be partly circular.)
+
+```
+calm                 if |Hormuz QoQ| <= 10%
+disrupted / local    if |control QoQ| < 10% and |Hormuz QoQ - control QoQ| > 20pp
+disrupted / systemic otherwise
+```
+
+Applied to the cleared record:
+
+| Quarter | Hormuz QoQ | Control QoQ | World supply QoQ | v1 | v2 |
+|---|---|---|---|---|---|
+| 2Q25 | +0.5% | −5.2% | +2.6% | stable | calm |
+| 3Q25 | +1.4% | +3.6% | +0.5% | stable | calm |
+| 4Q25 | +1.4% | +0.9% | −4.0% | stable | calm |
+| 1Q26 | **−31.0%** | −3.5% | −7.5% | disrupted | **disrupted / local** |
+| 2Q26 | **−67.1%** | **+8.1%** | **+3.7%** | disrupted | **disrupted / local** |
+
+The 2Q26 row is the one that matters: Hormuz fell 67% while the rest of the
+world's chokepoints **rose** and world supply **recovered**. That is
+unambiguously strait-specific, and the model now establishes it mechanically
+rather than by the CEO's eye. Bab el-Mandeb +45% QoQ shows the re-routing
+directly, and the arithmetic of substitution is visible: from 4Q25 to 2Q26
+Hormuz fell **−16.7 m b/d** while the downstream chokepoints that carry Gulf
+barrels fell only **−6.2 m b/d**, implying roughly **10.5 m b/d** of non-Gulf
+barrels moving onto the same routes.
+
+### 12.3 What this did NOT do, stated because the mandate invites overclaiming
+
+**The published band does not change. It is still 1.5–6.9 m b/d.**
+
+Both disrupted quarters classify as `local`, so there is no `systemic` history
+to calibrate against and therefore no basis for a separate band per disruption
+type. The detector got better; the number did not move. A cosmetic band change
+presented as progress would be exactly the failure §11 warns about, so this is
+recorded as a deliberate non-result rather than smoothed over. The companion
+series are **diagnostic only — they do not enter the point estimate.**
+
+Likewise, two candidates that looked attractive were **not** adopted:
+
+| Candidate | Outcome |
+|---|---|
+| **JODI-Oil World Database** (monthly producer-side exports — exactly the second anchor §11 asked for) | **REJECTED on licence.** Terms of Use read in full at `jodidata.org/terms-of-use.aspx`: *"The Intellectual Property rights in the JODI Website, and in the material published on it, are protected by Intellectual Property laws and treaties around the world. **All such rights are reserved.**"* The download page offers the data "for free", but free-to-download is not free-to-redistribute, and there is no open-data grant anywhere on the site. Painful, because monthly Gulf export data is the single most valuable thing the model could have. Not used, not even "to calibrate". A written permission request would be $0 but is outward contact, so it is the owner's call — added to the backlog alongside the dormant IMF one. |
+| **EIA Table 1, strategic oil inventories** | **Not adopted — apparent freshness is illusory.** Titled "as of August 2026", which looked like a monthly signal, but the note reads *"Data for 2Q26 are through June 2026 or the latest available"* and the columns are 4Q25/1Q26/2Q26. Same quarterly cadence as everything else. Recorded so a later cycle does not re-discover the title and think it found something. |
+
+### 12.4 The horizon guard — and the date it bites
+
+The §4 back-test measures how wrong persistence gets **one quarter past its
+anchor**. It says nothing about two or three quarters past, because the company
+has never been there and measured it. Until now the model applied its band flat,
+at any distance — §3 promised a band "widening with `d − t_end`" that was never
+actually implemented.
+
+New hard limit: `MAX_HORIZON_DAYS = 92`. Past that, the point estimate is
+**suppressed entirely** and the page says "No current estimate — awaiting the
+next published quarter". Refusing to answer is a legitimate output for an
+honest model, and is much better than stretching a range that was never tested
+that far.
+
+**This has a date on it.** The anchor covers through 2026-06-30, so the horizon
+expires **2026-09-30**. EIA is not expected to publish 3Q26 until ~November. So
+on current form the site's headline number disappears at month end and stays
+gone for several weeks. That is a real product consequence of an honesty
+constraint, it was flagged to the owner at the top of PR #8 rather than allowed
+to arrive as a surprise, and the owner may legitimately choose a different
+behaviour (e.g. fall back to the measured quarter plus the chart).
+
+### 12.5 Also delivered: §3's recalibration promise now actually runs
+
+`scripts/refresh_estimate.py` (PR #8) re-fetches the supplement daily, and when
+EIA publishes a new quarter it re-anchors, **scores the prior estimate against
+the new actual**, and appends the error to the model's record. Until now that
+was a documented intention with no mechanism behind it.
