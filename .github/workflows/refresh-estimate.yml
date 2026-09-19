@@ -19,6 +19,9 @@ on:
 
 permissions:
   contents: write
+  # Needed only to dispatch the Pages deploy -- see the last step for why a
+  # plain push is not enough.
+  actions: write
 
 concurrency:
   group: refresh-estimate
@@ -41,12 +44,15 @@ jobs:
         run: python scripts/refresh_estimate.py
 
       - name: Commit if anything changed
+        id: commit
         run: |
           set -euo pipefail
           if git diff --quiet -- site/; then
             echo "No change to publish."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
           git config user.name  "hormuz-refresh-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add site/
@@ -56,4 +62,29 @@ jobs:
           licence-cleared EIA Global Energy Security Data supplement; no prose
           was changed. See scripts/refresh_estimate.py and
           company-memory/methodology.md."
+          # A cycle may have pushed company-memory to main since checkout.
+          # Rebase rather than fail on a race; a real conflict still fails loudly.
+          git pull --rebase origin main
           git push
+
+      - name: Deploy the refreshed page
+        # Without this step the whole job is a no-op as far as readers are
+        # concerned. GitHub's documented rule: "Events triggered by the
+        # GITHUB_TOKEN will not create a new workflow run, with the following
+        # exceptions: workflow_dispatch and repository_dispatch." So the push
+        # above does NOT fire deploy-pages.yml -- the repo would look fresh
+        # while the live page stayed frozen, i.e. the exact defect of critical
+        # issue #7, only harder to notice. Dispatching the deploy explicitly
+        # is the documented exception. No `continue-on-error`: if the deploy
+        # cannot be dispatched, the run must go red.
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl -sS --fail-with-body -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/deploy-pages.yml/dispatches" \
+            -d '{"ref":"main"}'
+          echo "Pages deploy dispatched."

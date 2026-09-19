@@ -230,9 +230,14 @@ def main():
 
     with open(PAGE) as f:
         page = f.read()
+    # The replacement must be IDEMPOTENT: re-running on an unchanged day has
+    # to produce a byte-identical file, otherwise the "nothing changed, publish
+    # nothing" guard below never fires and the page accumulates whitespace on
+    # every run. So the markers and the indentation around them are rewritten
+    # verbatim rather than carried over from whatever the previous run left.
     new, n = re.subn(
-        r"(<!-- GENERATED:estimate -->\n).*?(\s*<!-- /GENERATED:estimate -->)",
-        lambda m: m.group(1) + block + m.group(2),
+        r"<!-- GENERATED:estimate -->.*?<!-- /GENERATED:estimate -->",
+        lambda m: "<!-- GENERATED:estimate -->\n" + block + "  <!-- /GENERATED:estimate -->",
         page, flags=re.S)
     if n != 1:
         raise Fail("could not find exactly one GENERATED:estimate block in index.html")
