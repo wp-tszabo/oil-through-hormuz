@@ -14,7 +14,7 @@
     "provenance_caveat": "EIA analysis based on Vortexa tanker tracking data. We republish EIA's published analysis; we do not hold or license Vortexa data.",
     "publisher_caveat": "Since the end of February 2026, AIS signal data for ships transiting the Strait of Hormuz have become especially unreliable. For 2026 Hormuz volumes, tanker tracking data are being revised frequently based on the best available information."
   },
-  "retrieved_utc": "2026-09-17T14:00:00Z",
+  "retrieved_utc": "2026-09-19T00:00:00Z",
   "units": "million barrels per day",
   "series": [
     { "period": "1Q25", "start": "2025-01-01", "end": "2025-03-31", "total_oil": 20.9, "crude_and_condensate": 14.8, "products": 6.2 },
@@ -31,7 +31,7 @@
     "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
     "shape_function": "persistence - the latest measured quarterly average is carried forward unchanged; no licence-cleared higher-frequency input exists to justify any within-quarter shape",
     "estimate": {
-      "for_date": "2026-09-17",
+      "for_date": "2026-09-18",
       "point": 4.9,
       "band_low": 1.5,
       "band_high": 6.9,
