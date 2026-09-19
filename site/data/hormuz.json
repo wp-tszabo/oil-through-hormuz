@@ -17,16 +17,58 @@
   "retrieved_utc": "2026-09-19T00:00:00Z",
   "units": "million barrels per day",
   "series": [
-    { "period": "1Q25", "start": "2025-01-01", "end": "2025-03-31", "total_oil": 20.9, "crude_and_condensate": 14.8, "products": 6.2 },
-    { "period": "2Q25", "start": "2025-04-01", "end": "2025-06-30", "total_oil": 21.0, "crude_and_condensate": 14.9, "products": 6.2 },
-    { "period": "3Q25", "start": "2025-07-01", "end": "2025-09-30", "total_oil": 21.3, "crude_and_condensate": 15.0, "products": 6.3 },
-    { "period": "4Q25", "start": "2025-10-01", "end": "2025-12-31", "total_oil": 21.6, "crude_and_condensate": 15.9, "products": 5.7 },
-    { "period": "1Q26", "start": "2026-01-01", "end": "2026-03-31", "total_oil": 14.9, "crude_and_condensate": 10.9, "products": 4.0 },
-    { "period": "2Q26", "start": "2026-04-01", "end": "2026-06-30", "total_oil": 4.9, "crude_and_condensate": 3.7, "products": 1.1 }
+    {
+      "period": "1Q25",
+      "start": "2025-01-01",
+      "end": "2025-03-31",
+      "total_oil": 20.9,
+      "crude_and_condensate": 14.8,
+      "products": 6.2
+    },
+    {
+      "period": "2Q25",
+      "start": "2025-04-01",
+      "end": "2025-06-30",
+      "total_oil": 21.0,
+      "crude_and_condensate": 14.9,
+      "products": 6.2
+    },
+    {
+      "period": "3Q25",
+      "start": "2025-07-01",
+      "end": "2025-09-30",
+      "total_oil": 21.3,
+      "crude_and_condensate": 15.0,
+      "products": 6.3
+    },
+    {
+      "period": "4Q25",
+      "start": "2025-10-01",
+      "end": "2025-12-31",
+      "total_oil": 21.6,
+      "crude_and_condensate": 15.9,
+      "products": 5.7
+    },
+    {
+      "period": "1Q26",
+      "start": "2026-01-01",
+      "end": "2026-03-31",
+      "total_oil": 14.9,
+      "crude_and_condensate": 10.9,
+      "products": 4.0
+    },
+    {
+      "period": "2Q26",
+      "start": "2026-04-01",
+      "end": "2026-06-30",
+      "total_oil": 4.9,
+      "crude_and_condensate": 3.7,
+      "products": 1.1
+    }
   ],
   "model": {
     "regime": "disrupted",
-    "regime_rule": "disrupted if latest quarter-on-quarter change exceeds +/-10%, or fewer than two consecutive quarters within +/-10%",
+    "regime_rule": "Regime detector v2. calm if the latest quarter-on-quarter change in Hormuz total oil is within +/-10%. Otherwise disrupted, and sub-classified using companion chokepoints from the same cleared EIA table: 'local' if the control group (Danish Straits + Turkish Straits + Panama Canal, none of which carry Gulf barrels) moved less than 10% and diverged from Hormuz by more than 20 points - i.e. the strait moved and the rest of the world did not; 'systemic' if they moved together. See methodology.md section 5.",
     "daily_estimate_published": true,
     "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
     "shape_function": "persistence - the latest measured quarterly average is carried forward unchanged; no licence-cleared higher-frequency input exists to justify any within-quarter shape",
@@ -39,8 +81,64 @@
       "anchor_period": "2Q26",
       "anchor_value": 4.9,
       "is_measurement": false,
-      "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6."
+      "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6.",
+      "horizon_days": 79,
+      "max_horizon_days": 92,
+      "suppressed": false
     },
-    "staleness_note": "This file is hand-maintained. estimate.for_date must be refreshed whenever the page is republished; a dated estimate left frozen is stale data under GOVERNANCE.md critical-issue category 1. Automating the refresh is the top open Build item."
+    "staleness_note": "Regenerated daily by scripts/refresh_estimate.py (GitHub Actions). The job re-dates the estimate, re-anchors on each new EIA release and scores the prior estimate against the new actual. It fails loudly and publishes nothing if the source fetch or parse fails. Past max_horizon_days beyond the anchor's coverage end the point estimate is suppressed entirely, because the band is only back-tested one quarter ahead.",
+    "companion_series": {
+      "malacca": [
+        22.3,
+        23.8,
+        23.4,
+        24.9,
+        21.3,
+        16.6
+      ],
+      "bab_el_mandeb": [
+        3.9,
+        4.5,
+        4.6,
+        5.4,
+        5.6,
+        8.1
+      ],
+      "danish_straits": [
+        5.0,
+        4.8,
+        4.9,
+        5.0,
+        4.9,
+        4.7
+      ],
+      "turkish_straits": [
+        3.8,
+        3.7,
+        3.7,
+        3.7,
+        3.3,
+        4.1
+      ],
+      "panama_canal": [
+        2.8,
+        2.5,
+        2.8,
+        2.8,
+        2.9,
+        3.2
+      ],
+      "world_total_oil_supply": [
+        105.0,
+        107.7,
+        108.2,
+        103.9,
+        96.1,
+        99.7
+      ]
+    },
+    "regime_kind": "local",
+    "regime_qoq_pct": -67.1,
+    "companion_series_note": "Companion chokepoint volumes from Table 2 of the same EIA Global Energy Security Data supplement (same publication, same public-domain licence as the Hormuz anchor). Used by the regime detector only; they do not enter the point estimate. Danish/Turkish/Panama carry no Gulf barrels and act as a global-demand control group."
   }
 }
