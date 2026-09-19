@@ -625,3 +625,86 @@ Bucket (2) of the standing Research brief — event and advisory signals — is
 therefore **still open**, and is still the most direct reading of the owner's
 "news, reports". Two of the three best candidates are blocked at origin rather
 than rejected on licence, which is a different and more tractable problem.
+
+## 14. KR6 cycle 3 — 2026-09-19 (8th cycle): the improved model reaches production, and the horizon is fixed at one quarter by owner decision
+
+**Which of the three KR6 options this cycle delivered: (b), partially, and the
+partial is stated rather than dressed up.** No new input was cleared and the
+published band did not move. What changed is that the model improvements built
+in cycles 1 and 2 of this mandate stopped being a document and started being the
+product — and one piece of the methodology that had only ever existed on paper
+now runs unattended.
+
+### 14.1 What actually improved
+
+- **The §3 recalibration promise is now a running mechanism, not an intention.**
+  `scripts/refresh_estimate.py` re-fetches the cleared EIA supplement every day,
+  and *on the first day the published series moves* it re-anchors, scores the
+  estimate we had been publishing against the new actual, and appends the error
+  to `model.scored_errors` in `site/data/hormuz.json`. Until this merged, that
+  scoring depended on a CEO cycle happening to run on the right day. The
+  back-test is now self-extending; that is a methodology improvement, not a
+  deployment detail.
+- **Regime detector v2 (companion chokepoints, EIA Table 2) is live**, so the
+  local/systemic classification is computed from the source every day rather
+  than being a finding in a memory file. Current live classification:
+  `disrupted / local`, Hormuz −67.1% quarter-on-quarter against a control group
+  that rose.
+- **The horizon guard is live and now has an owner decision behind it** (§14.2).
+
+### 14.2 Owner decision on the horizon — recorded here because it is a property of the model, not of the site
+
+Owner, 2026-09-19, live in conversation: *"one quarter is fine for now, we
+should extend it later."*
+
+`MAX_HORIZON_DAYS` stays at **92**. Past that, the model publishes nothing and
+says so. The anchor covers through 2026-06-30, so the point estimate is expected
+to disappear around **2026-10-01** and stay gone until EIA publishes 3Q26
+(~November). That consequence was put to the owner explicitly and accepted.
+
+**"Extend it later" is now a standing sub-goal of this mandate.** It is tracked
+separately from "widen the inputs" because the horizon is a property of the
+*back-test*, not of the input set: adding a series does not, by itself, tell us
+how wrong persistence gets two quarters out. The three routes, in order of
+promise:
+
+1. **Use the monthly cleared input we already have.** GPCI (STEO Table 3d, §13)
+   produces a testable one-month-ahead error every month. Twelve monthly errors
+   a year accumulate evidence about longer horizons far faster than four
+   quarterly observations ever will. This is where "extend the horizon" and
+   "widen the inputs" genuinely converge, and it is the reason the backlog line
+   points at the widen-inputs work rather than duplicating it.
+2. **Back-test further out on the history we already hold.** The §4 back-test
+   only ever measured one-quarter-ahead error. Two- and three-quarter-ahead
+   persistence errors can be computed from the same cleared series today. That
+   would not make the model better, but it would make an honest statement about
+   a longer horizon *possible*, which is currently not the case.
+3. **Replace flat persistence with a real shape function.** Only this could make
+   a longer horizon deserve anything other than a much wider band.
+
+**The bar for ever moving the threshold, stated now rather than at the moment of
+temptation**: a longer horizon must be earned by a *measured* error at that
+horizon. Widening `MAX_HORIZON_DAYS` because the blank headline is awkward would
+be asserting a validation we never performed — rubric §1.6 and critical-issue
+category 4. The owner's "extend it later" is permission to do the work, not
+permission to skip it.
+
+### 14.3 What was not done, and why — so this is not silence
+
+No new candidate input was scouted this cycle. The cycle was scoped by the
+owner to executing one decision (merge PR #8) and was deliberately not widened
+into a research pass on the way past. The open candidates are unchanged and
+carried forward verbatim in `backlog.md`: bucket (2) event/advisory signals
+(UKMTO and MARAD **403-blocked at origin, not licence-rejected** — retry from
+another route), OPEC MOMR, UN Comtrade, Eurostat, Gulf customs/port authorities,
+and the standing question of whether EIA publishes anything *weekly* that is
+Gulf-relevant.
+
+### 14.4 Honest accounting
+
+The published number today is the same number as yesterday: **4.9, range
+1.5–6.9, estimate for 18 September 2026, horizon 80 of 92 days.** A cycle that
+improves the machinery and not the estimate is reported as exactly that. Note
+that the most substantive open methodology question is *not* this section — it
+is critical issue #9 (§13), which argues our published figure is probably too
+low, and which remains the owner's decision.
