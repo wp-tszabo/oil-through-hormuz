@@ -447,3 +447,181 @@ behaviour (e.g. fall back to the measured quarter plus the chart).
 EIA publishes a new quarter it re-anchors, **scores the prior estimate against
 the new actual**, and appends the error to the model's record. Until now that
 was a documented intention with no mechanism behind it.
+
+## 13. KR6 cycle 2 — 2026-09-19: a monthly cleared input, regime detector v3, and evidence against our own published number
+
+Delivery type: **(a) a licence-cleared input AND (b) a model/calibration
+improvement.** This is the second consecutive cycle to deliver both, and unlike
+cycle 1 it **does** move the number — or rather, it produces the first hard
+evidence that the published number is wrong, which was escalated to the owner as
+critical issue **#9** rather than acted on unilaterally.
+
+### 13.1 The input: EIA Short-Term Energy Outlook, Table 3d (monthly)
+
+**How it was found** — by applying, for the third time, the lesson this company
+learned the expensive way: *always ask whether the publisher has a different or
+higher-cadence product than the obvious one.* Cycle 1 applied it inside the
+Global Energy Security supplement and found it has ten tables, not one. This
+cycle applied it one level up, to EIA as a whole. The Hormuz supplement is a
+**quarterly** annex to the STEO. The **STEO itself is monthly**, and its data
+workbook carries per-country crude oil production.
+
+| Property | Value |
+|---|---|
+| Publisher | U.S. Energy Information Administration |
+| Product | Short-Term Energy Outlook, `STEO_m.xlsx`, sheet `3dtab` — "Table 3d. World Crude Oil Production" |
+| URL | `https://www.eia.gov/outlooks/steo/xls/STEO_m.xlsx` |
+| Release read | September 2026 (2026-09-09) |
+| Cadence | **Monthly** |
+| History through | **2026-08** — read from the workbook's own `Dates` sheet, field `Last Historical Month--- 202608`, *not* inferred from the column headers |
+| Licence | **CLEARED.** US federal public domain |
+| Licence text actually read | `https://www.eia.gov/about/copyrights_reuse.php` — *"U.S. government publications are in the public domain and are not subject to copyright protection. You may use and/or distribute any of our data, files, databases, reports, graphs, charts, and other information products that are on our website…"*, acknowledgment including publication date requested |
+| New licence surface | **None.** Same publisher, same terms page, already cleared for the anchor |
+
+The `Last Historical Month` check is the load-bearing step and is called out
+deliberately: the STEO is a **forecast** product, its workbook runs to 2027, and
+an agent that read the columns without reading that field would have silently
+fed EIA's *forecasts* into our model and presented them as observed data. The
+months used here (through August 2026) are history. September 2026 onward is
+forecast and is **excluded**.
+
+Residual risk, recorded not glossed: EIA's copyright page has a "Protected
+materials" clause covering third-party documents, illustrations and photographs
+hosted on their site. Table 3d is EIA's own statistical estimate, so the clause
+does not bite — and it bites *less* here than on the Hormuz anchor, which is
+EIA analysis of licensed Vortexa data and already carries a provenance caveat on
+`sources.html`.
+
+### 13.2 GPCI — the Gulf Producer Crude Index
+
+**GPCI = crude oil production of Iran + Iraq + Kuwait + Saudi Arabia + Bahrain**,
+from Table 3d, monthly.
+
+Construction choices, all of which are about consistency rather than coverage:
+
+- **One variable only.** All five are the `copr_` (crude oil production) series.
+- **UAE and Qatar excluded.** This workbook carries them only in Table 3b as
+  `papr_` (petroleum *and other liquids*) — a different variable. Summing
+  `copr_` and `papr_` would be an apples-and-oranges error that no downstream
+  check would catch, because the total would still look plausible. This was an
+  actual near-miss this cycle: a first label-match pulled UAE from Table 3b and
+  it was caught only by noticing the series code was `papr_tc`, not a `copr_`.
+- **Oman excluded** despite having a clean `copr_` series: its main export
+  terminals are outside the strait, so it is not Hormuz-dependent.
+- GPCI is therefore an **index**, not a measure of total Gulf production. It is
+  used for *co-movement and regime*, never as a flow figure in its own right.
+
+Known structural caveats, which are why GPCI can never simply replace the
+anchor: production is not transit. Barrels can go to storage, to domestic
+refining, or to routes that bypass Hormuz entirely (Saudi East-West pipeline to
+Yanbu; ADNOC's pipeline to Fujairah; Iraq's Ceyhan line).
+
+### 13.3 The finding: a stable transit ratio that breaks in a diagnosable way
+
+| Quarter | GPCI | Hormuz total oil | ratio = flow / GPCI |
+|---|---|---|---|
+| 2025Q1 | 19.26 | 20.9 | 1.085 |
+| 2025Q2 | 19.55 | 21.0 | 1.074 |
+| 2025Q3 | 19.82 | 21.3 | 1.075 |
+| 2025Q4 | 20.18 | 21.6 | 1.070 |
+| 2026Q1 | 18.21 | 14.9 | 0.818 |
+| 2026Q2 | 11.96 | 4.9 | **0.410** |
+| 2026Q3 | **14.42** (Jul–Aug, history) | not yet published | — |
+
+**Calm-regime ratio: mean 1.076, sd 0.006, range 1.070–1.085.** Four quarters,
+spread under 1%. Ratio above 1 is expected and not an error — Hormuz total oil
+includes refined products and barrels from producers outside the index.
+
+The ratio's *collapse* is the diagnostic payload. Production fell 41% peak to
+trough; transit fell 77%. **The 2026 disruption is a transit constraint, not a
+production constraint** — a distinction the model previously had no way to draw,
+and one that matters, because a transit constraint can lift much faster than a
+production one.
+
+### 13.4 Regime detector v3 — monthly, and no longer a quarter late
+
+v1 was a ±10% quarter-on-quarter test on a single quarterly series. v2 (cycle 1)
+added a chokepoint control group so a Hormuz-specific shock could be told from a
+global one — but was still quarterly, so it could only notice a disruption
+roughly a quarter after it began. That was named in `backlog.md` as the model's
+real gap.
+
+v3 runs on GPCI, monthly, with observations landing ~2–3 weeks after month end
+instead of ~11 weeks:
+
+| State | Rule (on GPCI) | Meaning |
+|---|---|---|
+| `calm` | three consecutive months within ±3% m/m | transit ratio ≈ 1.076 is usable directly |
+| `disrupting` | any month ≤ −10% m/m | producer-side shock under way |
+| `recovering` | two consecutive months ≥ +10% m/m after a `disrupting` state | producers lifting again |
+| `unstable` | anything else | no direct estimator; band only |
+
+Applied to the record, v3 dates the episode for the first time:
+
+- **Onset: March 2026** — GPCI 21.04 → 13.38, **−36.4% m/m**. Previously all the
+  company could say was "sometime in Q1".
+- **Trough: May 2026**, 11.00.
+- **Recovery: June (+20.2%) and July (+15.5%)** → state `recovering`.
+- August 2026: 13.57, −11.1% m/m — so the recovery is **not** monotonic, and v3
+  drops back to `unstable` rather than declaring an all-clear. Recorded because
+  the convenient reading would have been "recovery confirmed".
+
+### 13.5 What this says about the number we are publishing — the uncomfortable part
+
+2026Q3 GPCI (July–August history) is **14.42, up 20.6%** on the 2026Q2 trough.
+The published estimate carries 4.9 forward by persistence, which assumes nothing
+has changed since June.
+
+Applying every transit ratio the company has ever actually observed:
+
+| Ratio | Implied 2026Q3 Hormuz flow |
+|---|---|
+| worst ever observed (2026Q2, 0.410) | **5.9** |
+| partial disruption (2026Q1, 0.818) | 11.8 |
+| calm mean (1.076) | 15.5 |
+
+**Every one of those is above the published point estimate of 4.9, and the
+lowest sits at the top of the published 1.5–6.9 band.** The page tells readers
+to treat the range as the answer; on this evidence the bottom half of that range
+(1.5–4.0) is supported by nothing.
+
+**Escalated as critical issue #9, not fixed unilaterally.** Changing a published
+figure needs the owner, a fresh rubric run, and the copy checkpoint. Four options
+were put to the owner (leave it; widen the band upward; re-anchor on GPCI;
+suppress the estimate now). CEO recommendation: widen now, re-anchor after
+review.
+
+### 13.6 The limits of this result, stated because the mandate invites overclaiming
+
+1. **The transit ratio is unstable in disruption — that is the finding, and it
+   cuts both ways.** A Q3 ratio of 0.30 would give 4.3, inside the current band.
+   The *direction* of the evidence is solid; the *magnitude* is not.
+2. **Production is not transit.** §13.2's bypass routes are real and unmeasured.
+3. **GPCI is incomplete by construction** — no UAE, no Qatar. Deliberate, but it
+   means the index understates the Hormuz-relevant producer base.
+4. **Still no specialist review.** Seven consecutive cycles without the Agent
+   tool. Every judgement here — the licence read, the index construction, the
+   exclusions, the ratio interpretation — was made and checked by the same agent.
+5. **The published band did not change this cycle.** As in cycle 1, motion is
+   not being dressed up as progress: what changed is the evidence and the
+   diagnosis. The number is the owner's to move.
+
+### 13.7 What this does not change
+
+The licence bar held again. Nothing uncleared was used, including "just to
+sanity-check" — the 403-blocked sources below were dropped rather than worked
+around.
+
+**Checked and not adopted this cycle:**
+
+| Candidate | Outcome |
+|---|---|
+| **UKMTO** (`ukmto.org`) maritime advisories | **UNRESOLVED — could not read.** HTTP 403 at origin (not the proxy; `eia.gov` and `msi.nga.mil` fetched fine in the same pass). Terms never read, so it cannot be cleared. Not used. Re-try from a different route next cycle. |
+| **US MARAD MSCI advisories** (`maritime.dot.gov`) | **UNRESOLVED — could not read.** HTTP 403 at origin. Same treatment. |
+| **NGA Maritime Safety Information** (`msi.nga.mil`) broadcast warnings API | **Reachable and probably public domain, but NOT ADOPTED — low signal.** 386 active warnings, 24 Gulf-relevant, and they are navigational hazards: wrecks, survey operations, an inoperative lattice beacon. A dangerous wreck notice says nothing about oil flow. NGA's *special warnings* series would be the geopolitically meaningful one; no working endpoint found this cycle. Licence not pursued, because an unusable input does not need clearing. |
+| **EIA STEO Table 3a** | Not adopted — no per-country Gulf breakout; aggregates only. |
+
+Bucket (2) of the standing Research brief — event and advisory signals — is
+therefore **still open**, and is still the most direct reading of the owner's
+"news, reports". Two of the three best candidates are blocked at origin rather
+than rejected on licence, which is a different and more tractable problem.
