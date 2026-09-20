@@ -708,3 +708,162 @@ improves the machinery and not the estimate is reported as exactly that. Note
 that the most substantive open methodology question is *not* this section — it
 is critical issue #9 (§13), which argues our published figure is probably too
 low, and which remains the owner's decision.
+
+## 15. KR6 cycle 4 — 2026-09-20 (9th cycle): the bypass term stops being "unmeasured"
+
+Delivery type: **(b) a model/calibration improvement with no new input.** No new
+source was introduced and no new licence surface was opened. Nothing was
+published. The published figure is unchanged at **4.9, range 1.5–6.9**.
+
+This cycle ran in **read-only mode** — the week-of-2026-09-21 plan is still
+`PROPOSED` (GitHub issue #10, no owner response), so under GOVERNANCE.md the
+company may research and prepare but may not spend, publish, or take
+hard-to-reverse action. A methodology improvement that stays in
+`company-memory/` and a script that touches nothing under `site/` are squarely
+inside that boundary. Changing the live number would not be, however good the
+evidence — which is the whole point of §15.4 below.
+
+### 15.1 What it attacks: our own stated limit
+
+`§13.6` lists as limit (2): *"Production is not transit. §13.2's bypass routes
+are real and unmeasured."* That word — unmeasured — is load-bearing, because
+critical issue **#9** rests on GPCI (Gulf producer crude) having recovered 20.6%
+off its trough, and the argument only carries to *Hormuz* if the recovered
+barrels have to use the strait. Gulf crude can reach market without transiting
+Hormuz: pipelines to Red Sea and Gulf-of-Oman terminals exist. If those routes
+absorbed part of the 2026 collapse, then two things follow at once, and they
+pull in opposite directions:
+
+- the transit ratio **understates** how much crude was still reaching market, and
+- a production recovery translates into **less** Hormuz traffic than a naive
+  GPCI ratio implies.
+
+Both effects are material to issue #9 and neither was quantified. Now one is.
+
+### 15.2 Method, and the check that makes it more than arithmetic
+
+Reproducible end-to-end: `scripts/bypass_analysis.py`, which re-fetches both
+cleared sources rather than trusting any number recorded in this file.
+
+1. Fit an OLS linear trend to each companion chokepoint's **crude and
+   condensate** series over the four calm quarters (1Q25–4Q25).
+2. Extrapolate into 1Q26 and 2Q26; the residual is flow above or below that
+   route's own pre-disruption trend.
+3. Bypass proxy = **positive** residuals on the Red Sea routes (Bab el-Mandeb,
+   Suez/SUMED) — routes a Gulf barrel can reach by pipeline without passing the
+   strait.
+4. **Placebo control** — repeat on routes that carry essentially no Gulf crude
+   (Danish Straits, Turkish Straits, Panama). If the method manufactures large
+   residuals there, it is measuring noise, not re-routing.
+5. Malacca and the Cape are **downstream of both** Hormuz and the Red Sea
+   routes, so they are read as confirmation of direction only and are never
+   added to the bypass term — adding them would count the same barrel twice.
+
+Step 4 is what stops this being curve-fitting to a story, and it is reported
+whichever way it comes out.
+
+### 15.3 Results
+
+| Route (crude) | 1Q26 residual | 2Q26 residual | Read as |
+|---|---|---|---|
+| Hormuz | −5.10 | −12.64 | the disruption itself |
+| **Bab el-Mandeb** | **−0.05** | **+2.32** | **the bypass signal** |
+| Suez / SUMED | −0.55 | −0.41 | no northbound bypass |
+| Malacca (downstream) | −3.30 | −7.37 | Asia-bound Gulf crude fell hard |
+| Cape (downstream) | −1.20 | −0.32 | ≈ on trend |
+| Danish Straits (control) | −0.25 | **−0.02** | placebo: clean |
+| Turkish Straits (control) | −0.25 | **+0.58** | placebo: noise floor |
+| Panama (control) | +0.00 | **+0.10** | placebo: clean |
+
+Three things are worth more than the headline:
+
+- **The 1Q26 Bab el-Mandeb residual is −0.05.** The trend fitted on 2025 alone
+  predicted the next quarter to within 0.05 m b/d, and only broke in the quarter
+  Hormuz collapsed. That is an out-of-sample hit, not a fitted one, and it is the
+  strongest single reason to believe the +2.32 is real.
+- **The bypass went south, not north.** Suez/SUMED is *below* trend throughout.
+  Whatever was re-routed left through Bab el-Mandeb toward Asia.
+- **The placebo is not perfectly clean.** Turkish Straits shows +0.58, so this
+  method's empirical noise floor is about ±0.6 m b/d — a quarter of the signal
+  it is claiming. Recorded because the convenient version of this section would
+  have quoted only Danish (−0.02) and Panama (+0.10).
+
+**Bypass-adjusted transit ratio:**
+
+| Quarter | Hz crude | GPCI | raw ratio | bypass-adjusted |
+|---|---|---|---|---|
+| 1Q25–4Q25 (calm) | 14.8–15.9 | 19.26–20.18 | mean **0.769**, sd 0.014 | same |
+| 1Q26 | 10.9 | 18.21 | 0.599 | 0.599 |
+| 2Q26 | 3.7 | 11.95 | **0.310** | **0.504** |
+
+**The bypass term explains 42% of the 2Q26 collapse in the transit ratio.** The
+other 58% is a genuine transit constraint, so §13.3's central finding survives —
+2026 is still a transit story, not a production story — but it was overstated by
+roughly a factor of two, and it is corrected here rather than defended.
+
+### 15.4 What it says about critical issue #9 — and why the number still did not move
+
+Projecting 2026Q3 with the bypass term carried explicitly (GPCI 14.42, Jul–Aug
+history):
+
+| 2026Q3 scenario | Hormuz crude | Total oil (2Q26 product mix) | Total oil (calm product mix) |
+|---|---|---|---|
+| bypass persists at the 2Q26 level | 4.94 | **6.5** | **6.9** |
+| bypass halves | 6.10 | 8.1 | 8.5 |
+| bypass ends entirely | 7.26 | 9.6 | 10.2 |
+
+Set against §13.5's ratio-family figures of **5.9 / 11.8 / 15.5** and the
+published **4.9 (range 1.5–6.9)**:
+
+1. **Issue #9's direction is confirmed and its magnitude is tightened.** Every
+   construction the company has tried — raw transit ratio, ratio family,
+   bypass-explicit — lands **above 4.9**. The spread narrows from 5.9–15.5 to
+   6.5–10.2, and the narrowing comes from naming a mechanism rather than from
+   picking a ratio.
+2. **The most conservative case is now the most structurally informed one.**
+   "Bypass persists" gives 6.5–6.9, i.e. the *top edge* of the published band.
+   The bottom half of the published range (1.5–4.0) is supported by nothing on
+   any construction. That is the same conclusion as §13.5, reached independently.
+3. **Nothing was changed on the live site.** Read-only mode aside, this is one
+   cycle old, unreviewed by any specialist, and rests on an assumed Q3 bypass.
+   It is filed as **new evidence on issue #9**, which remains the owner's
+   decision.
+4. **The recommendation on #9 is refined, not reversed.** Previously "B now
+   (widen the band upward), C after review (re-anchor on GPCI)". A raw-GPCI
+   re-anchor (C as originally written) would land near 15.5 and would be wrong
+   for a reason we can now name: it ignores the bypass. So C is respecified as
+   **C′ — re-anchor on a bypass-adjusted GPCI estimator**, which is what
+   `scripts/bypass_analysis.py` computes. **B now, C′ after review.**
+
+### 15.5 Limits, stated because the mandate invites overclaiming
+
+1. **There is no 2026Q3 chokepoint observation and will not be until ~November.**
+   The Q3 bypass term is *assumed*, not measured — the same persistence
+   assumption this company criticises elsewhere, applied to the bypass. If
+   Hormuz reopens, the bypass unwinds and the true figure moves toward 8–10.
+2. **It is an attribution, not a measurement.** Bab el-Mandeb flows are
+   bidirectional and include non-Gulf barrels. **No pipeline-capacity figure
+   from any source was used** — the attribution rests only on the chokepoint
+   residuals, deliberately, because a capacity number would be an uncleared
+   input doing work on a published figure.
+3. **Four points fit the trend**, and the placebo noise floor is ±0.58.
+4. **GPCI still excludes UAE and Qatar**, so these are index ratios, not
+   physical shares.
+5. **Still no specialist review — ninth consecutive cycle.** The Agent tool was
+   tested again this cycle and returned `No such tool available: Task`. Every
+   judgement above was made and checked by the same agent. The one mitigation
+   added this cycle: the derivation is a script that re-fetches from source, so
+   a reader can re-run it instead of trusting this document.
+6. **The published number is the same as yesterday**: 4.9, range 1.5–6.9. A
+   cycle that improves the evidence and not the estimate is reported as exactly
+   that.
+
+### 15.6 Independent re-derivation of GPCI, recorded because it is cheap assurance
+
+`scripts/bypass_analysis.py` rebuilds GPCI from `STEO_m.xlsx` rather than
+reading §13's table. It reproduces **19.26 / 19.55 / 19.82 / 20.18 / 18.21 /
+11.96** and **14.42** for 2026Q3 (Jul–Aug) — identical to §13.2 to two decimals,
+from a workbook released since that work was done. The history/forecast boundary
+was again taken from the workbook's own `Last Historical Month--- 202608` field,
+and the script **exits with a failure** rather than guessing if that field is
+ever missing.

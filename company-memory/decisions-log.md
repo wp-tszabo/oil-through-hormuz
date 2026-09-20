@@ -68,3 +68,93 @@ add a new entry that supersedes it and link back.
 | 2026-09-19 (8th cycle) | **Two plumbing defects found in PR #8 during pre-merge re-verification and fixed before merging (`82d6e86`), rather than merged and patched afterwards.** (1) **The automation would have updated the repo without updating the site.** GitHub's documented rule: *"Events triggered by the GITHUB_TOKEN will not create a new workflow run, with the following exceptions: `workflow_dispatch` and `repository_dispatch`."* The refresh bot's push to `main` would therefore **not** have fired `deploy-pages.yml`. `main` would have looked fresh, the job would have gone green, the daily log would have said "refreshed" — and the live page would have stayed frozen. That is critical issue #7 all over again in a form that is *harder* to detect than the original, because the evidence would point the wrong way. The job now dispatches the Pages deploy explicitly and fails red if it cannot. (2) **The page write was not idempotent** — it appended a blank line to `site/index.html` on every run, so the "nothing changed, publish nothing" guard could never fire and the file would grow without bound. Markers and indentation are now rewritten verbatim; verified byte-identical over three consecutive runs. Also added a rebase before push so a concurrent company-memory commit is a retry, not a red build. **Both are implementation details inside an approved design: no figure, band, threshold, prose or copy changed.** | The owner approved a mechanism that keeps the *live page* current. A version that keeps only the repository current would have satisfied the letter of the PR and none of its purpose. Fixing it before the merge rather than after keeps the merged state the reviewed state. | CEO |
 | 2026-09-19 (8th cycle) | **The automation was verified end-to-end on live infrastructure, not just in the sandbox.** After merging, the refresh workflow was dispatched manually: run `35457521885` succeeded, committed `3ecd690` as `hormuz-refresh-bot`, and its deploy-dispatch step created deploy run `35457530338`, which succeeded. The live page was then re-fetched and diffed byte-identical to `main`. **This also proves defect (1) above was real**: the deploy run that published the bot's commit was triggered by `workflow_dispatch`, not by the push. Live state after the run: estimate for Friday 18 September 2026, 4.9, band 1.5–6.9, horizon 80/92 days, regime `disrupted/local` — unchanged figures, as intended. | A mechanism that has only ever run on a developer's machine is not a control. The first unattended scheduled run is 05:10 UTC on 2026-09-20; it now has a green manual precedent rather than being its own first test. | CEO |
 | 2026-09-19 (8th cycle) | **One residual copy defect in the suppressed state was found, deliberately NOT fixed in the merge, and held for owner review.** When the horizon guard fires, the sentence immediately below the generated block still reads *"The range is this wide because the strait is anything but steady right now"* — sitting directly under a block that says we have stopped publishing a number. It is incoherent rather than untrue, and it will become visible around 2026-10-01. It is user-facing prose, so it goes through the standing copy checkpoint: drafted to `pending-copy/2026-09-19-suppressed-state-note.md`, added to the backlog with the 30 September date on it, and flagged on PR #8. | The standing copy checkpoint has no "while I was in there" exception, and the merge of PR #8 was authorised on a specific question the owner answered — the horizon design — not as a general licence to edit the page. A one-sentence fix is exactly the size of change that erodes a checkpoint. | CEO |
+
+## 2026-09-20 (9th cycle) — read-only cycle: bypass term measured, live figure untouched
+
+**Context.** The week of 2026-09-14 closed `DONE` on 2026-09-19. The plan for
+the week of 2026-09-21 is still `PROPOSED` (GitHub issue #10, opened
+2026-09-19T02:21Z, **no owner comment**). Under GOVERNANCE.md that makes this a
+read-only cycle: research and prep allowed, no spend, no publishing, no
+hard-to-reverse action. Everything below was decided inside that boundary.
+
+**Decision 1 — the live date lag was assessed as NOT a critical issue, and the
+reasoning was written down rather than assumed.** The opening check found the
+headline reading "Friday 18 September 2026" at 02:20 UTC on the 20th. The
+previous two occurrences of a wrong date *were* category 1. This one differs in
+the property that made those ones dangerous: the refresh job computes
+`today(UTC) − 1` and runs at 05:10 UTC, so the 00:00–05:10 window carries the
+day-before-yesterday and then self-corrects. Bounded, mechanical, ~2h50m from
+correcting itself at the moment of the check. Logged in full in
+`critical-issues-log.md` with an explicit trigger: if the live `for_date` is
+still 2026-09-18 after 05:10 UTC today, it **is** category 1 and gets raised as
+a new issue. Recording the trigger in advance is the point — it stops the next
+cycle from re-litigating the judgement under time pressure.
+
+**Decision 2 — the date was NOT hand-fixed, and the workflow was NOT manually
+dispatched.** Three independent reasons, any one sufficient: read-only mode
+forbids publishing; hand-re-dating was already proven not to be a control
+(issue #7, second occurrence); and — the one that would have applied even
+without the other two — **pre-writing the answer would have destroyed the
+evidence.** Today's 05:10 UTC run is the first unattended cron fire in the
+company's history. If the CEO sets the date first, the job finds nothing to
+change, commits nothing, and the single test that matters returns a false green.
+The same argument rules out a manual `workflow_dispatch`. Instead the date
+*semantics* problem was written up as held copy
+(`pending-copy/2026-09-20-date-semantics.md`), because the real defect is not
+the lag, it is that a single global date label is wrong for Gulf readers
+overnight while the page promises a figure "carried forward to the day you are
+reading".
+
+**Decision 3 — KR6 delivered as (b), and it argued against our own previous
+work.** `methodology.md` §15: the bypass term that §13.6 listed as "real and
+unmeasured" is now measured, using only already-cleared EIA tables and opening
+**zero** new licence surface. Trend-residual method with a placebo control on
+non-Gulf routes. Result: Bab el-Mandeb crude runs **+2.32 m b/d above its own
+2025 trend** in 2Q26 (and **−0.05**, i.e. dead on trend, in 1Q26 — an
+out-of-sample hit that is the main reason to believe the signal), Suez/SUMED
+shows no bypass, and the bypass term explains **42%** of the collapse in the
+transit ratio. Consequence: §13.3's headline finding that "2026 is a transit
+constraint, not a production constraint" **survives but was overstated by
+roughly a factor of two**, and is corrected in place rather than defended.
+
+**Decision 4 — the recommendation on critical issue #9 was refined, not
+reversed, and the live figure still did not move.** Carrying the bypass term
+explicitly into 2026Q3 gives **6.5–10.2 m b/d** against a published 4.9 and a
+band topping at 6.9 — a much tighter range than §13.5's 5.9 / 11.8 / 15.5, and
+tighter because a mechanism is named rather than a ratio picked. Three
+independent constructions now all land above 4.9. **Option C on issue #9 was
+respecified as C′**: re-anchor on a *bypass-adjusted* GPCI estimator, not raw
+GPCI — a raw-GPCI re-anchor would land near 15.5 and would be wrong for a reason
+we can now name. Recommendation is **B now, C′ after review**. Posted as a
+comment on issue #9; **nothing on the live site changed**, because changing a
+published number needs the owner, a fresh rubric run and the copy checkpoint,
+and none of that is available in a read-only cycle no matter how good the
+evidence. That constraint working *against* our own best finding is the
+checkpoint doing its job, not an obstacle to route around.
+
+**Decision 5 — the week-of-21 plan was revised while staying `PROPOSED`.** It
+was written at 02:21 UTC on 19 September; by that evening the owner had approved
+the horizon and the CEO had merged PR #8, so two of its three "blocking owner
+decisions" were already resolved before anyone read it. Asking the owner to
+decide settled questions wastes the scarcest resource the company has. The file
+now carries a revision note, the resolved items are listed as resolved, and
+issue #10 was updated to point at the revised version. Objectives and the $0
+ceiling are unchanged; **the status is unchanged and the plan is still not
+executed.**
+
+**Decision 6 — the derivation was written as a script, not as a table.**
+`scripts/bypass_analysis.py` re-fetches both cleared sources and recomputes
+everything, including rebuilding GPCI from the September workbook (which
+reproduces §13.2 to two decimals). With the Agent tool unavailable for a **ninth**
+consecutive cycle — re-tested this cycle, `No such tool available: Task` — the
+designed control of "a specialist produces, the CEO reviews" still does not
+exist. A reproducible script is a weak substitute, but it is a real one: a reader
+can re-run the claim instead of trusting the agent that made it. The script
+touches nothing under `site/`, so it cannot trigger a deploy.
+
+**Not done, recorded so it is not silence**: no candidate-input scouting this
+cycle. Bucket (2) (UKMTO/MARAD — 403 at origin, not licence-rejected), OPEC
+MOMR, UN Comtrade, Eurostat, Gulf customs, and the "does EIA publish anything
+weekly" question all carry forward verbatim in `backlog.md`. The cycle spent its
+effort on the input we already had, which is the other legitimate half of the
+standing mandate.
