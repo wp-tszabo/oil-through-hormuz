@@ -867,3 +867,157 @@ from a workbook released since that work was done. The history/forecast boundary
 was again taken from the workbook's own `Last Historical Month--- 202608` field,
 and the script **exits with a failure** rather than guessing if that field is
 ever missing.
+
+## 16. KR6 cycle 5 — 2026-09-21 (10th cycle): a *weekly* cleared input, and it argues against our own preferred answer
+
+**Type: (a) a new licence-cleared input AND (b) a calibration improvement.** Zero
+new licence surface. **The published figure did not move** — the week-of-09-21
+plan is still `PROPOSED`, so this cycle was read-only and moving it was not
+available even had the evidence justified it. It does not, as it turns out.
+
+### 16.1 What was added
+
+**EIA, Weekly Preliminary Crude Oil Imports by Country of Origin**
+`https://www.eia.gov/dnav/pet/pet_move_wimpc_s1_w.htm`
+Release **2026-09-16**, next release **2026-09-23**, history to 2010.
+Series used: `W_EPC0_IM0_NUS-NSA_MBBLD` (Saudi Arabia),
+`W_EPC0_IM0_NUS-NIZ_MBBLD` (Iraq), `W_EPC0_IM0_NUS-NKU_MBBLD` (Kuwait).
+
+Licence: same publisher and same terms as the two inputs already cleared — US
+federal government work, public domain. Terms re-read **first-hand this cycle**
+at `eia.gov/about/copyrights_reuse.php` rather than assumed from prior cycles.
+That page carries a carve-out for "protected materials ... contributed or
+licensed by private individuals, companies, or organizations"; it was checked
+and does not bite here, because these are EIA/Census survey statistics, not a
+vendor feed. This is not a pedantic distinction — the Hormuz anchor *does* carry
+exactly that kind of caveat (it is derived from Vortexa data), which is why the
+site republishes EIA's analysis and never claims to hold vendor data.
+
+**This is the company's first weekly-cadence input.** It is also the third time
+the question *"does this publisher have a higher-cadence product?"* has paid
+off: annual→quarterly, quarterly→monthly, and now monthly→weekly, all from a
+publisher we had already cleared. That lesson has now produced every single
+input the model has.
+
+### 16.2 Why a 2–4% sample is worth anything at all
+
+It is not a flow measure and is never to be scaled into one: US crude imports
+from the Gulf averaged **0.46 m b/d across 2025** (and swung from 0.00 to 0.87
+during 2026) against ~15 m b/d of crude transiting the strait — a **~3%**
+sample, and one selected by where barrels were *sold*, not sampled at random. What makes it useful is narrower and real — it is a **transit-side**
+observation (barrels that physically left the Gulf and reached a US port) at
+**weekly** resolution, where every other input is production-side or quarterly.
+
+Lagged by a Gulf→US voyage of ~35–55 days, the latest week (ending 2026-09-11)
+describes barrels loaded around **2026-07-18 to 2026-08-07** — all of which fall
+*after* the Hormuz anchor's 2026-06-30 coverage end, i.e. **inside the Q3 gap
+the published estimate is currently extrapolating through blind.** That is the
+whole reason to bother with it.
+
+### 16.3 The placebo control, and what passed
+
+Confound to beat: a fall in Gulf-origin arrivals could be a US refinery story,
+not a Gulf story. Same defence as §15 — carry a control group of non-Gulf
+origins (Canada, Mexico, Brazil, Colombia, Venezuela, Nigeria).
+
+2026 monthly means, against each group's own 2025 calm baseline
+(Gulf 459.9 kb/d; control 4,785.8 kb/d):
+
+| 2026 | Gulf-origin | vs calm | Control | vs calm |
+|---|---|---|---|---|
+| Jan | 548.2 | +19.2% | 4898.4 | +2.4% |
+| Feb | 775.2 | +68.6% | 4993.0 | +4.3% |
+| Mar | 866.5 | +88.4% | 5018.8 | +4.9% |
+| Apr | 499.8 | +8.7% | 4740.5 | −0.9% |
+| May | 242.0 | −47.4% | 4953.0 | +3.5% |
+| Jun | 112.5 | −75.5% | 4736.5 | −1.0% |
+| **Jul** | **0.0** | **−100.0%** | 5104.0 | +6.6% |
+| Aug | 174.2 | −62.1% | 5275.8 | +10.2% |
+| Sep | 377.5 | −17.9% | 5710.0 | +19.3% |
+
+**Placebo PASS, and not marginally**: at the Gulf trough the divergence is
+**−106.6 points** (Gulf −100.0%, control +6.6%). The control group did not dip
+at all. **Five consecutive weeks of literally zero Gulf-origin crude arrivals,
+ending 2026-07-31.** Whatever happened was Gulf-specific.
+
+**Timeline corroboration, independent of everything else we have**: the arrivals
+trough is **July 2026**; §13.3's monthly GPCI dates the production trough to
+**May 2026**. Two months apart — which is the voyage lag, arrived at from a
+completely different series. Three structurally unrelated inputs (quarterly
+chokepoint, monthly production, weekly arrivals) now agree on when this
+disruption happened.
+
+### 16.4 The finding that matters, and it cuts against us
+
+The aggregate recovery — latest 4-week average **334.2, −27.3% vs calm** — hides
+a split that reverses its meaning:
+
+| Origin | 2025 baseline | 4-wk avg @ 2026-09-11 | vs baseline |
+|---|---|---|---|
+| **Saudi Arabia** | 269.2 | 313.2 | **+16.4%** |
+| **Iraq** | 190.7 | 21.0 | **−89.0%** |
+
+Saudi Arabia is **fully recovered and above its pre-disruption normal**. Iraq is
+**still on the floor**. Two readings:
+
+1. Hormuz transit has substantially recovered, and Iraq's shortfall is
+   commercial — Basrah barrels redirected to Asia rather than blocked.
+2. **The recovery is bypass, not transit.** Saudi Arabia has a non-Hormuz route
+   to market (East–West pipeline to Red Sea terminals); Basrah crude does not.
+   A recovery visible *only* in the producer that can skip the strait is exactly
+   the fingerprint of production recovering while the strait stays constrained.
+
+Reading 2 is the one consistent with §15's measured bypass term, and **it
+weakens the strong form of critical issue #9.** We cannot currently separate the
+two: the chokepoint data that would settle it is quarterly and stops at
+2026-06-30. The next supplement (~November, covering 3Q26) resolves it.
+
+### 16.5 Consequence for critical issue #9 — the recommendation gets *more* conservative
+
+The **direction** still holds. Gulf-origin arrivals for Q3 loadings sit at −18%
+to −27% of calm; the published figure implies Hormuz transit is still at its
+2Q26 level of 4.9, which is **−77%** of calm. Those two are hard to reconcile,
+and the bottom of the published 1.5–6.9 band remains supported by nothing.
+
+The **magnitude** keeps shrinking as evidence accumulates, and that trend is
+worth naming explicitly:
+
+| Cycle | Construction | Implied 2026Q3 |
+|---|---|---|
+| §13 (2026-09-19) | raw transit ratios × GPCI | 5.9 / 11.8 / 15.5 |
+| §15 (2026-09-20) | bypass-adjusted | 6.5 – 10.2 |
+| §16 (2026-09-21) | weekly arrivals, Saudi/Iraq split | evidence that even 6.5–10.2 is **top-heavy** |
+
+**Recommendation to the owner, revised: B now — widen the band upward, keep 4.9
+as the point estimate. And C′ should NOT be adopted until a 3Q26 chokepoint
+observation exists (~November).** Last cycle said "C′ after review". This cycle
+says wait, because the input we added is the first one able to distinguish
+bypass-recovery from transit-recovery, and it leans toward bypass. Three cycles
+of new evidence have moved this company's own proposed number *down* each time;
+a re-anchor adopted at any of those earlier points would already have been
+wrong.
+
+### 16.6 Limits, stated because the mandate invites overclaiming
+
+1. **A 2–4% sample, selected by trade route.** It can corroborate a direction.
+   It cannot set a level, and nothing here is scaled into m b/d of Hormuz flow.
+2. **Arrivals, not loadings.** This can describe the recent past; it can never
+   nowcast today. The voyage lag is assumed (35–55 days), not fitted.
+3. **EIA labels these PRELIMINARY**; the Petroleum Supply Monthly revises them.
+4. **Only Saudi Arabia and Iraq are reported.** Kuwait has a series id but is
+   outside EIA's reported top ten and is empty throughout — the script proves
+   this rather than asserting it (0 weeks reported). UAE and Qatar never appear.
+5. **The Feb–Mar 2026 run-up (+69%, +88%) is unexplained.** Those are Jan–Feb
+   loadings, i.e. *before* the March onset. Pre-positioning ahead of anticipated
+   disruption is a plausible story and would make this series a *leading*
+   indicator, which would be valuable — but it is one episode and it is recorded
+   here as a **hypothesis, not a finding.**
+6. **Still no specialist review — tenth consecutive cycle.** The Agent tool was
+   tested again and returned `No such tool available: Task`. Mitigation is the
+   same as §15: the whole derivation is `scripts/weekly_arrivals_analysis.py`,
+   which re-fetches from source on every run.
+7. **This input is ANALYSIS-ONLY.** It does not enter the published estimate,
+   and `sources.html` has deliberately **not** been updated to mention it.
+   Listing an analysed-but-unused input would overstate the model's input
+   diversity, which is critical-issue category 4 — the same reason §13's GPCI
+   copy is still held and conditional.

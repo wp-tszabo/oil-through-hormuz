@@ -158,3 +158,124 @@ MOMR, UN Comtrade, Eurostat, Gulf customs, and the "does EIA publish anything
 weekly" question all carry forward verbatim in `backlog.md`. The cycle spent its
 effort on the input we already had, which is the other legitimate half of the
 standing mandate.
+
+---
+
+## 2026-09-21 (10th cycle) — a weekly input that argues against our own conclusion; the automation is verified unattended
+
+**Cycle mode: read-only, for the second consecutive cycle.** The
+week-of-2026-09-21 plan (issue #10) is still `PROPOSED` with no owner response
+since it was posted on 19 September and revised on the 20th. Under
+GOVERNANCE.md that permits research and prep and forbids spend, publishing and
+hard-to-reverse action. Nothing under `site/` was touched. The published figure
+is unchanged at **4.9, range 1.5–6.9**.
+
+### Decision 1 — the first unattended cron run is verified, and the residual on KR2 is closed
+
+Checked before anything else, from the Actions API rather than inferred from the
+page: refresh run **`35503239041`** (`event=schedule`, `success`) → bot commit
+**`9a1d712`** → Pages deploy **`35503243978`** (`success`, head `9a1d712`) →
+live page re-fetched byte-identical to `main`. All three legs the plan demanded.
+**KR2's "auto-updating" half is met unattended for the first time**, nine cycles
+after it was first claimed.
+
+### Decision 2 — the trigger we wrote last cycle was wrong, and it is corrected in the open
+
+The scheduled run fired at **09:46 UTC against a 05:10 UTC cron** — a 4h36m
+delay, because GitHub Actions schedules are best-effort. Three consequences were
+recorded rather than quietly patched:
+
+1. The "bounded, self-correcting ~5-hour window (00:00–05:10 UTC)" written down
+   on 2026-09-20 **is not the real window**. On 20 September it was ~9h46m, and
+   it has no guaranteed upper bound.
+2. The category-1 trigger written last cycle — *"more than one day behind
+   outside the 00:00–05:10 window"* — **would have misfired** on ordinary
+   scheduler latency, declaring a critical issue where none existed. A
+   false-positive interrupt is cheap by design, but a trigger that fires on
+   normal behaviour is one that gets ignored, which is how a real one gets
+   missed.
+3. **A skipped cron is entirely silent.** `refresh_estimate.py` fails loudly
+   only when it runs. GitHub can drop scheduled runs under load, and nothing
+   anywhere would go red — the page would simply freeze, exactly as in critical
+   issue #7, with the automation's green history as false reassurance.
+
+**Decision**: not raised as an interrupt — the site is showing current, correct
+data and was inside its documented tolerance at check time, so what is defective
+is our monitoring and our own arithmetic, not a misstatement to a reader. The
+trigger is **replaced** with: category 1 if a two-days-back date persists past
+**~12:00 UTC**, or if **no `event=schedule` refresh run has succeeded in the
+preceding 36 hours**. The second condition is the one that catches a silent
+skip, which the old trigger could not express at all. The uptime-monitor backlog
+item is widened from "HTTP 200 + certificate validity" to also assert data
+freshness and that the job actually ran — it remains owner-gated on the plan.
+
+### Decision 3 — KR6 cycle 5: adopt a weekly cleared input, analysis-only
+
+The plan's cheapest open lead was *"does EIA publish anything **weekly** that is
+Gulf-relevant?"*. It does: **Weekly Preliminary Crude Oil Imports by Country of
+Origin** (release 2026-09-16, next release 2026-09-23, history to 2010), with
+Saudi Arabia and Iraq reported weekly. Licence re-read **first-hand this cycle**
+at `eia.gov/about/copyrights_reuse.php` rather than inherited from prior cycles
+— including its "protected materials" carve-out for third-party content, which
+was checked and does not bite, because these are EIA/Census survey statistics
+rather than a vendor feed. **Zero new licence surface.** `ir.eia.gov` returned
+403 on one probe and was left alone, not retried with a spoofed user-agent,
+consistent with the UKMTO/MARAD precedent.
+
+This is the **third** time the question "does this publisher have a
+higher-cadence product?" has paid off — annual→quarterly→monthly→weekly — and
+that single question has now produced **every input the model has**. It is
+recorded here because it is the strongest standing argument against a Phase 2
+paid-data proposal: OPEC MOMR, UN Comtrade, Eurostat and the Gulf customs
+authorities have still never been checked once.
+
+### Decision 4 — report the finding that undercuts our own recommendation, prominently
+
+The new input was expected to strengthen critical issue #9. It partly does the
+opposite, and that is written as the headline of `methodology.md` §16.4 rather
+than buried in the limits.
+
+What it confirms: the collapse was real and **Gulf-specific** — five consecutive
+weeks of *zero* Gulf-origin arrivals ending 2026-07-31, against a non-Gulf
+placebo control that ran **+6.6%** over the same window (a −106.6 point
+divergence). And the arrivals trough (July) sits exactly one voyage after the
+GPCI production trough (May), so three structurally unrelated inputs now agree
+on this disruption's timing.
+
+What it undercuts: the aggregate recovery (−27.3% of calm, for barrels loaded
+18 Jul–7 Aug, i.e. *inside* the Q3 gap) **splits** into **Saudi Arabia +16.4%**
+and **Iraq −89.0%**. A recovery visible only in the producer that owns a
+non-Hormuz route, while Basrah crude that must transit the strait stays shut, is
+the fingerprint of **production recovering while transit does not** — §15's
+bypass mechanism showing up in an unrelated dataset.
+
+**Decision**: the *direction* of issue #9 stands (Q3 loadings at −18/−27% of
+calm are hard to reconcile with a published figure implying −77%, and the bottom
+of the 1.5–6.9 band remains supported by nothing), but the CEO recommendation is
+revised to be **more** conservative than last cycle's: **B now — widen the band
+upward, keep 4.9 as the point estimate — and do NOT adopt C′ until a 3Q26
+chokepoint observation exists (~November).** Last cycle said "C′ after review".
+The implied Q3 figure this company has proposed has now shrunk on three
+consecutive cycles (5.9/11.8/15.5 → 6.5–10.2 → evidence that even that is
+top-heavy), which means a re-anchor adopted at any earlier point would already
+have been wrong. That pattern is the argument for waiting, and it is worth more
+than any single derivation.
+
+### Decision 5 — no copy drafted for the new input, deliberately
+
+`sources.html` was **not** updated and no new draft was written. The input is
+analysis-only; listing an analysed-but-unused source would overstate the model's
+input diversity, which is critical-issue category 4 — the same reason §13's GPCI
+copy is still held and conditional. There are already two unreviewed one-line
+drafts in the queue; adding a third speculative one for an input the owner has
+not accepted would be noise rather than diligence.
+
+### Standing conditions, unchanged
+
+Agent tool unavailable for a **tenth** consecutive cycle (re-tested: `No such
+tool available: Task. Task is disabled for this session, in subagents as well as
+here.`). Every judgement above was made and reviewed by the same agent; the only
+mitigation remains that the derivation is a script — `scripts/weekly_arrivals_analysis.py`
+— which re-fetches all nine country series from source on every run, so a reader
+can re-run the claim instead of trusting the agent that made it. It touches
+nothing under `site/`. Spend **$0**, tenth consecutive cycle.
