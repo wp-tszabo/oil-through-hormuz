@@ -1021,3 +1021,194 @@ wrong.
    Listing an analysed-but-unused input would overstate the model's input
    diversity, which is critical-issue category 4 — the same reason §13's GPCI
    copy is still held and conditional.
+
+## 17. KR6 cycle 6 — 2026-09-22 (11th cycle): the first non-EIA corroboration, and a licence that is only half-clear
+
+**Delivery type: (b), with an (a) candidate deliberately left unadopted.** The
+published figure is unchanged at **4.9, band 1.5–6.9**. This cycle ran
+read-only — the week-of-21 plan is still `PROPOSED` — so moving it was not
+available even had the evidence justified it. No parameter of the model
+changed. What improved is the model's *evidential base*, and a weakness that
+had never been named got named and measured.
+
+Derivation: `scripts/eu_imports_analysis.py`, which re-fetches every series
+from source on each run. No cached number is trusted.
+
+### 17.1 The weakness this cycle was aimed at
+
+Every input the model has ever had — the Hormuz anchor (Table 4), the companion
+chokepoints (Table 2), GPCI (STEO Table 3d), the weekly US arrivals series —
+comes from **one publisher: the EIA**. That is not a licence problem; it is a
+*correlated-error* problem, and it is the kind of thing that is invisible from
+the inside. If EIA's Hormuz series is systematically wrong — and EIA itself
+warns that Hormuz AIS data has been unreliable since end-February 2026 and is
+"being revised frequently" — then every one of our cross-checks inherits the
+same blind spot, and our apparent agreement between three inputs is partly an
+artefact of a single collection pipeline.
+
+§16 ended by claiming "three structurally unrelated inputs now agree." That
+claim was **overstated**, and it is corrected here: they were three
+structurally different *series*, but one publisher. The test that was actually
+needed was an independent statistical system.
+
+### 17.2 The candidate: Eurostat `nrg_ti_oilm`
+
+**Eurostat — Imports of oil and petroleum products by partner country, monthly**
+(`nrg_ti_oilm`, via the Eurostat dissemination API). Crude oil only
+(`siec=O4100_TOT`), declarant EU27, unit thousand tonnes/month.
+
+Why it is worth the trouble: it is a **destination-side customs observation** —
+barrels that physically arrived at an EU port and were declared to a national
+customs authority. Not tanker tracking, not AIS, not a production survey. It is
+about as methodologically distant from EIA's Vortexa-derived Hormuz series as a
+free source gets, which is precisely what makes it a real test rather than a
+fourth restatement.
+
+Structure metadata says the dataflow runs to 2026-07 and was last updated
+2026-09-10. **That is misleading for our slice, and the rubric caught it before
+it was written down as a freshness claim**: the crude-oil-by-partner series is
+populated only through **2026-06** — checked directly, and the 2026-07 cell is
+null for *every* partner tested (Saudi, US, Norway), not just the Gulf ones. The
+2026-07 edge belongs to some other slice of the dataflow, not to this one.
+
+Stated plainly because it matters: this input is **not fresher than the anchor**.
+It ends where the anchor ends (2026-06-30). It buys corroboration, not forward
+information, and it does **not** move critical issue #9's magnitude.
+
+### 17.3 Result — the placebo passes, and the split reproduces
+
+Each partner is measured against **its own** 2024-01..2025-12 calm mean, in
+percent. Levels are never compared across partners and never summed with the
+Hormuz anchor — that series is thousand tonnes per month, the anchor is million
+barrels per day (the §16 unit discipline, carried forward).
+
+| Group | 2Q26 vs own calm mean |
+|---|---|
+| Gulf partners | **−65.0%** (n=3) |
+| Placebo control (US, Norway, Nigeria, Brazil, Kazakhstan, Libya) | **+4.5%** (n=6) |
+| **Divergence** | **−69.5 points** |
+
+The collapse is **Gulf-specific**, not a European demand story.
+
+**Sensitivity, because the script's own exclusion threshold is load-bearing.**
+Kuwait (calm mean 5.2 kt/month) and Iran (0.2) were excluded as structural
+zeros — no signal is recoverable from a series that was already zero before the
+disruption, and reporting them as "−100%" would have been a fabricated result.
+The UAE (93.7 kt/month) sits just above the 50 kt cutoff and went to exactly
+0.0 for six straight months, which at that size is more plausibly a commercial
+re-routing than a strait signal. **Excluding the UAE as well**: Gulf group
+−47.5%, divergence **−52.0 points**. The conclusion survives either choice, so
+the threshold is not doing the work — but it is recorded rather than buried,
+because a cutoff that changes a headline is a parameter.
+
+**The split that matters**, against §16's US weekly arrivals:
+
+| Producer | EU imports, 2Q26 vs calm | US weekly arrivals (§16) | Non-Hormuz route? |
+|---|---|---|---|
+| Saudi Arabia | **−16.7%** | **+16.4%** | Yes — East–West pipeline to Yanbu |
+| Iraq | **−78.2%** | **−89.0%** | No — Basrah must transit the strait |
+
+Two statistical systems on two continents, with nothing in common but the
+physical cargoes, produce the **same ordering**: the producer that owns a route
+around the strait holds up; the producer whose barrels must pass through it is
+on the floor. The absolute numbers differ — as they should, since Europe and
+the US Gulf Coast are different markets with different voyage lengths — and the
+agreement being *ordinal rather than numerical* is the honest description.
+
+**Onset timing, independently recovered.** Iraq's EU imports: January +8.7%,
+February −4.8%, **March −37.9%**, April −75.6%, May −79.1%, June −80.0%. §13.3
+dated the disruption onset to **March 2026** from GPCI production data. A
+customs series from a different publisher lands on the same month. (Cargoes
+arriving in March loaded roughly three weeks earlier, so if anything the
+arrivals signal runs slightly ahead of the production signal — noted, not
+claimed: the lag is uncertain and customs declaration dates are not arrival
+dates.)
+
+### 17.4 What this does to critical issue #9 — very little, and that is the point
+
+It does **not** move the magnitude. The series stops at 2Q26, so it says nothing
+directly about 3Q26, and the published 4.9 is a 2Q26 anchor.
+
+What it does is **raise confidence in the mechanism** underneath §15 and §16 —
+production recovering while *transit* does not — now that the mechanism has
+survived a test against a publisher with no shared pipeline with EIA. That
+supports the **conservative** recommendation already on the table and does not
+rehabilitate the aggressive one: **B now** (widen the band upward, keep 4.9 as
+the point estimate), **C′ not before a 3Q26 chokepoint observation exists
+(~November)**. Recommendation unchanged from 2026-09-21.
+
+### 17.5 The licence — CLEARED-CONDITIONAL, and not adopted
+
+Terms read first-hand at `ec.europa.eu/eurostat/web/main/help/copyright-notice`
+(HTTP 200 this cycle), including the Exceptions section, which is where the
+problem is.
+
+- **General grant**: "Reuse of statistical data, metadata, publications, and
+  other dissemination tools published on this website for commercial or
+  non-commercial purposes is authorised provided the source is acknowledged."
+  Editorial content is CC BY 4.0. Implemented via Commission Decision
+  2011/833/EU. Modifications must be disclosed and a non-responsibility
+  disclaimer carried.
+- **The exception that bites**: certain data "may not be reused for **commercial
+  purposes**, but non-commercial reuse is possible without restriction,"
+  including *"Data for countries other than: Member States of the European
+  Union (EU), Member States of the European Free Trade Association (EFTA),
+  official EU acceding and candidate countries."*
+
+Saudi Arabia and Iraq are plainly outside that list. The question is whether a
+series recording *EU27 imports declared by EU members, broken down by partner*
+is "data for" the partner country or data for the declarant. The notice's own
+Switzerland/Austria clarification points to the **declarant** reading — it
+forbids selling trade data *declared by* Switzerland while expressly permitting
+the sale of "Swiss export/import data declared by an EU Member State." On that
+reading our use is commercial-safe.
+
+**That is a reading, not a grant, so it does not clear the bar.** Recorded
+verdict: **CLEARED for non-commercial use without restriction; AMBIGUOUS for
+commercial use.**
+
+Consequences, stated before anyone is tempted:
+
+1. The input is **NOT adopted**. It does not enter `site/data/hormuz.json`, it
+   does not touch the published figure, and `sources.html` has deliberately
+   **not** been updated — listing an analysed-but-unused source would overstate
+   the model's input diversity, which is critical-issue category 4. Same
+   discipline as §13's GPCI and §16's weekly series.
+2. This analysis is **not** "just a sanity check" that gets a pass on licensing.
+   It did not move the number, which is the only reason it is in-bounds at all;
+   the moment it would move one, it is an input and the ambiguity becomes live.
+3. **It is a Phase 2 trap, and that is the real finding.** The site is
+   non-commercial today, so the permissive half of the grant covers it. If this
+   input were adopted now and the owner later approved monetization, the
+   licence status of a live input would flip **silently**, with no alert
+   anywhere in the system. Any Phase 2 proposal must therefore state which
+   inputs are commercial-safe. Logged as a pre-emptive category-3 entry in
+   `critical-issues-log.md` for 2026-09-22.
+
+### 17.6 Limits, carried forward explicitly
+
+1. **EU27 is a minor destination for Gulf crude** — Asia dominates. This series
+   constrains the *shape* and *attribution* of the disruption. It cannot set
+   the *level* of Hormuz flow and must never be scaled into one.
+2. **No forward information.** Gulf rows end at 2026-06. The 3Q26 gap the
+   published estimate extrapolates through is still covered only by §16's
+   weekly US arrivals.
+3. **Route attribution is inferred, not measured.** "Saudi has a bypass, Iraq
+   does not" is a physical-geography claim carried from §15. No pipeline
+   capacity figure was used anywhere — a capacity number doing work on a
+   published estimate would be an input and would need a licence of its own.
+   The §15 bar holds.
+4. **Eleventh consecutive cycle with no specialist review.** The Agent tool
+   returned `No such tool available: Task. Task is disabled for this session,
+   in subagents as well as here.` This scouting pass was run by the CEO at
+   reduced depth, exactly as the week-of-21 plan said it would be if the tool
+   stayed unavailable. Mitigation unchanged: the derivation is a script that
+   re-fetches from source.
+5. **Not done this cycle, stated so it is not silence.** UKMTO
+   (`ukmto.org`, **403**), MARAD MSCI (`maritime.dot.gov/msci`, **403**) and
+   OPEC (`opec.org`, **403**) were all re-probed this cycle and all refused at
+   the origin. **None of them is licence-rejected** — they are unread, which is
+   a different and weaker status. No user-agent spoofing or other workaround
+   was attempted, on precisely the sources whose access terms matter most. UN
+   Comtrade and Gulf customs/port authorities remain unchecked and carry
+   forward verbatim.

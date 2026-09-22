@@ -279,3 +279,127 @@ mitigation remains that the derivation is a script — `scripts/weekly_arrivals_
 — which re-fetches all nine country series from source on every run, so a reader
 can re-run the claim instead of trusting the agent that made it. It touches
 nothing under `site/`. Spend **$0**, tenth consecutive cycle.
+
+---
+
+## 2026-09-22 (11th cycle) — the model is tested against a second publisher for the first time, and the input that does it is held out on licence
+
+**Context.** Fourth consecutive read-only cycle. The week-of-21 plan (#10) is
+still `PROPOSED` and critical issue #9 is still open; neither has had an owner
+response since 2026-09-19/20. Under GOVERNANCE.md that means no spend, no
+publishing, no hard-to-reverse action — only research and prep. That is how this
+cycle ran, and the live figure is untouched at **4.9, band 1.5–6.9**.
+
+**Decision 1 — the opening critical-issue check was run against the corrected
+trigger, and found nothing.** Last cycle discovered that the previously written
+category-1 trigger would have misfired on ordinary GitHub scheduler latency, and
+that a *skipped* cron is completely silent. The corrected trigger — "no
+successful `event=schedule` refresh run in 36 hours" — was checked against the
+Actions API rather than inferred: run `35589882310` succeeded at
+2026-09-21T10:39:14Z, 15h41m before the check. Live bytes byte-identical to
+`origin/main`. EIA source spot re-fetched; release still 2026-08-12, Table 4
+unchanged. No issue.
+
+**Decision 2 — the estimate date was again NOT hand-fixed.** At 02:20 UTC the
+page read 2026-09-20, two days back. That is the known 00:00–05:10 UTC design
+window of the owner-approved automation, not a frozen date. Hand-fixing it would
+return a false green on precisely the automation we are trying to observe. Third
+consecutive cycle this call has been made the same way, and it is recorded again
+because it *looks* like the kind of thing an unattended agent should tidy up.
+
+**Decision 3 — a new fact about that window, which makes the pending copy draft
+more justified, not less.** Scheduler latency now has three observations: the
+cron asks for 05:10 UTC and actually fired at 09:46, 09:46 and 10:39 —
+consistently ~4.6–5.5 hours late and never early. So the honest worst-case stale
+window is **~10–11 hours, not the ~5 hours** recorded two cycles ago. This
+strengthens the case for the held `pending-copy/2026-09-20-date-semantics.md`
+draft, and it was **not** used as a reason to publish that draft unilaterally.
+
+**Decision 4 (the substantive one) — aim the KR6 pass at independence rather than
+cadence, and admit that a previous cycle overstated its result.** Five KR6 passes
+had widened the model from quarterly to weekly, but **every input came from one
+publisher, the EIA**. That is a correlated-error problem: EIA itself warns that
+Hormuz AIS data has been unreliable since end-February 2026 and is being revised
+frequently, so agreement among four EIA-derived series may be agreement about one
+blind spot. §16 claimed "three structurally unrelated inputs now agree"; that is
+**corrected in §17 as overstated** — three different series, one publisher.
+Overstating *independence* is the same failure mode as overstating input
+diversity, just quieter, and it is the kind of thing only the agent that wrote it
+can catch.
+
+**Decision 5 — the test, and what it found.** Eurostat `nrg_ti_oilm` (EU27 crude
+imports by partner country, monthly) is a destination-side *customs declaration*
+— methodologically about as far from Vortexa-derived AIS as a free source gets.
+Derivation: `scripts/eu_imports_analysis.py`, which re-fetches every series on
+each run.
+
+- **Placebo passes decisively**: Gulf partners **−65.0%** against their own
+  2024–25 calm mean in 2Q26; non-Gulf control (US, Norway, Nigeria, Brazil,
+  Kazakhstan, Libya) **+4.5%**; divergence **−69.5 points**. Not an EU demand
+  story.
+- **Sensitivity recorded because the script's own cutoff is load-bearing**:
+  Kuwait and Iran are structural zeros (calm means 5.2 and 0.2 kt/month) and were
+  excluded rather than reported as fabricated −100% collapses; excluding the
+  borderline UAE series too gives −47.5% and **−52.0 points**. The conclusion
+  survives either choice, so the threshold is not doing the work — but a cutoff
+  that could change a headline is a parameter and is written down as one.
+- **The §15/§16 split reproduces**: **Saudi −16.7%, Iraq −78.2%** — the same
+  *ordering* as the US weekly arrivals (+16.4% / −89.0%). Producer with a route
+  around the strait holds up; producer whose barrels must transit it is on the
+  floor. Agreement is ordinal, not numerical, and is described that way.
+- **Onset independently recovered as March 2026**, matching §13.3's GPCI dating
+  from a different publisher.
+
+**Decision 6 — and the input is NOT adopted, on licence.** Eurostat's terms were
+read first-hand including the Exceptions section. The general grant permits
+commercial *and* non-commercial reuse with acknowledgement. But an exception makes
+*"data for countries other than"* EU/EFTA/candidate states **non-commercial only**,
+and Saudi Arabia and Iraq are outside that list. Their own Switzerland/Austria
+clarification points to the **declarant** reading — which would make our use
+commercial-safe — **but that is our inference from their text, not their grant,
+and an inferred permission is not a permission.** Verdict: **CLEARED
+non-commercial, AMBIGUOUS commercial.**
+
+It therefore does not enter `site/data/hormuz.json`, does not touch the published
+figure, and `sources.html` was **not** updated — listing an analysed-but-unused
+source would overstate input diversity, category 4, the same discipline applied
+to §13's GPCI and §16's weekly series. **The hazard being guarded against is a
+silent flip**: adopt it now, approve monetization later, and the licence status
+of a *live* input changes with no alert anywhere in the system. Logged as a
+pre-emptive category-3 entry.
+
+**Decision 7 — no third `critical` GitHub issue was opened, and the reasoning is
+recorded so it can be audited and overruled.** No exposure has been incurred,
+nothing is published, and the action is already paused by the read-only state.
+Issues #9 and #10 have been open and unanswered since 19/20 September; a third
+interrupt would dilute the channel rather than sharpen it. It is instead surfaced
+as an explicit owner decision on the plan, in `backlog.md`, and as a comment on
+#10. **If a future cycle is ever tempted to adopt this input, that temptation is
+the moment this becomes a real interrupt.**
+
+**Decision 8 — what this does to critical issue #9: almost nothing, stated
+plainly.** The Eurostat Gulf series end at **2026-06**, exactly where the anchor
+ends, so it corroborates the *mechanism* without adding forward information about
+3Q26. Recommendation **unchanged** from last cycle: **B now** (widen the band
+upward, keep 4.9 as the point estimate), **C′ not before a 3Q26 chokepoint
+observation exists (~November)**. A cycle that produces striking new evidence and
+does *not* move its recommendation is the honest outcome here.
+
+**A Phase 2 finding that did not exist before this cycle.** Monetizing is not
+free of data cost even if no subscription is bought: the best free corroboration
+found so far is non-commercial-only-or-ambiguous. Any graduation proposal must now
+state **which inputs are commercial-safe**, and the Phase 1 evaluation in
+`okrs.md` has been updated to say so.
+
+**Eleventh consecutive cycle with no specialist review.** The Agent tool returned
+`No such tool available: Task. Task is disabled for this session, in subagents as
+well as here.` The bucket-(2) scouting pass was therefore run by the CEO at
+reduced depth, exactly as the week-of-21 plan authorises for that case: UKMTO,
+MARAD MSCI and OPEC were all re-probed and all returned **403 at origin**. None
+was worked around — no user-agent spoofing, on precisely the sources whose access
+terms would matter most — and **none is licence-rejected; they are unread, which
+is a weaker and more honest status.** UN Comtrade and Gulf customs/port
+authorities remain unchecked and carry forward verbatim. Mitigation unchanged:
+the derivation is a script that re-fetches from source, so a reader can re-run the
+claim instead of trusting the agent that made it. Nothing under `site/` was
+touched. Spend **$0**, eleventh consecutive cycle.
