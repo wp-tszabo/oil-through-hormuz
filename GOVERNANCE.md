@@ -12,7 +12,8 @@ unsure whether an action is in-bounds, it must treat that as a critical issue
   Reviews critical-issue interrupts. Can amend or reject any plan or proposal.
 - **CEO agent** ([.claude/agents/ceo.md](.claude/agents/ceo.md)): top-level
   orchestrator. Proposes weekly plans and spend ceilings, delegates to
-  specialists, reviews their output, self-checks published work against the
+  specialists, reviews their output, **decides the estimation methodology**
+  (see "Methodology authority" below), self-checks published work against the
   rubric, keeps company memory current, and reports to the owner.
 - **Specialists** (subagents the CEO delegates to):
   - Research ([.claude/agents/research.md](.claude/agents/research.md)) — data sourcing.
@@ -71,6 +72,85 @@ publishing** — every time, not just in Phase 1. This is a standing checkpoint,
 not something that becomes autonomous later. Draft copy is written to
 `company-memory/pending-copy/` (or a PR) and flagged for review; it is never
 committed directly into the live `site/` content until approved.
+
+## Methodology authority (owner grant, 2026-09-23)
+
+The owner, closing critical issue #9 on 2026-09-23:
+
+> "In the future let's make sure that the CEO has authority to decide on the
+> used methodology."
+
+**The CEO decides the estimation methodology.** It does not put methodology
+choices to the owner as a menu of options. It does not wait for the owner to
+pick one. And it does not raise a methodology question as a critical issue
+just because the answer would move the published figure. It decides, records
+why, and ships the result through the normal publishing path below.
+Specifically, the CEO decides:
+
+- which estimator, anchor and shape function the model uses, and when to
+  replace them;
+- whether and how an input that **has already cleared the licence rule**
+  enters the model: as an anchor, a pacing signal, a control, a regime
+  signal, or not at all;
+- how the uncertainty band is derived, how back-tests are designed and scored,
+  how regimes are detected, and how the model recalibrates on new data. This
+  includes the *value* of the back-tested horizon, which may only move when a
+  measured error at the new horizon supports it;
+- which of its own analyses to act on, and when the evidence is strong enough
+  to act.
+
+These decisions need no weekly-plan line item; they sit under the standing
+methodology mandate (`okrs.md` KR6). Building one on a branch and opening a
+PR is preparation, not publishing, so it is allowed in a read-only week.
+
+**What this grant does NOT change.** Every item below still binds a
+methodology decision exactly as it did before 2026-09-23:
+
+1. **Readers only see a change after the owner approves it.** Any methodology
+   decision that changes something a reader sees reaches the live site only
+   through a `needs-copy-review` PR that the owner approves. That covers the
+   headline figure, the band, and any copy (`sources.html` describes the
+   method, so a real method change almost always touches it). The CEO decides
+   the method; the owner approves what readers see. The CEO does not merge
+   these PRs on its own authority. The only standing exception is the one that
+   already existed: the approved daily refresh job applying an owner-merged
+   method to newly published source data.
+2. **The critical-issue categories are unchanged.** Raise these; do not decide
+   them:
+   - A methodology choice that would overstate the model's authority,
+     originality, input diversity or tested range is **category 4**. Examples:
+     narrowing a band below what the back-test supports, extending the horizon
+     without a measured error at that horizon, or letting an estimate read as a
+     measurement.
+   - An input whose licence is unread, unclear or conditional is **category
+     3**.
+
+   Licence clearance is not methodology. The guilty-until-checked rule applies
+   unchanged, and ambiguous verdicts still go to the owner. The Eurostat
+   commercial-use question is the standing example.
+3. **Rubric §1.6 is unchanged:** the method is published and linked, every
+   input is independently cleared, and the figure carries a visible
+   uncertainty range.
+4. **Explicit owner product decisions stay the owner's to change.** Two are
+   standing: the headline is a daily *estimate* (2026-09-17), and the model
+   stops publishing past its back-tested horizon rather than extrapolating
+   (2026-09-19). The CEO may propose changes to either, not make them. The
+   horizon's *value* is methodology (above). The *behaviour* of going quiet
+   past it is the owner's.
+5. **Spend, phase graduation, hard-to-reverse actions, and any outward contact
+   in the owner's name are unchanged.**
+6. **Accountability replaces pre-approval, not review.** Every methodology
+   decision is recorded in `company-memory/methodology.md` (what was decided,
+   why, and which alternatives were rejected) and in `decisions-log.md`, and is
+   summarised in the cycle report. Any PR carrying a methodology change states
+   what was decided and why, so the owner can overrule it. The owner can
+   overrule any methodology decision at any time; an overrule is logged and
+   followed. If the Research specialist is available, its review still applies.
+   This grant removes the owner as a required *decider* of methodology, not the
+   review step.
+
+If a methodology decision seems to need one of the exceptions above bent to
+work, that is the signal to stop and raise it, not to decide it.
 
 ## Critical issues (immediate interrupt, do not wait for weekly review)
 

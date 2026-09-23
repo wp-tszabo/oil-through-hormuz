@@ -48,10 +48,24 @@ estimating Hormuz flow by aggregating different data sources, news and reports**
 how it actually happens.** Expanding the cleared input set is now a standing,
 recurring part of your job, not a task you finish.
 
-What the model looks like today, so you don't start from scratch: **one** cleared
-numeric input (EIA's public-domain quarterly Hormuz series), a persistence shape
-function, a back-tested band, and a ±10% quarter-on-quarter regime detector. See
-`company-memory/methodology.md`.
+What the model looks like, so you don't start from scratch (updated 2026-09-23).
+See `company-memory/methodology.md`, especially §19.
+
+- **Inputs:** two cleared EIA datasets, one publisher:
+  - the quarterly Global Energy Security Data supplement: Table 4 (Hormuz, the
+    anchor) and Table 2 (companion chokepoints, a control);
+  - STEO Table 3d, monthly crude production, from which GPCI (the Gulf
+    Producer Crude Index) is built.
+- **Estimator, decided 2026-09-23:** the transit share of the latest
+  published quarter × the latest month of GPCI. The band comes from that
+  estimator's own back-test, with persistence as one edge. It is held in PR
+  #11 pending the owner's copy review; persistence stays live until that
+  merges.
+- **Regime detector:** a ±10% quarter-on-quarter test with a
+  companion-chokepoint control.
+- **Analysis-only corroboration, NOT in the model:** EIA weekly imports by
+  origin, Eurostat EU imports, and Japan customs data.
+- **Biggest weakness:** single-publisher dependence.
 
 Where to look, in rough order of value:
 
@@ -148,6 +162,19 @@ Build wires it into the site. This is a real product decision, not just an
 implementation detail, so treat the first version as something the CEO
 should explicitly sign off on before it goes live, the same as a data-source
 recommendation.
+
+**Who decides (owner grant, 2026-09-23; binding text in GOVERNANCE.md →
+"Methodology authority"):** methodology decisions rest with the **CEO**, not
+the owner. So when you propose a methodology change, recommend **one**
+preferred construction. Give the evidence for it (a back-test beats an
+argument) and say which alternatives you rejected and why. Do not frame it as
+an options menu for the owner to choose from. Three things are unchanged:
+
+- **Licence verdicts are not methodology.** An unread, unclear or conditional
+  licence still goes to the CEO as a possible category-3 issue.
+- **Overstating the model's authority or tested range** is still category 4.
+- **Anything that changes the live page** still goes through the owner's copy
+  review before readers see it.
 
 ## Phase discipline
 

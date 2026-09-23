@@ -1,5 +1,12 @@
 # Daily Best-Guess Estimation Methodology — design v1
 
+> **2026-09-23: the estimator is being replaced. Read §19 first.** Persistence
+> (§3) is being replaced by the GPCI transit-share estimator ("option C", critical
+> issue #9). It is built and held in **PR #11** for owner copy review, and is
+> **not live until that PR merges**; until then the site still runs §3/§12.
+> Methodology decisions are now the CEO's under GOVERNANCE.md → "Methodology
+> authority" (owner grant, 2026-09-23).
+
 **Status**: ACTIVE — the publication question in §6 was **decided by the owner
 on 2026-09-17** (see §10). The model's daily estimate is now the site's
 headline figure, labelled as an estimate and shown with its band. §6 records
@@ -834,6 +841,10 @@ published **4.9 (range 1.5–6.9)**:
    for a reason we can now name: it ignores the bypass. So C is respecified as
    **C′ — re-anchor on a bypass-adjusted GPCI estimator**, which is what
    `scripts/bypass_analysis.py` computes. **B now, C′ after review.**
+   *[Correction, 2026-09-23 — see §19.1. "C as originally written would land
+   near 15.5" is wrong. The issue #9 body defined C as the **last observed**
+   ratio × latest GPCI, ≈5.9. 15.5 is the **calm** ratio, which was never
+   option C. Left in place for the trail.]*
 
 ### 15.5 Limits, stated because the mandate invites overclaiming
 
@@ -1382,3 +1393,191 @@ Findings, in order of how much weight they bear:
    (KNOC/KESIS — a natural second importer test, licence unread), India
    (Ministry of Commerce trade data bank — licence unread). UKMTO, MARAD, OPEC,
    METI: 403 at origin, unread.
+
+## 19. KR6 cycle 8 — 2026-09-23 (owner response): option C adopted, persistence replaced
+
+**Delivery type: (b), improve the model.** No new input. STEO Table 3d, cleared
+in §13.1, moves from analysis into the published estimator. EIA reuse terms were
+re-read first-hand this cycle (`eia.gov/about/copyrights_reuse.php`, HTTP 200,
+public-domain grant unchanged). **Status: built, rubric PASS, held in PR #11
+for owner copy review. NOT LIVE until merged.** The live site still shows
+persistence: 4.9, range 1.5–6.9.
+
+**Authority.** The owner closed critical issue #9 at 2026-09-23T10:34:58Z:
+*"Let's go with option C. In the future let's make sure that the CEO has
+authority to decide on the used methodology."* The choice of construction below
+was made by the CEO under that grant, now written into GOVERNANCE.md
+("Methodology authority"). Publishing the result still needs the owner's
+approval of PR #11.
+
+### 19.1 Which "option C" — resolved, with an error in our own record corrected
+
+Three constructions carried similar names across the #9 thread:
+
+| Label | Construction | Figure |
+|---|---|---|
+| **C (issue #9 body, 2026-09-19)** | last observed transit ratio (2Q26) × latest monthly GPCI | ≈5.9 in the issue text; **5.6** as built (19.2) |
+| C′ (§15, 2026-09-20) | bypass-adjusted ratio × GPCI, minus an *assumed* Q3 bypass | 6.5–10.2 by scenario |
+| calm-ratio GPCI | calm mean ratio 1.076 × GPCI | ≈15.5 |
+
+§15.4 said "C as originally written would land near 15.5". **That was wrong.** It
+conflated C with the calm-ratio row of §13.5's table. The option the owner was
+shown was always the last-observed ratio, ≈5.9. So the owner's pick and the
+cautious end of the CEO's later recommendation were never far apart. Flagged in
+place at §15.4.
+
+**Interpretation adopted:** the owner chose to re-anchor now rather than only
+widen the band (B). The construction was then chosen on technical merit, below.
+
+### 19.2 The estimator
+
+```
+estimate(d) = r_A × G_m
+r_A = Hormuz total oil (quarter A) / mean GPCI over quarter A     (transit share)
+G_m = GPCI in the latest month of observed history (STEO "Last Historical Month")
+```
+
+As of 2026-09-23: A = 2Q26, H_A = 4.9, GPCI(2Q26) = 11.95, r_A = 0.4099. The
+newest month is 202608, GPCI 13.57. **Point = 5.56 → 5.6.**
+
+The issue text's 5.9 used the July–August *average* (14.42). The live
+estimator uses the **latest month**, because that is what makes it
+monthly-updating and it is what the back-test (19.3) actually tests. August's
+dip (−11.1% m/m) is why the figure is 5.6 rather than 5.9.
+
+### 19.3 Back-test, as the live job could actually have run
+
+For target quarter T with anchor A = T−1, the live model is only unsuppressed
+from A's publication (~6 weeks after A ends) to 92 days after A ends. In that
+window the newest GPCI month is T's first month, then its second. So each target
+is scored at those two months, **not** with hindsight GPCI for all of T.
+
+| Target | GPCI month | GPCI-C error | Persistence error |
+|---|---|---|---|
+| 2Q25 | Apr / May | −0.6% / +0.6% | −0.5% |
+| 3Q25 | Jul / Aug | −1.6% / −2.0% | −1.4% |
+| 4Q25 | Oct / Nov | +0.9% / 0.0% | −1.4% |
+| 1Q26 | Jan / Feb | +45.2% / +51.2% | +45.0% |
+| 2Q26 | Apr / May | **+94.4% / +83.7%** | **+204.1%** |
+
+What this says:
+- Calm quarters: a tie, within 2.0% vs 1.4%.
+- The 1Q26 onset: **no better** than persistence. March's collapse was not
+  visible in real time.
+- 2Q26: error **roughly halved**.
+
+A hindsight variant (the full target-quarter GPCI) beats persistence in every
+quarter. It is **not** the variant the live job can run, so it is not the one
+quoted anywhere public. The first write-up of this cycle's work said "beats
+persistence in every quarter"; that was corrected before anything was
+published.
+
+### 19.4 Why C and not C′
+
+1. **C is back-testable; C′ is not.** C′'s bypass term exists for one quarter
+   and needs an assumed Q3 value, the same persistence assumption applied to a
+   less observable quantity.
+2. **C uses only measured quantities.**
+3. **C is the more cautious reading of §16–§18.** All three destination-side
+   datasets show recovery concentrated in bypass-capable producers. C lets
+   the bypass scale with production (the strait keeps its measured share).
+   C′ "bypass persists" holds the bypass fixed, so it routes all the recovered
+   output through the strait. That is the more aggressive assumption, and §16
+   already called 6.5–10.2 top-heavy.
+4. The C′ scenario family still informs the range: its whole span sits inside
+   the new band (19.5).
+
+The analysis-only series (EIA weekly imports, Eurostat, Japan customs) informed
+this *choice*. **None of them is a computational input**; nothing they report
+enters the formula. All three are licence-clear for the site's present
+non-commercial use. Eurostat is ambiguous for commercial use, so if a future
+cycle ever makes it an input, the §17 category-3 question comes back.
+
+### 19.5 The band — derived by rule, re-derived every run
+
+- **Calm regime:** point ± max(3%, 1.5 × the worst calm back-test miss). Today
+  that is ±3.0%.
+- **Disrupted regime:** from persistence (H_A, "the strait's volume unchanged
+  since quarter A") to the estimator's worst measured disrupted miss, factor
+  **k = 1.945** (2Q26 at April GPCI: 9.53 predicted vs 4.9 actual). The miss is
+  applied in the direction GPCI has moved since A:
+  - rising: [H_A, point × k];
+  - falling: [point / k, H_A].
+
+  The point always lies between the two ends.
+
+Today GPCI is rising (13.57 vs 11.95), so the **band is 4.9–10.8**. That
+contains every construction the company has tried except calm-ratio 15.5 (which
+Iraq's still-collapsed exports contradict) and anything below 2Q26 (which no
+cleared Q3 series supports).
+
+**Stated limit:** k was measured only in a *deepening* disruption. Applying it
+upward in a recovery assumes the lag error is symmetric, which is **unverified**.
+The 3Q26 release (~November) is the first test of it, and the job scores it
+automatically.
+
+The page sentence *"headline as its midpoint"* would now be false, so the
+generated copy states the asymmetry instead. That change is in the PR.
+
+### 19.6 Unchanged, deliberately
+
+- **Horizon guard: 92 days** from the anchor's end (owner, 2026-09-19). It
+  matches the back-test window exactly. The new headline therefore shows only
+  until 2026-09-30, then blanks until 3Q26 is published. The durable effect of
+  this change starts in November.
+- **Extending the horizon:** not attempted. A two-quarter-ahead back-test of C
+  (hindsight GPCI, i.e. flattering: 3Q25 +1.0%, 4Q25 +0.3%, 1Q26 +31.3%, 2Q26
+  +161%) beats persistence (+341% in 2Q26) but is nowhere near good enough to
+  earn a longer horizon, even before the realistic-timing penalty.
+- **Regime detector v2:** unchanged.
+
+### 19.7 Latent defects found in the live refresh job, fixed in the same PR
+
+Both were reproduced against `main`'s code before fixing:
+
+1. **Silent.** The Table 4 parser took the first six numbers per row.
+   - If EIA *appends* 3Q26, the job ignores it and reports `OK`, so the headline
+     stays blank indefinitely after 1 Oct with every build green.
+   - If EIA instead *rolls* the table, values land under the wrong quarter
+     labels.
+
+   The fix parses by period label and refuses a row whose value count differs
+   from the header. This is a pre-emptive category-1 entry in
+   `critical-issues-log.md`.
+2. **Loud.** Scoring divided by `estimate.point`, which is `None` while
+   suppressed, so any EIA release after 1 Oct crashes the job. The fix scores
+   the last *published* estimate for the quarter that just landed, alongside
+   the persistence counterfactual.
+
+**If PR #11 is declined, fix 1 must be split out and merged before the first
+3Q26 release.**
+
+Also added:
+- GPCI staleness guard: fail if the newest month is more than 70 days old;
+- anchor-quarter completeness check;
+- the shared parser in `scripts/gpci.py`.
+
+Edge paths tested:
+- suppression;
+- 3Q26 arriving while suppressed;
+- rolled table;
+- falling production;
+- stale GPCI;
+- broken page;
+- extra value in a row;
+- idempotent page write.
+
+### 19.8 Limits
+
+1. **One publisher.** The estimate now rests on two EIA datasets. Stated on the
+   page.
+2. **Transit share is the load-bearing assumption between quarters**, and it
+   is the quantity that moves in a disruption. Stated on the page.
+3. **GPCI excludes UAE and Qatar** (variable consistency, §13.2).
+4. **The static chart** does not gain a 3Q26 bar automatically. Backlog item.
+5. **Static dates in `sources.html`** go stale at the next input release.
+   Backlog item.
+6. **No specialist review, 13th consecutive cycle.** No Agent tool was
+   available in this session either. Mitigation: the estimator re-derives its
+   own back-test from source on every run and stores it in
+   `site/data/hormuz.json` → `model.estimator.backtest`.
