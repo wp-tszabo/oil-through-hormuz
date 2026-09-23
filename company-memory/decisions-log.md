@@ -570,3 +570,117 @@ those has been acted on. A future cycle must not cite this entry as evidence
 that a PROPOSED plan can be executed.
 
 Spend **$0**.
+
+---
+
+### 2026-09-23 (owner, live in conversation): CEO gets full publishing authority; two standing goals; the 2026-09-16 copy checkpoint is SUPERSEDED
+
+**Made by:** Owner (grant and goals); CEO (the boundary, the PR #11 call, the
+growth-honesty rule).
+
+**Owner's words**, relayed verbatim by the launching session from a live
+conversation:
+
+> "I want the CEO to take full authority on what's visible on the site. I might
+> give feedback, but he should be pursuing the goal of achieving reasonable
+> accuracy and very high visitor counts. With these goals he should drive the
+> team. Are all three agents operational now?"
+
+**Provenance note, recorded so it can be audited:** this grant has no GitHub
+record. It reached the CEO only through the launching session, the same
+channel as the owner's 2026-09-19 horizon decision. The CEO acted on it for
+the reasons in Decision 3. **The owner is asked to confirm with a one-line
+GitHub comment** (on PR #11 or any issue), so the constitution does not rest
+on a relay alone.
+
+**Decision 1 — SUPERSEDES the 2026-09-16 entry "Website copy is a standing,
+permanent checkpoint — owner reviews all copy before publishing, in every
+phase."**
+- That row stays unedited, as this log requires. It governed PRs #4, #6, #8
+  and #11 and is no longer in force.
+- The CEO now decides and publishes what is visible on the site without
+  pre-approval: copy, the estimate and its presentation, layout, pages and
+  features. That includes **merging its own site PRs**, the concrete mechanism
+  the grant unblocks.
+- It also covers publishing while the weekly plan is still `PROPOSED`. The
+  plan gate now binds spend and hard-to-reverse actions only. Reason: "full
+  authority on what's visible" is not full if a plan the owner has not opened
+  in five days can still block it.
+- It also covers the *presentation* of the two former owner product decisions
+  (daily-estimate headline; going quiet past the horizon). Their honesty core
+  stays locked under category 4. Neither is being changed today.
+- Written into GOVERNANCE.md → "Publishing authority", with a replacement
+  gate:
+  - every `site/` change goes through a PR labelled `ceo-published`;
+  - each carries a plain-language what-and-why;
+  - the rubric must PASS;
+  - the live page is verified after deploy;
+  - owner feedback is followed, including reverts.
+- Mirrored in rubric §3 (the old "owner-review checkpoint" item is replaced),
+  `ceo.md`, `build.md` and `research.md`. KR3 is closed as superseded.
+
+**Decision 2 — what does NOT change, stated explicitly, because the owner did
+not mention it:**
+- **The four critical-issue categories.** They are a safety and legal
+  mechanism, not a copy-taste checkpoint. Category 4 (overstating authority,
+  originality, input diversity, certainty or tested range) is still raised as
+  a critical issue, not quietly shipped. Doubt is the trigger.
+- Rubric §1 and §2, including the visible range.
+- Spend and the ceiling.
+- Phase 2 graduation. Traffic is not authorisation for monetization.
+- Hard-to-reverse actions (domain/DNS, data deletion).
+- Outward contact and accounts in the owner's name. This explicitly includes
+  analytics and Search Console sign-ups and social posting.
+- CLAUDE.md, permissions and harness configuration. **CLAUDE.md is therefore
+  now stale** where it tells the owner that `pending-copy/` holds copy
+  awaiting their review. The CEO did not edit it; the owner may.
+
+**Decision 3 — PR #11 (option-C re-anchor, 5.6, range 4.9–10.8): MERGED under
+the new authority.** It was open *only* because of the checkpoint just
+retired. Merged for these reasons:
+1. The owner chose option C personally, on GitHub (issue #9, 10:34:58Z).
+2. The construction was the CEO's under the morning's methodology grant, and
+   is recorded in `methodology.md` §19.
+3. The copy passed the rubric this morning.
+4. Re-verified today, before merging:
+   - mergeable `clean`;
+   - the branch's refresh job re-run against live EIA data in a scratch
+     worktree with `main` merged in. It reproduced **5.6, 4.9–10.8, k=1.945,
+     GPCI 202608 = 13.57**; the only diff was the retrieval timestamp.
+5. The copy says "two cleared datasets, one publisher". It names the share
+   assumption as the one most likely to be wrong, and says the method is no
+   better than persistence at the 1Q26 onset. No category-4 concern.
+6. It carries the parser fix for the pre-emptive category-1 defect. Merging
+   now removes a November trap.
+
+**Doubts, recorded rather than hidden:**
+- (a) The new headline shows for only ~7 days before the unchanged 92-day
+  horizon blanks it.
+- (b) The band's k was measured only on the way down.
+
+Neither is a reason to keep a number the owner already rejected on #9 live.
+
+**Decision 4 — the growth-honesty rule.** The standing goals and concrete
+will-do/won't-do lists are in GOVERNANCE.md → "Standing goals" and
+`okrs.md`. Rubric §3.2 gains a mechanical headline test. The principle:
+accuracy is the product, traffic is the reward, and accuracy wins a conflict.
+
+**Decision 5 — measurement before targets.**
+- G3 carries no invented visitor number. Visitors have never been measured.
+- Every analytics option needs an owner-name account plus a privacy notice,
+  so G2 goes to the owner as a proposal.
+
+**Decision 6 — the "13 cycles disabled" record corrected with an exact error
+and a probable cause.** Real dispatches attempted this session:
+- Research bucket-2 brief via `Agent` → `No such tool available: Agent. Agent
+  is disabled for this session, in subagents as well as here.`
+- Build chart brief via `Task` → `No such tool available: Task. Task is
+  disabled for this session, in subagents as well as here.`
+
+Cause: `/ceo-cycle` launches the CEO *as a subagent*, and subagents here
+cannot spawn subagents. The owner's observation (Agent present in the
+scheduled session) and the CEO's (Agent absent) are both correct: they are
+different processes. The fix is harness configuration (run the CEO procedure
+in the top-level session), so it is recommended to the owner, not made.
+
+Spend **$0**.

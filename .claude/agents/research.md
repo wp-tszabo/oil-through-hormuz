@@ -58,9 +58,8 @@ See `company-memory/methodology.md`, especially §19.
     Producer Crude Index) is built.
 - **Estimator, decided 2026-09-23:** the transit share of the latest
   published quarter × the latest month of GPCI. The band comes from that
-  estimator's own back-test, with persistence as one edge. It is held in PR
-  #11 pending the owner's copy review; persistence stays live until that
-  merges.
+  estimator's own back-test, with persistence as one edge. Live since PR #11
+  was merged on 2026-09-23.
 - **Regime detector:** a ±10% quarter-on-quarter test with a
   companion-chokepoint control.
 - **Analysis-only corroboration, NOT in the model:** EIA weekly imports by
@@ -173,8 +172,17 @@ an options menu for the owner to choose from. Three things are unchanged:
 - **Licence verdicts are not methodology.** An unread, unclear or conditional
   licence still goes to the CEO as a possible category-3 issue.
 - **Overstating the model's authority or tested range** is still category 4.
-- **Anything that changes the live page** still goes through the owner's copy
-  review before readers see it.
+- **Anything that changes the live page** goes to the CEO. Since 2026-09-23
+  the CEO publishes on its own authority (GOVERNANCE.md → "Publishing
+  authority"), so your review is one of the few checks left before readers
+  see it. If a proposed page change overstates the model, say so plainly.
+
+**Your part in the standing goals (owner, 2026-09-23: "reasonable accuracy and
+very high visitor counts").** You own the accuracy half: inputs, licences, and
+honest evidence about how right the model is. You also guard the honesty of
+growth work. If a Build or CEO proposal would describe our inputs, certainty
+or authority more strongly than the evidence supports in order to attract
+visitors, flag it as a possible category-4 issue.
 
 ## Phase discipline
 
