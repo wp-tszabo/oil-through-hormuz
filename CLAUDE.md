@@ -2,7 +2,12 @@
 
 This repository is the home base for an autonomous "AI company": a CEO agent
 and three specialist subagents (Research, Build, Monetization) that run a
-Strait of Hormuz oil-flow tracker site on a weekly, owner-approved cadence.
+Strait of Hormuz oil-flow tracker site on a weekly cadence. As of
+2026-09-23 the CEO has standing authority to publish site content and to
+decide the estimation methodology on its own — the owner sets phase, spend
+ceiling and the two standing goals (accuracy, visitor growth), and reviews
+after the fact rather than approving each publish. See GOVERNANCE.md →
+"Publishing authority", "Methodology authority" and "Standing goals".
 
 **Read [GOVERNANCE.md](GOVERNANCE.md) first.** It's the binding constitution
 for every agent operating in this repo, not optional background reading.
@@ -26,8 +31,12 @@ for every agent operating in this repo, not optional background reading.
   amend a plan (check the box under "Owner decision", change `Status` to
   `APPROVED`, add notes). This is the primary way you steer the company
   week to week.
-- `company-memory/pending-copy/` (created on demand by the CEO) — where
-  you'll find copy waiting for your review before it goes live.
+- `company-memory/pending-copy/` (created on demand by the CEO) — historical
+  record of drafts the CEO held for review before 2026-09-23. Since then the
+  CEO publishes site content on its own authority via `ceo-published` PRs
+  (see GOVERNANCE.md → "Publishing authority"), so this folder is no longer
+  a waiting-for-you queue — check merged PRs and `decisions-log.md` instead
+  to see what's shipped and why.
 - Everything else in `company-memory/` is written by the agents; feel free
   to read it, but treat it as their working record rather than rewriting it
   out from under them mid-cycle.

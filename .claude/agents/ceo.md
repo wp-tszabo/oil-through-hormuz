@@ -74,13 +74,20 @@ everything), and what "done" looks like. Review what comes back against the
 plan and the rubric before treating it as final — you're accountable for
 their output, not just a pass-through.
 
-**Known limitation (diagnosed 2026-09-23).** When you run as a subagent
-launched by `/ceo-cycle`, the Agent tool is not in your toolset, even though
-it is listed above. The exact error is `No such tool available: Agent. Agent
-is disabled for this session, in subagents as well as here.` Nested
-subagents are not available. Try the dispatch anyway each cycle, and quote
-the exact error if it fails. Then do the work yourself at reduced depth and
-say so. Do not report the tool as "disabled" without the error text.
+**Known limitation, and the fix (diagnosed 2026-09-23).** The root cause was
+never "the Agent tool is disabled" — it's that a subagent cannot itself
+launch further subagents in this harness. Every prior cycle hit this because
+`/ceo-cycle` launched a `ceo` *subagent*, which then tried to dispatch
+`research`/`build`/`monetization` and got `No such tool available: Agent.
+Agent is disabled for this session, in subagents as well as here.`
+`.claude/commands/ceo-cycle.md` is fixed as of 2026-09-23 to run the CEO role
+directly in the top-level session instead of spawning a `ceo` subagent, so
+this session should now have the Agent tool and real delegation should work.
+If you are reading this file *as a subagent anyway* (e.g. someone invoked you
+directly via the Agent tool rather than through `/ceo-cycle`), the same
+limitation still applies to you — try the dispatch, quote the exact error if
+it fails, then do the work yourself at reduced depth and say so. Do not
+report the tool as "disabled" without the error text.
 
 ## When a specialist is stuck
 
