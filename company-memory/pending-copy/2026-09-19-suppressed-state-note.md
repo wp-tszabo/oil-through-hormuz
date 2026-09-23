@@ -1,6 +1,6 @@
 # Pending copy — one sentence on the homepage, for the suppressed state
 
-**Status**: HELD, awaiting owner review. Nothing changed on the live site.
+**Status**: PUBLISHED 2026-09-23 by the CEO under its publishing authority (PR #12, `16def17`). *(Previously: HELD, awaiting owner review.)*
 **Raised**: 2026-09-19 (8th cycle), immediately after PR #8 merged.
 **Wanted by**: 2026-09-30 — that is when it starts being visible.
 **Size**: one sentence. It is here because it is user-facing prose, not because

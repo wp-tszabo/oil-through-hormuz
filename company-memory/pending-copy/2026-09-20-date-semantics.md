@@ -1,6 +1,6 @@
 # Pending copy — say which time zone the date is in
 
-**Status**: HELD, awaiting owner review. Nothing changed on the live site.
+**Status**: PUBLISHED 2026-09-23 by the CEO under its publishing authority (PR #12, `16def17`). *(Previously: HELD, awaiting owner review.)*
 **Raised**: 2026-09-20 (9th cycle), from the opening critical-issue check.
 **Urgency**: low. Not dated, not a correctness failure. **Batch it with
 `2026-09-19-suppressed-state-note.md`** — they are both one-liners and there is

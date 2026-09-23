@@ -1,9 +1,10 @@
 # Daily Best-Guess Estimation Methodology — design v1
 
-> **2026-09-23: the estimator is being replaced. Read §19 first.** Persistence
-> (§3) is being replaced by the GPCI transit-share estimator ("option C", critical
-> issue #9). It is built and held in **PR #11** for owner copy review, and is
-> **not live until that PR merges**; until then the site still runs §3/§12.
+> **2026-09-23: the estimator has been replaced and the replacement is LIVE. Read
+> §19 first.** Persistence (§3) was replaced by the GPCI transit-share estimator
+> ("option C", critical issue #9). **PR #11 was merged by the CEO on 2026-09-23
+> (`2d98638`) under its new publishing authority** (GOVERNANCE.md → "Publishing
+> authority"). The deploy was verified live: 5.6, range 4.9–10.8.
 > Methodology decisions are now the CEO's under GOVERNANCE.md → "Methodology
 > authority" (owner grant, 2026-09-23).
 
@@ -1399,16 +1400,18 @@ Findings, in order of how much weight they bear:
 **Delivery type: (b), improve the model.** No new input. STEO Table 3d, cleared
 in §13.1, moves from analysis into the published estimator. EIA reuse terms were
 re-read first-hand this cycle (`eia.gov/about/copyrights_reuse.php`, HTTP 200,
-public-domain grant unchanged). **Status: built, rubric PASS, held in PR #11
-for owner copy review. NOT LIVE until merged.** The live site still shows
-persistence: 4.9, range 1.5–6.9.
+public-domain grant unchanged). **Status: LIVE since 2026-09-23** (PR #11,
+merge `2d98638`, deploy `35852729377`, live bytes identical to `main`). It
+replaced persistence (4.9, range 1.5–6.9). *(Earlier the same day: built,
+rubric PASS, held in PR #11 for owner copy review.)*
 
 **Authority.** The owner closed critical issue #9 at 2026-09-23T10:34:58Z:
 *"Let's go with option C. In the future let's make sure that the CEO has
 authority to decide on the used methodology."* The choice of construction below
 was made by the CEO under that grant, now written into GOVERNANCE.md
-("Methodology authority"). Publishing the result still needs the owner's
-approval of PR #11.
+("Methodology authority"). Publishing it then needed the owner's approval
+of PR #11. That requirement was retired later the same day, when the owner
+gave the CEO publishing authority, and the CEO merged it.
 
 ### 19.1 Which "option C" — resolved, with an error in our own record corrected
 
@@ -1581,3 +1584,31 @@ Edge paths tested:
    available in this session either. Mitigation: the estimator re-derives its
    own back-test from source on every run and stores it in
    `site/data/hormuz.json` → `model.estimator.backtest`.
+
+
+## 20. 2026-09-23 (owner governance session): KR6 entry
+
+**Delivery type: none new. The §19 improvement reached readers, and a new
+input could not be added this session for the evidenced reasons below.**
+
+1. **What changed for readers.** §19's estimator went live (PR #11). The 2Q26
+   back-test error halves against persistence (+84–94% vs +204%), and the
+   figure now moves monthly with GPCI. KR6 counted this as its eighth
+   delivery when it was built. This entry records that it is now published,
+   not a ninth delivery.
+2. **Presentation fix that touches the estimate's honesty.** The estimate date
+   is now labelled UTC, and the methodology clause says "most recent completed
+   day (UTC)". In the suppressed state, the sentence under the block no longer
+   talks about a range that isn't shown (PR #12, `16def17`). No figure moved.
+3. **Why no new input:**
+   - The bucket-2 event/advisory brief (UKMTO, MARAD, sanctions notices) was
+     dispatched to Research for real. It failed:
+     `No such tool available: Agent. Agent is disabled for this session, in
+     subagents as well as here.`
+   - Probable cause: the CEO runs as a subagent, and subagents cannot spawn
+     subagents. See `okrs.md` finding 0.
+   - The session was scoped by the owner to governance changes plus that
+     test, so no reduced-depth CEO pass was run.
+   - Carried forward unchanged: UKMTO, MARAD MSCI and OPEC are 403 at origin,
+     unread (not rejected). UN Comtrade and Gulf customs are unchecked. Korea
+     and India licences are unread. Japan August data is due ~end-September.
