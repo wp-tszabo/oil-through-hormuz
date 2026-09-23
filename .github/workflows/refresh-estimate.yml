@@ -58,10 +58,10 @@ jobs:
           git add site/
           git commit -m "Refresh daily estimate ($(date -u +%Y-%m-%d))
 
-          Automated re-date of the model estimate. Values derive only from the
-          licence-cleared EIA Global Energy Security Data supplement; no prose
-          was changed. See scripts/refresh_estimate.py and
-          company-memory/methodology.md."
+          Automated refresh of the model estimate. Values derive only from
+          licence-cleared EIA sources (Global Energy Security Data supplement
+          and Short-Term Energy Outlook Table 3d); no prose was changed. See
+          scripts/refresh_estimate.py and company-memory/methodology.md."
           # A cycle may have pushed company-memory to main since checkout.
           # Rebase rather than fail on a race; a real conflict still fails loudly.
           git pull --rebase origin main
