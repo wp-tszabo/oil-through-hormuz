@@ -46,26 +46,40 @@
 
   <h2>What is in it today</h2>
   <p>
-    One cleared dataset, and we say so rather than implying a wider net: the
-    <strong>U.S. Energy Information Administration</strong>&rsquo;s
+    Two cleared datasets, both from one publisher: the <strong>U.S. Energy
+    Information Administration</strong> (EIA). Both are works of the U.S.
+    federal government and in the public domain. Relying on one publisher is a
+    real limitation &mdash; if EIA&rsquo;s figures share a blind spot, so do
+    ours &mdash; and we say so rather than implying a wider net.
+  </p>
+  <p>
+    The <strong>anchor</strong> is EIA&rsquo;s
     <a href="https://www.eia.gov/outlooks/steo/report/energysecurity/article.php">Global
     Energy Security Data</a>, released <strong>12 August 2026</strong>,
-    covering quarters through April&ndash;June 2026. It is a work of the U.S.
-    federal government and is in the public domain. EIA&rsquo;s volumes are
-    based on Vortexa tanker tracking data with additional EIA analysis; we
+    covering quarters through April&ndash;June 2026. It is the only cleared
+    series that measures the strait itself. We read two of its tables. Table 4
+    is the Strait of Hormuz. Table 2 carries the world&rsquo;s other maritime
+    chokepoints, and we use it as a control rather than as an input: the Danish
+    Straits, the Turkish Straits and the Panama Canal carry no Gulf barrels, so
+    when Hormuz moves sharply and those three do not, we can tell the change is
+    specific to this strait and not a worldwide slowdown. EIA&rsquo;s volumes
+    are based on Vortexa tanker tracking data with additional EIA analysis; we
     republish EIA&rsquo;s published analysis and do not hold or license
     Vortexa&rsquo;s underlying data.
   </p>
   <p>
-    We now read <strong>two tables</strong> from it rather than one. Table 4 is
-    the Strait of Hormuz series, and it remains the only thing the headline
-    number is built from. Table 2 is new to the model as of 18 September 2026:
-    it carries the world&rsquo;s other maritime chokepoints, and we use it as a
-    control rather than as an input. The Danish Straits, the Turkish Straits and
-    the Panama Canal carry no Gulf barrels at all, so when Hormuz moves sharply
-    and those three do not, we can tell that what we are looking at is specific
-    to this strait and not a worldwide slowdown. That distinction is now made
-    mechanically instead of by eye.
+    The <strong>monthly signal</strong> is EIA&rsquo;s
+    <a href="https://www.eia.gov/outlooks/steo/">Short-Term Energy Outlook</a>,
+    Table 3d (September 2026 edition), which reports crude oil production by
+    country every month, currently observed through <strong>August 2026</strong> &mdash; two months
+    past the end of the anchor. We add up five Gulf producers that depend on
+    the strait (Saudi Arabia, Iraq, Kuwait, Iran and Bahrain) and use only
+    months EIA has observed, never its forecasts. This measures production,
+    not the strait: oil can go into storage, into local refineries, or into
+    pipelines that bypass Hormuz altogether, which is exactly why it moves our
+    estimate but does not replace the anchor. The United Arab Emirates and
+    Qatar are left out because the same table reports them on a different
+    basis, and mixing the two would quietly distort the total.
   </p>
   <p>
     EIA notes that since the end of February 2026, AIS signal data for ships
@@ -78,29 +92,42 @@
   <p>
     Several daily trackers exist. We have checked their terms and rejected
     them: IMF PortWatch and the WTO/AXSMarine Hormuz tracker are both closed to
-    redistribution. We do not use an uncleared source &ldquo;just to
+    redistribution, and so is the JODI monthly oil database, whose terms
+    reserve all rights. We do not use an uncleared source &ldquo;just to
     calibrate&rdquo; &mdash; if it moves the number, it needs a licence.
   </p>
 
   <h2>How the estimate is built</h2>
   <p>
-    The latest published quarterly average is the anchor. With no cleared
-    higher-frequency input, we carry it forward unchanged rather than inventing
-    a shape inside the quarter that we cannot observe &mdash; a smoother curve
-    would be false precision, not better information.
+    Two numbers do the work. The first is the strait&rsquo;s share: in the
+    latest quarter EIA has measured, how much oil passed through Hormuz
+    relative to what those five Gulf producers pumped. The second is the most
+    recent month of their production. Our estimate applies the one to the
+    other: it assumes the strait still carries the same share of Gulf output as
+    in the last measured quarter, and lets the figure move month by month as
+    that output rises or falls. That share is our main assumption between
+    quarters, and it is the one most likely to be wrong &mdash; in a
+    disruption it moves, and we cannot see it move until the next quarter is
+    published.
   </p>
   <p>
-    The range is not a guess about a guess. We back-tested the same method
-    against the published record: predicting each quarter from the one before
-    was accurate to within 1.4% while flows were steady, then overshot by 45%
-    and by 204% as flows collapsed through 2026. A range wide enough to have
-    contained that collapse runs from about 70% below the anchor to about 40%
-    above it &mdash; today, 1.5 to 6.9 million barrels per day. A mechanical
-    test decides which regime we are in: anything beyond &plusmn;10%
-    quarter-on-quarter is &ldquo;disrupted&rdquo;, and the range widens
-    accordingly. Every time a new quarter publishes, the anchor resets, the
-    previous estimate is scored against the actual, and that error joins the
-    record the range is derived from.
+    The range is not a guess about a guess. We tested the method against the
+    published record, predicting each quarter from the one before and using
+    only the production months that would actually have been available at the
+    time. While flows were steady it stayed within 2% of the measured figure.
+    Through the 2026 collapse it overshot by 45&ndash;51% in the first quarter,
+    no better than simply carrying the previous quarter forward (45%), and by
+    84&ndash;94% in the second, where carrying forward overshot by 204%. So in a
+    disruption one end of our range is &ldquo;nothing has changed since the last
+    measured quarter&rdquo;, and the other is the method&rsquo;s largest
+    measured miss, applied in the direction production has moved since then.
+    That is why the headline does not sit in the middle of the range. When
+    flows are steady the range closes to about &plusmn;3%. A mechanical test
+    decides which regime we are in: anything beyond &plusmn;10%
+    quarter-on-quarter is &ldquo;disrupted&rdquo;. Every time a new quarter
+    publishes, the share resets, the estimate we published is scored against
+    the measured figure, and that result joins the record the range is derived
+    from.
   </p>
 
   <h2>When we stop answering</h2>
