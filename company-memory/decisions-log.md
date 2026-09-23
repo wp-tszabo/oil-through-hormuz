@@ -403,3 +403,55 @@ authorities remain unchecked and carry forward verbatim. Mitigation unchanged:
 the derivation is a script that re-fetches from source, so a reader can re-run the
 claim instead of trusting the agent that made it. Nothing under `site/` was
 touched. Spend **$0**, eleventh consecutive cycle.
+
+## 2026-09-23 (12th cycle) — read-only again; a commercial-safe, non-EIA input found and cleared, analysis-only
+
+**Decision 1: fifth consecutive read-only cycle.** Issue #10 (week-of-21 plan) and
+issue #9 have had no owner response. Every comment since 2026-09-21 is the CEO's
+own progress note; they are posted through the owner's token, so they were
+checked by content, not by login. The plan file is still `PROPOSED` and the
+owner-decision boxes are unchecked. Nothing was published, spent, or merged.
+
+**Decision 2: the opening health check is clean, but one of its instruments
+degraded, so the check says so rather than reporting green.** This sandbox's
+egress proxy re-signs TLS, so `ssl_verify_result=0` proved only the proxy chain.
+Origin certificate state was confirmed from Certificate Transparency instead
+(Let's Encrypt, valid to 2026-12-16). The Pages API is proxy-blocked. This is
+logged in `critical-issues-log.md` as a further argument for the owner-gated
+monitor running on GitHub infrastructure.
+
+**Decision 3: KR6 cycle 7, type (a) analysis-only plus (b). Japan Ministry of
+Finance trade statistics (HS 2709 by origin, via e-Stat).** Chosen to fill both
+gaps §17 left: a *commercial-safe* non-EIA input, and cleared data reaching into
+3Q26. The licence was read first-hand before any download: Customs notice (EN
+and the authoritative JA page), PDL1.0, and e-Stat terms. **CLEARED, commercial
+and non-commercial**, on condition of source citation plus an "edited by"
+statement, and never presenting our output as government-produced. It is the
+first non-EIA input that is commercial-safe.
+
+**Decision 4: findings reported by weight, and two overclaims removed from our
+own draft.** Robust: Japan's total crude imports fell ~60% in Apr–May (third
+independent statistical system), and the no-bypass-falls-further ordering
+(Kuwait vs Saudi) holds in all four disrupted months, matching §16 (US) and §17
+(EU). Directional only: no-bypass Kuwait crude shows partial recovery in July
+arrivals (−55% from −100%), but that is roughly one cargo. Removed: a "−716 pt
+divergence" vs a non-Gulf "control" that is actually the substitution source.
+Also corrected: a leap-year denominator.
+
+**Decision 5: issue #9 recommendation unchanged, a second cycle running.** B now,
+C′ not before ~November. The direction gains modest support; the magnitude is
+not informed.
+
+**Decision 6: not adopted into the published model, no copy drafted.** This is a
+read-only cycle, the input cannot set a level, and `sources.html` describes only
+what is in the model today. When a plan is approved, the candidate adoption
+path is as a recovery/regime signal, not a level. It would need a rubric run and
+owner-approved copy carrying the PDL1.0 citation and edit statement.
+
+**Decision 7: no new GitHub issue opened.** Nothing is critical. The two open
+threads get one short comment each rather than another long one. Five cycles of
+long progress notes have drawn no response, so brevity is the remaining lever
+on the channel.
+
+Spend **$0**, twelfth consecutive cycle. No Agent tool (12th cycle); reduced-depth
+CEO pass.

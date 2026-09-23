@@ -1212,3 +1212,173 @@ Consequences, stated before anyone is tempted:
    was attempted, on precisely the sources whose access terms matter most. UN
    Comtrade and Gulf customs/port authorities remain unchecked and carry
    forward verbatim.
+
+## 18. KR6 cycle 7 — 2026-09-23 (12th cycle): a commercial-safe, non-EIA input with the first 3Q26 loadings in it
+
+**Delivery type: (a), analysis-only, plus (b).** A licence-cleared input was
+found, read and added to the model's *evidence base*. It is **not** in the
+published band: this is a read-only cycle (the week-of-21 plan is still
+`PROPOSED`), and the input cannot set a level anyway, so "re-derive the band
+with it in" is done here as analysis, not publication. Published figure
+unchanged at **4.9, band 1.5–6.9**.
+
+Derivation: `scripts/japan_imports_analysis.py`, which re-fetches from source
+on every run.
+
+### 18.1 Why this candidate, and why now
+
+§17 left two gaps: (1) the only non-EIA corroboration was licence-ambiguous for
+commercial use, and (2) nothing cleared reached into 3Q26 except a ~3% US
+sample. The question asked this cycle was: *which importer is so
+Gulf-dependent that its customs data is effectively a Hormuz transit sample,
+and does it publish faster than Eurostat?* Answer: **Japan** — 94% of calm
+crude imports are Gulf-origin (~2.2 of 2.36 m b/d), and the Ministry of Finance
+publishes 9-digit HS by country monthly, with **July 2026 provisional already
+out (updated 2026-08-28)** — one month past the EIA anchor and Eurostat.
+
+### 18.2 The licence — CLEARED, commercial and non-commercial
+
+Read first-hand this cycle, three documents:
+
+- **Japan Customs site notice** (`customs.go.jp/copyright_e.htm`, and the
+  authoritative Japanese page `customs.go.jp/kyotsu/rules.htm`): content is
+  under the **Public Data License 1.0 (PDL1.0)** "unless any rights are
+  indicated". The site-specific "important information" lists exactly three
+  things under other rules: the Customs logo, the "Custom-kun" mascot, and the
+  150th-anniversary logo. No statistics carve-out, no declared third-party
+  rights.
+- **PDL1.0** (`digital.go.jp/en/resources/open_data/public_data_license_v1.0`,
+  English reference text; the Japanese version governs): "Commercial use of
+  'This Content' is also permitted", and "numerical data, simple tables,
+  graphs, etc. are not subject to copyright protection … and can be used
+  freely."
+- **e-Stat terms** (`e-stat.go.jp/en/terms-of-use`, the distribution channel):
+  Government of Japan Standard Terms of Use 2.0, commercial use permitted,
+  stated CC BY 4.0-compatible.
+
+**Conditions that bind any future publication**: cite the source, **state that
+it has been edited and by whom**, and never present edited output "in a format
+that may be misconstrued" as produced by the Government of Japan. For us that
+means our estimate may never read as a Japanese government figure — the same
+category-4 discipline we already apply to EIA.
+
+**Verdict: CLEARED for commercial and non-commercial reuse.** This is the first
+non-EIA input that is **commercial-safe**, which matters for the Phase 2
+question §17 raised.
+
+Access notes: e-Stat and Customs serve default clients (verified with plain
+curl and Python's default user agent); the script sends an honest project UA.
+**METI** (`meti.go.jp`, including its homepage) returned **403** to every probe
+— recorded as *403 at origin, unread, not worked around*, like UKMTO/MARAD/OPEC.
+An earlier note in this cycle called it a wrong URL; that was corrected when the
+homepage also refused.
+
+### 18.3 Design — with a natural split, and a placebo that turned out weak
+
+Origins are grouped by physical route, carried from §15/§17:
+
+| Group | Origins | Route |
+|---|---|---|
+| Must-transit | Kuwait, Qatar (Iraq/Iran/Bahrain: structural zeros into Japan, excluded) | no bypass — every barrel crosses the strait |
+| Bypass-capable | Saudi Arabia, UAE | Yanbu (Red Sea), Fujairah (Gulf of Oman) |
+| Regional placebo | Oman | loads at Mina al Fahal, **outside** the strait |
+| Non-Gulf | everyone else | — |
+
+Two design corrections made during the run, recorded because they are the kind
+of thing that quietly inflates a result:
+
+1. **The non-Gulf group is NOT a placebo here.** In §16/§17 the non-Gulf control
+   was independent of the treatment. For Japan it is where the *replacement*
+   barrels come from, so it rises when the Gulf falls (+412% June, +682% July,
+   on a small base). A "Gulf-vs-control divergence of −716 points" was in the
+   first draft output and was **removed** — it is a substitution effect, not
+   evidence. The honest demand check is **Japan's total imports** instead.
+2. **Oman is a weak placebo**: 18 kb/d calm, and lumpy (−49% in June, +7% in
+   July). It does not collapse with the must-transit group (−20% in 2Q26 vs
+   −95%), which is consistent with the strait story, but it cannot carry much
+   weight.
+
+### 18.4 Results (% of each group's own 2024–25 calm daily rate, by month of arrival in Japan)
+
+| 2026 | Jan | Feb | Mar | Apr | May | Jun | Jul (prov.) |
+|---|---|---|---|---|---|---|---|
+| Must-transit (KW, QA) | −34 | −45 | −52 | −98 | −100 | −87 | −73 |
+| Bypass-capable (SA, AE) | +22 | +15 | +1 | −60 | −60 | −41 | −30 |
+| Kuwait alone (calm 153 kb/d) | −23 | −12 | −58 | −100 | −100 | −78 | −55 |
+| Saudi alone (calm 936 kb/d) | +72 | +46 | +16 | −60 | −75 | −48 | −27 |
+| Oman (weak placebo) | −100 | −3 | −10 | −16 | +4 | −49 | +7 |
+| **Japan total (demand check)** | +18 | +12 | −5 | **−60** | **−59** | −22 | +4 |
+
+Findings, in order of how much weight they bear:
+
+1. **Large-sample, robust: Japan's *total* crude imports fell ~60% in April and
+   May** (2.36 m b/d base). No importer cuts 60% voluntarily; this is a supply
+   constraint arriving in Japan, from a third statistical system with no shared
+   pipeline with EIA or Eurostat. Caveat: strategic-stock draws could have
+   substituted for part of it, so it bounds the *arrival* shortfall, not the
+   transit shortfall.
+2. **Robust ordinal split, now reproduced by a third publisher.** In every
+   disrupted month the no-bypass origin falls further than the bypass-capable
+   one — Kuwait vs Saudi: −100/−60, −100/−75, −78/−48, −55/−27. Same ordering
+   as §16 (US weekly: Saudi +16.4%, Iraq −89.0%) and §17 (EU: Saudi −16.7%,
+   Iraq −78.2%). Three destinations, three statistical systems, one ordering:
+   **production with a route around the strait recovered first.** Ordinal, not
+   numerical.
+3. **Directional only: the first cleared observation of no-bypass crude with
+   3Q26 loadings in it shows partial recovery.** July arrivals (~20–25 day
+   voyage → loaded roughly mid-June to mid-July) put Kuwait at −55%, up from
+   −100% in April/May. **But this is cargo-count granularity**: Kuwait's calm
+   rate is ~2.3 VLCC cargoes a month (153 kb/d × 30.4 days ≈ 4.7 Mbbl; a VLCC carries ~2 Mbbl), so −100% → −55% is roughly *zero cargoes
+   to one*. Qatar is at −100% throughout (0–1 cargo/month). A single cargo
+   moves these rows by ~40 points. This finding is **not** evidence of a
+   magnitude and must never be scaled into one.
+4. **Onset**: the must-transit group is already −34/−45% in Jan/Feb arrivals —
+   *earlier* than the March onset §13.3 and §17 derived. With Qatar at −98% in
+   February on a 0–1-cargo base, this is most likely lumpiness, not an earlier
+   onset. Recorded, not explained away; if August/September data show the same
+   pattern in Kuwait, revisit.
+
+### 18.5 What this does to critical issue #9
+
+- **Direction: modestly supported.** Transit of no-bypass crude was recovering at
+  the Q2/Q3 boundary, not flat — so a flat-persistence 4.9 already looks low for
+  early 3Q26, which is the direction of #9. The bottom of the 1.5–6.9 band is
+  still supported by nothing.
+- **Magnitude: not informed.** The must-transit sample is ~0.25 m b/d (~1.2% of
+  calm Hormuz transit) at one-cargo resolution; the large-sample groups are
+  bypass-capable and so cannot distinguish transit from re-routing. Any level
+  derived from this would be a ratio of small numbers.
+- **Recommendation unchanged**: **B now** (widen the band upward, keep 4.9 as the
+  point estimate), **C′ not before a 3Q26 chokepoint observation (~November)**.
+  Two cycles running, new evidence has *not* moved the recommendation; that is
+  the honest outcome, not a failure to update.
+
+### 18.6 Why this input is still worth having, and what it would take to adopt it
+
+- **It is the first commercial-safe non-EIA input**, so if Phase 2 is ever
+  proposed, the model is not wholly dependent on one publisher for its
+  commercial-safe evidence.
+- **It has a forward schedule**: August 2026 9-digit data is due on e-Stat
+  around the end of September. That is the next cleared observation of 3Q26
+  loadings, well before EIA's 3Q26 chokepoint release (~November).
+- **Adoption into the published model** would be as a *regime/recovery signal*
+  (e.g. a must-transit recovery indicator feeding the regime detector), not as a
+  level. It needs an approved plan, a fresh rubric run, and owner-approved
+  `sources.html` copy carrying the PDL1.0 citation **and** the "edited by"
+  statement. **No copy was drafted**: `sources.html` must describe what is in
+  the model today, and this is not in it.
+
+### 18.7 Limits and not-done, stated so it is not silence
+
+1. July is **provisional**; 9-digit provisional figures are revised.
+2. Japan-bound Gulf barrels fell *less* than Hormuz overall (lag-aligned ~−49%
+   all-Gulf vs the anchor's −77% in 2Q26). Expected — Saudi/UAE can re-route and
+   Japan holds long-term contracts — but it means Japan is **not** a
+   representative sample of the strait and must not be treated as one.
+3. **Twelfth consecutive cycle with no specialist review** — the Agent tool is
+   not available in this session either. This was a CEO reduced-depth pass.
+   Mitigation unchanged: the derivation is a script that re-fetches from source.
+4. Carried forward unchecked: UN Comtrade, Gulf customs/port authorities, Korea
+   (KNOC/KESIS — a natural second importer test, licence unread), India
+   (Ministry of Commerce trade data bank — licence unread). UKMTO, MARAD, OPEC,
+   METI: 403 at origin, unread.
