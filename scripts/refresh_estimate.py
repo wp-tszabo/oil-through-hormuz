@@ -483,6 +483,7 @@ def main(today=None, page=None, xlsx=None):
             '      daily number rather than extrapolate beyond what we have tested.\n'
             '    </p>\n' % (anchor["period"], horizon)
         )
+        note = "This is deliberate, not a fault &mdash; see"
         print("HORIZON EXCEEDED (%d > %d days) -- estimate suppressed" % (horizon, MAX_HORIZON_DAYS))
     else:
         point = round(point_raw, 1)
@@ -500,6 +501,8 @@ def main(today=None, page=None, xlsx=None):
                     "      assumes the strait still carries the same share of Gulf oil output\n"
                     "      as it did in %s, although that output has since fallen.\n" % period_words(anchor["period"]))
         est["suppressed"] = False
+        note = ("The range is this wide because the strait is anything but steady right now\n"
+                "    &mdash; see" if regime != "calm" else "See")
         est["point"] = point
         est["band_low"] = round(lo, 1)
         est["band_high"] = round(hi, 1)
@@ -513,7 +516,7 @@ def main(today=None, page=None, xlsx=None):
                                    "band_low": est["band_low"], "band_high": est["band_high"],
                                    "anchor_period": anchor["period"], "method": "gpci-transit-share"}
         block = (
-            '    <p class="est-label">Our model&rsquo;s estimate for %s</p>\n'
+            '    <p class="est-label">Our model&rsquo;s estimate for %s (UTC)</p>\n'
             '    <p class="figure">%s</p>\n'
             '    <p class="unit">million barrels per day</p>\n'
             '    <p class="band">\n'
@@ -535,6 +538,16 @@ def main(today=None, page=None, xlsx=None):
         pagetext, flags=re.S)
     if n != 1:
         raise Fail("could not find exactly one GENERATED:estimate block in index.html")
+    # The sentence under the block must agree with the block's state (suppressed /
+    # disrupted / calm), so it is generated too (copy decided 2026-09-23 under the
+    # CEO's publishing authority; draft: pending-copy/2026-09-19-suppressed-state-note.md).
+    note_html = ('  <p class="note">\n    %s <a href="#how">how we get to a number</a>.\n  </p>\n' % note)
+    new, n = re.subn(
+        r"<!-- GENERATED:note -->.*?<!-- /GENERATED:note -->",
+        lambda m: "<!-- GENERATED:note -->\n" + note_html + "  <!-- /GENERATED:note -->",
+        new, flags=re.S)
+    if n != 1:
+        raise Fail("could not find exactly one GENERATED:note block in index.html")
 
     with open(PAGE, "w") as f:
         f.write(new)
