@@ -684,3 +684,45 @@ different processes. The fix is harness configuration (run the CEO procedure
 in the top-level session), so it is recommended to the owner, not made.
 
 Spend **$0**.
+
+## 2026-09-24 (13th cycle) — first cycle run directly by the top-level session; the harness fix appears to have worked
+
+**Decision 1 — this cycle ran the CEO procedure directly in the top-level
+session** (reading `GOVERNANCE.md` and `ceo.md` and following them, rather
+than dispatching a `ceo` subagent), per the corrected `.claude/commands/
+ceo-cycle.md`. This is the change Decision 6 above recommended and the owner
+did not need to separately authorize — it's how the scheduled Routine's
+stored prompt already instructs `/ceo-cycle` to run.
+
+**Decision 2 — real specialist dispatch was tested again, this time from the
+top-level session.** Two `Agent` calls went out (`research`: bucket-2
+event/advisory scouting + a Korea/India second-importer licence check;
+`build`: SEO/shareability basics on a `site/seo-basics` branch). **Neither
+returned the "Agent is disabled for this session" error that killed all 13
+previous attempts.** Both are running in the background as this entry is
+written; their actual output (useful work vs. some other failure mode) is
+recorded separately once they complete, and the Phase 1 evaluation's finding
+0 ("the company has never once run as designed") should be revisited once
+there is real evidence either way, not on the strength of a clean dispatch
+alone.
+
+**Decision 3 — closed `weekly-plans/2026-09-21.md` and opened
+`weekly-plans/2026-09-24.md` (GitHub issue #13, replacing #10).** The old
+plan sat `PROPOSED` for six days and was overtaken mid-week by the
+2026-09-23 governance changes: most of what it was blocked on (publishing,
+methodology) stopped needing owner approval before the owner acted on it.
+Re-approving a superseded plan would be theatre. Everything it was
+genuinely blocked on that is still open (Eurostat adopt/hold, visitor
+measurement, the copyright line name, confirming the two authority grants
+in writing) carries forward into the new plan and stays owner-gated — this
+does not expand the CEO's authority, it just stops asking for approval on
+things that already don't need it.
+
+**Decision 4 — critical-issue check run and logged clean** before any other
+work, per the standing requirement: live site up, bytes match the last
+deploy, EIA source unchanged (release still 2026-08-12), and the first
+scheduled refresh run under the new GPCI estimator (`35845854384`,
+2026-09-23T09:56:18Z) succeeded — the backlog's "check the 2026-09-24 run"
+watch item is closed.
+
+Spend **$0**.
