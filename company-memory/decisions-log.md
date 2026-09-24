@@ -726,3 +726,9 @@ scheduled refresh run under the new GPCI estimator (`35845854384`,
 watch item is closed.
 
 Spend **$0**.
+
+## 2026-09-24 (13th cycle, continued) — first real specialist dispatch confirmed working end-to-end
+
+**Decision 5 — the harness fix works, with evidence, not just a clean dispatch.** The Build specialist was dispatched with a self-contained brief (SEO/shareability basics, `okrs.md` G4), worked independently on a branch, made a real scope judgment (left share-card text figure-free rather than hardcode a number that would go stale, exactly the failure class `critical-issues-log.md` 2026-09-18/19 already taught this company once), and reported back with the branch pushed and specific rubric-relevant details flagged for CEO review. The CEO then reviewed the actual diff (not just the specialist's summary), ran the rubric, logged it in `self-check-log.md`, opened PR #14, merged it (`fcce605`), and verified the live deploy. This is the first time in the company's 13-cycle history that "Research/Build draft, CEO reviews and merges" ran as designed rather than being a description of a control that had never fired. The Phase 1 evaluation's finding 0 ("the company has never once run as designed... one agent marking its own homework") is corrected by this entry, not deleted — it was true for 13 cycles and stopped being true this one.
+
+Spend **$0**.
