@@ -14,7 +14,7 @@
     "provenance_caveat": "EIA analysis based on Vortexa tanker tracking data. We republish EIA's published analysis; we do not hold or license Vortexa data.",
     "publisher_caveat": "Since the end of February 2026, AIS signal data for ships transiting the Strait of Hormuz have become especially unreliable. For 2026 Hormuz volumes, tanker tracking data are being revised frequently based on the best available information."
   },
-  "retrieved_utc": "2026-09-24T09:57:00Z",
+  "retrieved_utc": "2026-09-25T10:09:51Z",
   "units": "million barrels per day",
   "series": [
     {
@@ -73,7 +73,7 @@
     "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
     "shape_function": "GPCI transit-share: the strait is assumed to carry the same share of Gulf producer crude output (GPCI) as in the latest published quarter; the estimate moves monthly with GPCI. Replaced persistence on 2026-09-23 (methodology.md section 19).",
     "estimate": {
-      "for_date": "2026-09-23",
+      "for_date": "2026-09-24",
       "point": 5.6,
       "band_low": 4.9,
       "band_high": 10.8,
@@ -82,7 +82,7 @@
       "anchor_value": 4.9,
       "is_measurement": false,
       "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6.",
-      "horizon_days": 85,
+      "horizon_days": 86,
       "max_horizon_days": 92,
       "suppressed": false
     },
@@ -257,7 +257,7 @@
       ]
     },
     "last_published": {
-      "for_date": "2026-09-23",
+      "for_date": "2026-09-24",
       "point": 5.6,
       "band_low": 4.9,
       "band_high": 10.8,
