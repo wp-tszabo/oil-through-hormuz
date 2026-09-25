@@ -760,3 +760,7 @@ Spend **$0**.
 **This cycle's specialist track record now stands at 4 for 4** (13th cycle: Build SEO basics, Research bucket-2/second-importer; 14th cycle: Build freshness monitor, Research bucket-2 retry) — all delivered disciplined, reviewable work with no licence-rule shortcuts and no unauthorized outward contact, strengthening the case that the harness fix (2026-09-23/24) is durable rather than a one-off.
 
 Spend **$0**.
+
+## 2026-09-25 (14th cycle, continued) — process note: issue #13's body briefly overwritten, caught and fixed same-cycle
+
+Used the wrong tool call to post the cycle report to issue #13: `issue_write` with `method: update` and a `body` replaces the issue's body field, not adds a comment — it briefly overwrote the weekly-plan text itself with the cycle report. Caught immediately by reading the issue back before moving on, restored the original plan body verbatim from the local `weekly-plans/2026-09-24.md` (which was never touched), and posted the actual report as a proper comment via `add_issue_comment`. No data reached readers, nothing in `site/` or company memory was affected, and the issue history/comment thread itself is intact (GitHub does not version body edits visibly, so this is recorded here rather than left undiscoverable). Logged because a silent near-miss on a governance record is exactly the class of thing this log exists to catch, per the 2026-09-17 precedent (stranded-memory near-miss).
