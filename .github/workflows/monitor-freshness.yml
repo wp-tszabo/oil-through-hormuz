@@ -1,0 +1,62 @@
+name: Independent uptime / certificate / freshness monitor
+
+# This is a DELIBERATELY SEPARATE workflow from refresh-estimate.yml.
+# See scripts/monitor_freshness.py for the full reasoning (three real
+# incidents this is built to catch); company-memory/backlog.md
+# ("Independent uptime + certificate + FRESHNESS check") and
+# company-memory/critical-issues-log.md (2026-09-17, 2026-09-20, 2026-09-21,
+# 2026-09-23) for the incident history.
+#
+# It checks, independently of the refresh job's own success reporting:
+#   1. https://oilthroughhormuz.com/ returns HTTP 200.
+#   2. The TLS certificate for the real origin is valid and not expired,
+#      verified directly from this runner (which sees the actual origin
+#      cert, unlike a sandbox that proxies HTTPS through a re-signing CA).
+#   3. data/hormuz.json's model.estimate.for_date is recent, on a threshold
+#      that accounts for the refresh cron's documented ~5h scheduling slack.
+#   4. The refresh-estimate.yml workflow has an event=schedule run that
+#      succeeded in the last 36 hours, via the GitHub Actions API -- this is
+#      what catches a cron GitHub silently never fires, which produces no
+#      red anywhere else.
+#
+# On failure this run goes red and does nothing else -- no auto-filed issue,
+# no outward contact. A CEO cycle checking Actions status is the escalation
+# path (GOVERNANCE.md; cross-workflow issue creation is out of Build's
+# scope).
+
+on:
+  schedule:
+    # Runs several times a day, offset from the refresh cron (05:10 UTC) so
+    # it isn't just re-observing the same instant every time, and often
+    # enough that a stale/skipped refresh or a cert problem is caught within
+    # a few hours rather than sitting undetected for a full day.
+    - cron: "25 1,7,13,19 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  # Read-only: this workflow queries the Actions API for the refresh
+  # workflow's run history. It never writes anything.
+  actions: read
+
+concurrency:
+  group: monitor-freshness
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run the independent monitor
+        # No continue-on-error, on purpose -- see the header comment above.
+        # A red run here IS the alert.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: python scripts/monitor_freshness.py
