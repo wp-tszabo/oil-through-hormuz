@@ -78,6 +78,7 @@ import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gpci as gpcimod  # noqa: E402
+import generate_chart as chartmod  # noqa: E402
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(REPO, "site", "data", "hormuz.json")
@@ -548,6 +549,20 @@ def main(today=None, page=None, xlsx=None):
         new, flags=re.S)
     if n != 1:
         raise Fail("could not find exactly one GENERATED:note block in index.html")
+
+    # The chart is generated from `series` itself (scripts/generate_chart.py)
+    # so it extends automatically as EIA quarters are added -- see that
+    # module's docstring and backlog.md, "Generate the chart from
+    # hormuz.json". Regenerated every run, not just on `changed`, so it
+    # stays byte-identical to what the current data would produce even on a
+    # day nothing else moved.
+    chart_svg = "\n".join("    " + line for line in chartmod.render_chart(series).splitlines())
+    new, n = re.subn(
+        r"<!-- GENERATED:chart -->.*?<!-- /GENERATED:chart -->",
+        lambda m: "<!-- GENERATED:chart -->\n" + chart_svg + "\n    <!-- /GENERATED:chart -->",
+        new, flags=re.S)
+    if n != 1:
+        raise Fail("could not find exactly one GENERATED:chart block in index.html")
 
     with open(PAGE, "w") as f:
         f.write(new)
