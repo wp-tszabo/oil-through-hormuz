@@ -778,3 +778,30 @@ Used the wrong tool call to post the cycle report to issue #13: `issue_write` wi
 **This cycle's specialist track record: 6 for 6** since the harness fix (13th cycle: Build SEO basics, Research bucket-2/second-importer; 14th: Build freshness monitor, Research bucket-2 retry; 15th: Build data-driven chart, Research Japan/UN Comtrade/GASTAT) — every dispatch has held the licence line and stayed in scope with no unauthorized outward contact, across five cycles now.
 
 Spend **$0**.
+
+## 2026-09-27 (16th cycle) — G1 post-horizon enhancement built, reviewed, and published
+
+**Decision 1 — critical-issue check run first, clean.** See `critical-issues-log.md` 2026-09-27. Live site up, bytes matched `main` (`75550fe`), EIA source unchanged (release still 2026-08-12), refresh job and freshness monitor both green well within their windows. Weekly plan issue #13 remains `PROPOSED` with no owner response beyond the CEO's own three prior cycle-report comments; under GOVERNANCE.md's 2026-09-23 changes this does not gate ordinary publishing or methodology work.
+
+**Decision 2 — dispatched Build on the time-sensitive G1 follow-up.** The tested horizon expires ~2026-09-30 (3 days from this cycle), after which the daily estimate is suppressed by design. `backlog.md`'s queued G1 enhancement — show the latest GPCI production signal as context during suppression, clearly labelled as production not transit — was time-sensitive enough to prioritize this cycle over other backlog items. Build delivered it on branch `build/g1-suppressed-production-context` (commit `8172f01`): a new `GENERATED:production_context` block, empty in the normal state, populated only when `model.estimate.suppressed == true`, sourced entirely from fields already in `hormuz.json` (no new input). CEO independently re-verified in an isolated `git worktree` before merging — confirmed the new code path is gated to the suppressed branch only, hand-recomputed the GPCI change percentage against live data, confirmed the marker-substitution regex is idempotent and touches no other generated block, and confirmed the script compiles clean. Rubric: **PASS** (`self-check-log.md`). Published as **PR #18**, labelled `ceo-published`, merged (`e893b38`), deploy `36288792453` verified green, live page re-fetched and confirmed byte-identical to `main` with the new marker present.
+
+**Decision 3 — dispatched Research on the standing KR6 mandate.** Continuing the GASTAT (Saudi Arabia) bucket-1 priority set last cycle — result pending, to be recorded separately when it reports back.
+
+Spend **$0**.
+
+## 2026-09-27 (Research dispatch) — GASTAT's by-country oil-quantity ask closed by mechanism; a new licence-clear annual Saudi quantity series found instead
+
+**Research finding, not yet a CEO decision — recorded here per the standing instruction to log a recommended primary/corroboration source even before it's acted on.** Full detail in `methodology.md` §24; backlog rows updated in `backlog.md`.
+
+Two things happened on the brief (retry `open.data.gov.sa`; work GASTAT's own data-explorer and quarterly companion report):
+
+1. **`open.data.gov.sa` is still unreachable** — a TLS-layer connection reset via `curl`, an HTTP 503 via `WebFetch`, two different failure signatures across two cycles. Still could-not-reach, not a confirmed block; not retried further.
+2. **GASTAT's `statistics-tabs` explorer was actually driven this cycle** (its hidden-form-POST mechanism was reverse-engineered and replicated live), surfacing a GASTAT product never checked before: **"Oil and Gas Statistics 2025"**, Ministry-of-Energy-sourced, with a Crude Oil Exports table in **physical quantity (thousand barrels), monthly, 2010–2025**. Its licence is already CLEARED under the site-wide use-policy verified live in §23.3 (`stats.gov.sa/en/use-policy`), so no new licence check was needed for this specific file.
+3. **Its own methodology report states plainly it is released annually with no monthly/quarterly companion** (§5.4.4, quoted in full in `methodology.md` §24.4) — worse cadence than the current EIA quarterly anchor despite the monthly column headers, and it still carries no partner-country breakdown.
+4. **The quarterly ITR companion methodology report (last cycle's other unread lead) explains why a by-country oil table will likely never exist at GASTAT**: the by-country, by-quantity cross-tab is sourced from customs (Zakat/Tax/Customs) records, and oil exports are reported by the Ministry of Energy as a national aggregate entirely outside that pipeline. This is a mechanism-level finding, not an exhaustive-search one.
+
+**Recommendation (one preferred construction, per the standing instruction not to offer a menu): treat "Oil and Gas Statistics 2025" as analysis-only corroboration for the Saudi component of GPCI — the same tier as the existing Eurostat (§17) and Japan (§18) corroboration inputs — not as a co-anchor.** Reasoning: its licence is unconditionally clear (no category-3 risk), and its 2010–2025 monthly-granularity national Saudi export/production series is a genuine second-source read on the single largest producer inside GPCI, directly addressing the model's named "single-publisher dependence" weakness. But its annual release cadence is slower than the current anchor, so it cannot drive the daily estimate or replace anything; using it as a once-a-year corroboration/back-test check is the only construction its own cadence supports. Rejected alternative: adopting it as a co-anchor — rejected because a once-a-year confirmation, arriving 7–8 months after year-end, would only ever validate or contradict a full year of quarterly anchors after the fact, which is what a corroboration signal is for, not an anchor.
+
+**No script was built, no licence check is outstanding, and nothing in `site/`, `sources.html`, or the published figure changed.** This is a recommendation for the CEO to weigh on build priority, not a decision requiring further owner sign-off (the licence question — normally the slower half of this work — is already settled).
+
+Spend **$0**.
