@@ -143,6 +143,12 @@ def period_words(label):
     return "%s&ndash;%s %d" % (MONTH_WORDS[start.month - 1], MONTH_WORDS[end.month - 1], end.year)
 
 
+def month_words(yyyymm):
+    """'202608' -> 'August 2026'."""
+    y, m = int(yyyymm[:4]), int(yyyymm[4:])
+    return "%s %d" % (MONTH_WORDS[m - 1], y)
+
+
 def month_end(yyyymm):
     y, m = int(yyyymm[:4]), int(yyyymm[4:])
     nxt = datetime.date(y + (1 if m == 12 else 0), 1 if m == 12 else m + 1, 1)
@@ -486,6 +492,30 @@ def main(today=None, page=None, xlsx=None):
         )
         note = "This is deliberate, not a fault &mdash; see"
         print("HORIZON EXCEEDED (%d > %d days) -- estimate suppressed" % (horizon, MAX_HORIZON_DAYS))
+        # G1 (backlog.md, 2026-09-23/25): while the strait estimate is
+        # suppressed, still give readers *something* -- the latest Gulf
+        # production signal already in the model, clearly labelled as
+        # production, not transit, and explicitly not a replacement for the
+        # suppressed figure. Every value here is already in model.estimator /
+        # doc["production_source"]; no new source, no estimator math.
+        gpci_change_pct = round((g_latest / g_anchor - 1) * 100, 1)
+        direction_word = "up" if gpci_change_pct >= 0 else "down"
+        production_html = (
+            '<!-- GENERATED:production_context -->\n'
+            '  <p class="production-context">\n'
+            '    <strong>Production context, not a strait estimate:</strong> Gulf producer\n'
+            '    crude output (GPCI, our production index &mdash; see\n'
+            '    <a href="sources.html">sources</a>) was last observed at\n'
+            '    <strong>%.2f</strong> million barrels per day <em>of Gulf crude oil\n'
+            '    production</em> for %s, %s %.1f%% from its %s\n'
+            '    anchor-quarter average of %.2f. This is a different measure &mdash;\n'
+            '    production, not oil moving through the strait &mdash; shown for context\n'
+            '    only. It has not been back-tested as a predictor of strait flow and it\n'
+            '    does not narrow, replace or stand in for the suppressed estimate above.\n'
+            '  </p>\n'
+            '  <!-- /GENERATED:production_context -->\n'
+        ) % (g_latest, month_words(last_hist), direction_word, abs(gpci_change_pct),
+             period_words(anchor["period"]), g_anchor)
     else:
         point = round(point_raw, 1)
         if regime == "calm":
@@ -502,6 +532,10 @@ def main(today=None, page=None, xlsx=None):
                     "      assumes the strait still carries the same share of Gulf oil output\n"
                     "      as it did in %s, although that output has since fallen.\n" % period_words(anchor["period"]))
         est["suppressed"] = False
+        # No production-context block outside the suppressed state (G1):
+        # the normal presentation is unchanged, only the suppressed one gains
+        # this addition.
+        production_html = '<!-- GENERATED:production_context -->\n  <!-- /GENERATED:production_context -->\n'
         note = ("The range is this wide because the strait is anything but steady right now\n"
                 "    &mdash; see" if regime != "calm" else "See")
         est["point"] = point
@@ -539,6 +573,15 @@ def main(today=None, page=None, xlsx=None):
         pagetext, flags=re.S)
     if n != 1:
         raise Fail("could not find exactly one GENERATED:estimate block in index.html")
+    # G1: production-context block, present only in the suppressed state
+    # (production_html is the empty-marker pair otherwise). See backlog.md
+    # "G1 -- Decide what the page shows past the horizon".
+    new, n = re.subn(
+        r"<!-- GENERATED:production_context -->.*?<!-- /GENERATED:production_context -->\n?",
+        lambda m: production_html,
+        new, flags=re.S)
+    if n != 1:
+        raise Fail("could not find exactly one GENERATED:production_context block in index.html")
     # The sentence under the block must agree with the block's state (suppressed /
     # disrupted / calm), so it is generated too (copy decided 2026-09-23 under the
     # CEO's publishing authority; draft: pending-copy/2026-09-19-suppressed-state-note.md).
