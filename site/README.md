@@ -26,3 +26,8 @@ estimates — see `scripts/generate_history.py`).
 `history.html` is the estimate-history page (table + chart, generated from
 `data/history.json`) and `feed.xml` is the Atom feed of our own daily
 estimates. Both are rewritten each refresh run alongside `index.html`.
+
+Every HTML page carries the GoatCounter visitor-count snippet
+(`data-goatcounter=...`) immediately before `</body>`, outside any
+`<!-- GENERATED:... -->` block so the daily refresh never rewrites it. Any new
+page must include it too; `terms.html` → "Privacy" describes what it collects.
