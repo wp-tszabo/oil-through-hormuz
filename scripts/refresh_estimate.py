@@ -48,6 +48,10 @@ What it does
 3. Re-dates the estimate to yesterday (UTC), recomputes point and band.
 4. Enforces the horizon guard (unchanged, owner decision 2026-09-19).
 5. Rewrites the generated block in site/index.html and site/data/hormuz.json.
+6. Appends today's published estimate (or its suppression) to the
+   persistent history -- site/data/history.json, site/data/history.csv,
+   site/feed.xml and site/history.html (scripts/generate_history.py,
+   backlog.md "NEW 2026-09-23 (G5)"). Idempotent by for_date.
 
 What it deliberately will NOT do
 --------------------------------
@@ -79,6 +83,7 @@ import urllib.request
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gpci as gpcimod  # noqa: E402
 import generate_chart as chartmod  # noqa: E402
+import generate_history as historymod  # noqa: E402
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(REPO, "site", "data", "hormuz.json")
@@ -562,6 +567,33 @@ def main(today=None, page=None, xlsx=None):
         )
         if not tail:
             block = block.replace("as the answer. \n", "as the answer.\n")
+
+    # G5 (backlog.md, 2026-09-23) -- append today's published estimate (or
+    # its suppression) to the persistent history: site/data/history.json,
+    # site/data/history.csv, site/feed.xml and the site/history.html table
+    # and chart. Idempotent by for_date (scripts/generate_history.upsert),
+    # so re-running for a date already recorded updates it in place instead
+    # of duplicating it. This is a record of OUR OWN past outputs, never a
+    # republished EIA series.
+    history = historymod.load_history()
+    historymod.upsert(history, {
+        "for_date": est["for_date"],
+        "retrieved_utc": doc["retrieved_utc"],
+        "point": est.get("point"),
+        "band_low": est.get("band_low"),
+        "band_high": est.get("band_high"),
+        "band_basis": est.get("band_basis"),
+        "anchor_period": est.get("anchor_period"),
+        "method": None if est.get("suppressed") else "gpci-transit-share",
+        "regime": model.get("regime"),
+        "regime_kind": model.get("regime_kind"),
+        "suppressed": bool(est.get("suppressed")),
+        "horizon_days": est.get("horizon_days"),
+    })
+    historymod.save_history(history)
+    historymod.save_csv(history["entries"])
+    historymod.save_feed(history["entries"])
+    historymod.write_history_page(history["entries"])
 
     with open(PAGE) as f:
         pagetext = f.read()
