@@ -17,5 +17,12 @@ that content **does** go through the standing copy-review checkpoint in
 [GOVERNANCE.md](../GOVERNANCE.md) before it lands here — draft it into
 `company-memory/pending-copy/` first.
 
-`data/` is where fetched data snapshots live once Research/Build wire in a
-source.
+`data/` holds the fetched/derived data files: `hormuz.json` (the current
+snapshot: cleared source series plus the model's current daily estimate,
+rewritten each run by `scripts/refresh_estimate.py`) and
+`history.json`/`history.csv` (the append-only record of our own past daily
+estimates — see `scripts/generate_history.py`).
+
+`history.html` is the estimate-history page (table + chart, generated from
+`data/history.json`) and `feed.xml` is the Atom feed of our own daily
+estimates. Both are rewritten each refresh run alongside `index.html`.
