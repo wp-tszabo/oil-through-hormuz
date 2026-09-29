@@ -1870,3 +1870,187 @@ Per section 23.1's precisely-dated forecast, live-checked `https://www.customs.g
 4. **Small defect noticed, not fixed in passing:** the script's closing caveat still says the series is analysis-only "until the owner rules on issue #9". Issue #9 was resolved on 2026-09-23 (option C), so the caveat's reason is stale, though its conclusion (analysis-only) is still true. Backlog nit.
 
 **Published figure, `site/data/hormuz.json`, `sources.html`: unchanged.**
+
+## 27. KR6 cycle — 2026-09-29: Japan's August detailed release confirmed live and re-run — Kuwait's July "recovery" reverses to zero, must-transit stays on the floor while bypass-capable Gulf keeps recovering
+
+**Delivery type: (c) — no new cleared input, no model/calibration change.** This is
+the pre-scheduled re-run of an already-CLEARED, already-analysis-only input
+(§18, licence PDL1.0, re-confirmed not-yet-published in §23/§26). It produces
+a new, real 3Q26 observation, but per its own standing status it **does not
+enter the model or `sources.html`**. `site/`, `site/data/hormuz.json` and
+`sources.html` are untouched this cycle.
+
+### 27.1 Confirming the release actually happened, live, and finding the new file ID
+
+The brief's premise — "today is the first cycle this could plausibly find
+real data" — was checked, not assumed. Three independent live signals, all
+fetched this session (2026-09-29, after 09:30 JST):
+
+1. The old `FILES[2026]` id (`000040494488`) now returns **HTTP 404** at the
+   file-download endpoint — a strong signal the file set changed, not proof
+   of what replaced it.
+2. `https://www.e-stat.go.jp/dbview?sid=0004002163` (customs-office-level
+   companion table, live, HTTP 200, 2026-09-29): title string live-reads
+   **"(1-7月：確報、8月：輸入9桁速報) 2026年"** — Jan–Jul now confirmed
+   (確報), August now present as 9-digit provisional (速報). This is the
+   exact status the 2026-09-26 cycle (§23.1) predicted would appear after
+   the 09:30 JST release.
+3. `https://www.e-stat.go.jp/stat-search/database?page=1&layout=dataset&toukei=00350300&tstat=000001013141&tclass1=000001013180`
+   (the **nationwide** table the script actually needs, live, HTTP 200):
+   same status, **"公開（更新）日 2026-09-29"**, i.e. published today, not
+   backdated.
+
+**Methodological note for future cycles, since it cost real time this
+session:** the plain `stat-search/files?...&stat_infid=...` URL the script's
+docstring points at is client-rendered (no file data in the static HTML) —
+this is new; §23.1 apparently could read it directly, but that no longer
+works, or the earlier read used a different rendering path. What **does**
+still render server-side, confirmed this session: `dbview?sid=...` pages,
+and `stat-search/{files,database}?...&layout=dataset` (note the
+`layout=dataset` parameter, undocumented in the script, found by matching
+Google's indexed snippets — which *do* see rendered content — back to a
+working live URL). **The new statInfId was found and verified this way**,
+not guessed and not taken from a snippet: filtered the live `layout=dataset`
+files list to the row reading *"確速 品別国別表 輸入(1-7月：確報、8月：輸入9桁速報)
+５部 25-27類"* (Section V, Chapters 25–27, Import, 2026), which resolves to
+`statInfId=000040507877`. Downloaded directly
+(`https://www.e-stat.go.jp/en/stat-search/file-download?statInfId=000040507877&fileKind=1`,
+HTTP 200, `content-disposition: ik-100h2026i005.csv`), parsed, and confirmed
+HS-2709 rows with `Unit1=KL` for all 16 origin countries, months Jan–Aug
+populated, Sep–Dec zero — exactly the shape a mid-cycle release should have.
+`scripts/japan_imports_analysis.py` `FILES[2026]` updated to
+`"000040507877"` with a dated comment; no other logic changed.
+
+**Cross-check against the prior (provisional) July read, since a revision
+could otherwise masquerade as a trend:** §18.4 recorded Jul must-transit
+−73%, Kuwait −55%, Saudi −27%, bypass-capable −30%. This run's Jul figures:
+must-transit −72% (1-point rounding noise, not a revision), Kuwait −55%,
+Saudi −27%, bypass-capable −30% — **unchanged**. The July→confirmed step did
+not materially revise anything, which is itself worth recording: it argues
+against treating "provisional" as a reason to discount July's reading, and
+by extension against assuming August's own provisional figure will move much
+either.
+
+### 27.2 Results (% of each group's own 2024–25 calm daily rate, by month of arrival in Japan)
+
+| 2026 | Jan | Feb | Mar | Apr | May | Jun | Jul | **Aug (prov.)** |
+|---|---|---|---|---|---|---|---|---|
+| Must-transit (KW, QA) | −34 | −45 | −52 | −98 | −100 | −87 | −72 | **−94** |
+| Bypass-capable (SA, AE) | +22 | +15 | +1 | −60 | −60 | −41 | −30 | **−27** |
+| Kuwait alone (calm 153 kb/d) | −23 | −12 | −58 | −100 | −100 | −78 | −55 | **−100** |
+| Qatar alone (calm 97 kb/d) | −52 | −98 | −42 | −96 | −100 | −100 | −100 | **−84** |
+| Saudi alone (calm 936 kb/d) | +72 | +46 | +16 | −60 | −75 | −48 | −27 | **−9** |
+| UAE alone (calm 1,026 kb/d) | −23 | −13 | −13 | −60 | −46 | −36 | −33 | **−43** |
+| Oman (weak placebo) | −100 | −3 | −10 | −16 | +4 | −49 | +7 | **+3** |
+| Non-Gulf (substitution, NOT a placebo) | +67 | +81 | −6 | +5 | +21 | +413 | +682 | **+589** |
+| **Japan total (demand check)** | +18 | +12 | −5 | −60 | −59 | −22 | +4 | **−0** |
+
+2Q26 quarter average, for reference: Gulf −58.4% (must-transit −95.0%,
+bypass-capable −53.8%). August alone: Gulf −34.3% (must-transit −93.7%,
+bypass-capable −26.7%).
+
+Cargo-count context, since this group is at VLCC resolution (~2 Mbbl/cargo):
+Kuwait's raw August figure is **exactly 0 KL** — not a small positive
+number rounding to −100, a literal zero across all HS-2709 rows for country
+code 138. July was 338,741 KL ≈ 2.13 Mbbl (≈1 cargo). Qatar's August figure
+is 77,988 KL ≈ 0.49 Mbbl (≈0.25 cargo, a part-cargo/blended parcel, not a
+full VLCC) after two months (Jun, Jul) at exactly zero.
+
+### 27.3 Question 1 — did Kuwait's recovery continue past July's "−55%, about one cargo"?
+
+**No. It reversed to zero.** July's partial recovery (0 cargoes in
+Apr/May/Jun-adjacent months → ~1 cargo in July) did **not** continue into
+August; Kuwait-origin crude arriving in Japan in August was **zero**, the
+same floor as April–May. Read narrowly, this is a genuine new data point
+against the "recovery is underway" reading §18.5 flagged as modestly
+supported. Read at the correct resolution, per the caveat carried since
+§18.4 item 3, it is **one more swing in a series that has been alternating
+between 0 and ~1 cargo a month since April** (Apr 0, May 0, Jun ~0.5, Jul
+~1, Aug 0) — consistent with monthly VLCC scheduling lumpiness on a
+calm-rate base of only ~2.3 cargoes/month, not with a clean recovery-then-
+relapse story. **The honest statement is that July's reading was never
+strong evidence of a trend, and August confirms that by not extending it in
+either direction** — it is not evidence of a *reversal* either, just further
+noise at a resolution too coarse to read as a signal. This should correct,
+not reinforce, any inclination to read July's number as the start of a
+recovery.
+
+Qatar moved the opposite way (zero in Jun/Jul → a part-cargo in August),
+which on its own would read as the *beginning* of a recovery, but is
+symmetric noise from the same cause: two must-transit origins with structural
+near-zero calm-period cargo counts, moving independently of each other, is
+exactly what cargo-lumpiness — not a coordinated transit signal — looks
+like. **Net for the must-transit group: −94% in August, marginally worse
+than July's −72%, not materially different from the April–June floor.**
+
+### 27.4 Question 2 — does the Jan–Feb must-transit weakness recur (§18.4 item 4)?
+
+§18.4 item 4 flagged Jan (−34%) and Feb (−45%) must-transit readings as
+*earlier* than the March 2026 onset dated elsewhere (§13.3, §17), and asked
+whether the same **moderate, partial** pattern would recur later in the
+year — which would suggest a real early signal rather than one-off
+lumpiness. **It does not recur in this shape.** August's must-transit
+reading (−94%) is not a moderate partial decline like Jan/Feb's — it is
+close to the same near-total floor the group has held since April. The
+Jan/Feb readings remain best read as lumpiness on a thin base (Qatar was at
+a 0–1-cargo level even in February, per §18.4), not as an early leading
+indicator that August reproduces. This narrows, but does not fully close,
+the open question from §18.4 — the honest state is **unresolved, leaning
+toward "not a recurring pattern,"** not confirmed either way with only two
+non-adjacent data points to compare.
+
+### 27.5 Overall Gulf-vs-control read, and the demand check
+
+The split that has now reproduced across §16 (US), §17 (Eurostat/EU), and
+§18 (Japan) reproduces again, more starkly, in August: **the bypass-capable
+producer keeps closing the gap toward normal (Saudi −9%, its best reading of
+2026), while the must-transit group does not (−94%, effectively unchanged
+from the April–June floor).** UAE is the exception inside the bypass-capable
+group — it *worsened* in August (−43%, vs −33% in July) rather than
+continuing to recover, so "bypass-capable" as a pair is roughly flat
+month-on-month (−30% Jul → −27% Aug) only because Saudi's improvement offsets
+UAE's regression; the two origins are not moving together and should not be
+read as one trend.
+
+**Japan's total crude imports are now back to essentially calm levels
+(−0% in August, vs −60% in April/May and +4% in July)** — the clearest
+reading in this series to date that Japan has substituted its way back to
+normal aggregate demand (non-Gulf +589% vs calm) while its Gulf-origin
+supply, and especially its must-transit-origin supply, remains severely
+depressed. This is consistent with, not contradictory to, an ongoing
+transit constraint: it shows demand-side normalization masking a
+supply-side shortfall that a naive read of "Japan's imports are fine" would
+miss entirely.
+
+### 27.6 What this does and does not support
+
+- **Does not support** treating July's Kuwait figure as the start of a
+  recovery trend — August's reversal argues the opposite, at the same
+  resolution that made July look like a recovery in the first place. Net:
+  **weaker, not stronger, support** for the "B: widen the band upward"
+  direction §18.5/§23 discussed, though the sample is still too thin
+  (single-digit cargo counts) to move a published number.
+- **Does support**, more strongly than before, the cross-publisher ordinal
+  finding that bypass-capable production is recovering faster than transit
+  through the strait — now with an August reading where Saudi alone is
+  within single digits of its calm rate while must-transit Gulf is still
+  at −94%.
+- **Magnitude: still not informed.** The must-transit sample is ~0.25 m b/d
+  calm (~1.2% of calm Hormuz transit) at whole-cargo resolution; this cycle's
+  reading is a literal zero for one of its two origins. A ratio built on this
+  would be a ratio of near-zero numbers.
+- August is **provisional** (9-digit速報); per §27.1 the Jul provisional→
+  confirmed transition this cycle showed no material revision, so a large
+  revision is not expected, but it hasn't happened yet either.
+
+### 27.7 Carry-forward
+
+Re-run again once September's data publishes (on the historical cadence,
+provisional 9-digit ~end of the following month, i.e. ~late October for
+September). Everything else carried forward verbatim from §26/§25: GASTAT's
+2026 edition (expected ~mid-2027 on its current lag), UN Comtrade licence
+resolution (owner call, §23.2/§47 backlog row), the standing bucket-1
+producer-side search still needs a genuinely new Gulf country (Iraq, Kuwait,
+UAE, Qatar customs/statistics authorities remain effectively unchecked).
+
+**Published figure, `site/data/hormuz.json`, `sources.html`: unchanged.**

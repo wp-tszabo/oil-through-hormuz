@@ -58,7 +58,7 @@ import urllib.request
 FILES = {  # year -> e-Stat statInfId (Section V, Chapter 25-27, Import)
     2024: "000040368859",  # Jan-Dec fixed
     2025: "000040424872",  # Jan-Dec revised
-    2026: "000040494488",  # Jan-Jun detailed, Jul 9-digit provisional (updated 2026-08-28)
+    2026: "000040507877",  # Jan-Jul detailed (confirmed), Aug 9-digit provisional (updated 2026-09-29)
 }
 URL = "https://www.e-stat.go.jp/en/stat-search/file-download?statInfId={}&fileKind=1"
 CRUDE_PREFIX = "2709"
