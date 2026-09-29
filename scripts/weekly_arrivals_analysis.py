@@ -308,8 +308,9 @@ def main():
         "  Saudi fall is not automatically a Hormuz fall -- it is evidence only alongside",
         "  the Bab el-Mandeb bypass term measured in section 15.",
         "Only Saudi Arabia and Iraq are reported; UAE and Qatar never enter this table.",
-        "This input is ANALYSIS-ONLY until the owner rules on issue #9. It does not enter",
-        "  the published point estimate, and sources.html must not list it until it does.",
+        "This input is ANALYSIS-ONLY by CEO methodology decision (issue #9 resolved",
+        "  2026-09-23, option C). It does not enter the published point estimate, and",
+        "  sources.html must not list it unless that changes.",
     ]:
         print("  * " + c)
 
