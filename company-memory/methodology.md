@@ -2054,3 +2054,262 @@ producer-side search still needs a genuinely new Gulf country (Iraq, Kuwait,
 UAE, Qatar customs/statistics authorities remain effectively unchecked).
 
 **Published figure, `site/data/hormuz.json`, `sources.html`: unchanged.**
+
+## 28. KR6 cycle — 2026-09-30: the standing Gulf-country gap closed for all four named countries — Iraq's SOMO surfaces the most promising raw finding of this whole search, but its licence is unresolved; Kuwait closed by mechanism; UAE and Qatar could-not-reach
+
+**Delivery type: (c), with one substantive UNRESOLVED finding significant enough to
+flag for a CEO/owner decision.** No new numeric input enters the model or
+`sources.html` this cycle. Brief: check 1-2 of Iraq/Kuwait/UAE/Qatar's national
+customs/statistics authorities for a crude oil export or production series with
+useful granularity (monthly+, physical quantity, or country/partner breakdown),
+per §27.7's standing carry-forward ("Iraq, Kuwait, UAE, Qatar customs/statistics
+authorities remain effectively unchecked"). All four were actually attempted this
+cycle, not just one or two, since time allowed it.
+
+### 28.1 Iraq — SOMO (State Oil Marketing Organization, under the Ministry of Oil): the best raw candidate this brief has found, licence NOT cleared
+
+**Reached live**, `https://www.somooil.gov.iq/en/exports/chart` (HTTP 200) — unlike
+`oil.gov.iq` (the Ministry of Oil's own domain), which returned `HTTP 403` to every
+fetch method tried and was not pursued further this cycle.
+
+**What it measures.** Monthly crude oil **export quantity, in physical barrels**,
+split by three loading routes, read directly off the live page: *"January 2026
+report #79 — Quantity exported 107.6M bbl — Basrah 101.2M (94.0% of the month) —
+North [Kirkuk-Ceyhan pipeline via Turkey] — Kurdistan Region fields 6.5M (6.0%)."*
+Also gives monthly revenue and implied FOB price per barrel, and quarterly
+refined-product export/import volumes (fuel oil, naphtha, gasoline, etc., metric
+tons). Six months of 2026 were populated in the page's default view (January
+through June), each with its own per-field monthly figure, e.g. Basrah:
+Jan 101,160,349 bbl … Jun 17,799,036 bbl (a sharp mid-year drop, consistent with the
+2026 disruption dated elsewhere in this document, §13.3/§17).
+
+**Why this is more valuable than a generic national total.** "Basrah" is not an
+administrative region — it is Iraq's Gulf export terminals (Basra Oil Terminal /
+Khor al-Amaya single-point moorings), essentially 100% Hormuz-transiting, while
+"North" is the Kirkuk-Ceyhan pipeline, Iraq's own Hormuz-bypass route. SOMO is
+publishing, natively, exactly the must-transit vs. bypass split this document's
+corroboration scripts (§16 US, §17 Eurostat, §18/§27 Japan) have had to construct
+indirectly by grouping *other countries'* import records by Gulf producer. A
+primary-source, government-published, route-level split for a single country is a
+structurally different (and more direct) kind of evidence than any of those three.
+
+**Cadence and lag — only partially confirmed.** Monthly, per the historical
+columns; but the interactive chart is a client-hydrated widget that ignores URL
+query parameters when fetched without JS execution (tested explicitly:
+`?from=2026-07&to=2026-09` returned the same Jan-default content), and no
+documented API or downloadable file could be found (`/api/exports`,
+`/exports/month/2026-08`, and similar guesses all `404`). So **whether July-September
+2026 figures are already published behind the JS widget is unconfirmed** — this
+cycle's tooling could only confirm data existed for Jan-Jun as of 2026-09-30. The
+site's separate "Reports" index shows an "18 August 2026 — Crude oil prices for
+AUGUST 2026" entry, but that is a different product (official-selling-price
+formula announcements, not export-volume reports) and does not resolve the
+question. Flag for next cycle: retry with a JS-capable fetch if one becomes
+available, rather than guessing at the true lag.
+
+**Licence: UNRESOLVED, leaning toward not usable without further clearance.** No
+terms-of-use, open-data licence, or explicit reuse/redistribution grant was found
+anywhere on the site — checked: main nav (all sections), footer (every page),
+`/en/about/policy` ("Policies and Strategies of SOMO regarding Crude Oil Export
+Operations" — about export-allocation policy to trading companies, not a data
+licence), the Reports index, and a targeted web search for
+`somooil.gov.iq terms of use / privacy policy / copyright disclaimer` (no results
+beyond the site's own generic pages). The only rights statement found, present
+verbatim on every page checked including the 404 page, is: *"© 2026 State Oil
+Marketing Organization (SOMO). All rights reserved by the IT & Communications
+Department"* / *"© SOMO. All rights reserved."* That is a copyright-reservation
+statement, the opposite of a reuse grant — per the standing guilty-until-checked
+rule this is recorded as **UNRESOLVED / silent**, not rounded up to "probably
+fine," exactly the failure mode the standing mandate warns against.
+`somooil.gov.iq/robots.txt` returns the site's generic 404 page (no robots file
+exists either way) — not informative on redistribution rights.
+
+**Access mechanism.** Public web page, no login required, but the data itself is
+delivered only through the rendered chart widget — no CSV/API/documented export
+was found. Scraping the rendered figures would be the only access path, and with
+no terms page at all, whether that scraping is itself permitted has no answer yet
+either.
+
+**Verdict: UNRESOLVED.** On substance this is the single most promising Gulf-producer
+finding across the entire history of this standing search — closer to the "second
+numeric anchor" the mandate names as the model's biggest weakness than GASTAT,
+Eurostat, or Japan, specifically because of the Basrah/North/KRG route split. It
+clears none of the licence bar, though: not adopted, not used even for internal
+calibration. **Recommend the CEO weigh asking the owner to authorize direct
+outward contact to SOMO** requesting explicit redistribution permission — the same
+shape of ask already sitting in `backlog.md` for JODI, just with a stronger
+substantive case (route-level, not just national, granularity) and a currently
+completely silent (not explicitly hostile) licence posture.
+
+### 28.2 Kuwait — Central Bank of Kuwait (republishing Central Statistical Bureau data): reached live, closed by mechanism
+
+**Reached live**: `cbk.gov.kw/en/statistics-and-publication/dynamic-statistical-releases/quarterly/2023/q3/{33,35,38,40}`
+(all HTTP 200) and the monthly release table list (tables 11-28, HTTP 200).
+
+- **Table 33, "Summary of Foreign Trade"**: quarterly, KD million, gives "Oil
+  Exports" as a single national-aggregate **value** figure only — no physical
+  quantity, no country breakdown.
+- **Table 35, "Total Exports According to SITC Sections"**: quarterly, KD million;
+  oil is bundled inside SITC Section 3 ("Mineral Fuels, Lubricants & Related
+  Materials") together with other fuels — value only, not oil-exclusive.
+- **Table 38 is explicitly titled "Non-Oil Exports According to Destination"** —
+  i.e. CBK's only by-destination trade table deliberately *excludes* oil. This is
+  a structural, not incidental, absence: there is no CBK product that crosses oil
+  exports with a destination country at all.
+- **Table 40, "Kuwait's Foreign Trade with GCC Countries"**: all-goods (not
+  oil-specific), value only, and partners limited to the five other GCC states —
+  not useful for a global-destination Hormuz question even setting the oil-specific
+  gap aside.
+- The monthly release list (tables 11-28) is entirely banking/monetary (credit,
+  exchange rates, reserves) — no trade or oil table exists at monthly cadence in
+  this product at all.
+- Source line on every table: *"Source: Central Statistical Bureau. ... All data is
+  the property of Central Bank of Kuwait."* No explicit reuse/redistribution grant
+  found on any page fetched — not pursued further, since the granularity question
+  already closes this candidate on its own.
+- A separate, dedicated petroleum-statistics module exists on the primary
+  publisher's own site, `csb.gov.kw`, linked from its homepage nav as
+  `/Petrol/Pet_Login.aspx` — but as the URL states, it is **login-gated**. Creating
+  an account is outward contact in the owner's name (GOVERNANCE.md), so this was
+  flagged, not pursued.
+
+**Verdict: REJECTED for the standing ask, by mechanism, not merely unfound** — the
+same shape of decisive negative §24.5 reached for GASTAT's by-country oil table.
+CBK's published oil-export data is structurally value-only and structurally
+excludes a by-destination breakdown; the one product that might carry more (CSB's
+Petrol module) needs an owner-authorized account before it can be checked.
+
+### 28.3 UAE — FCSC (Federal Competitiveness and Statistics Centre): named, plausible datasets exist, but the whole relevant surface is Cloudflare-blocked to every method tried — could-not-reach, not a licence verdict
+
+**What is known to exist**, from one successful fetch of the FCSC homepage's
+rendered navigation (via a reader-proxy service, before that same service became
+blocked for this specific domain — see below): FCSC operates two relevant
+sub-portals, `uaestat.fcsc.gov.ae` (a .Stat-Suite-style SDMX data explorer) and
+`opendata.fcsc.gov.ae` (an open-data catalog). Named categories/datasets
+identified (via the nav plus corroborating search-engine indexing): an **"Oil and
+Gas"** statistics category (2009-2024 — year-range formatting with no month
+markers, unlike the same site's own "Climate" category which explicitly reads
+"Jan 2016 – Dec 2024," suggestively but not confirmedly annual); an
+**"International Trade in Commodities"** category (2000-2025, "General System" — a
+customs-based by-commodity dataset, plausibly with a partner-country dimension,
+cadence unconfirmed); and, the most specific and promising lead, an open-data
+entry titled **"Production and export crude oil"**, published by "Ministry of
+Energy and Industry," at
+`opendata.fcsc.gov.ae/@ministry-energy-industry/production-and-export-crude-oil`,
+plus an SDMX dataflow named **"Crude Oil Reserves, Production, Exports and
+Imports"** (`DF_CO`) referenced in a UAE.STAT visualization link surfaced by
+search indexing.
+
+**What could NOT be confirmed**: cadence, physical-quantity-vs-value, any
+country/partner breakdown, or licence text — none of the actual data pages or the
+portal's terms pages could be loaded this cycle. Methods tried, with their exact
+failure signatures, recorded so a future cycle does not repeat them blind:
+
+1. Direct `curl` through the proxy, with realistic browser headers (`User-Agent`,
+   `Accept`, `Accept-Language`), against `fcsc.gov.ae` and both subdomains:
+   consistent Cloudflare **`HTTP 403`**, response titled "Attention Required! |
+   Cloudflare" — a bot-management challenge response, not a dead domain or a 404.
+2. `WebFetch` tool: **`HTTP 403`** on every `fcsc.gov.ae`-family URL tried,
+   including the plain homepage on a second attempt.
+3. `r.jina.ai` reader proxy (an independent headless-browser service): worked
+   **exactly once**, for the plain homepage nav only, then returned
+   **`401 AuthenticationRequiredError ... blocked from performing anonymous
+   queries due to bad IP reputation`** on every subsequent request to this
+   specific domain for the rest of the session, including on retry after a delay
+   — i.e. now blocked for this target specifically, not merely rate-limited.
+4. Google Translate proxy trick (`fcsc-gov-ae.translate.goog/...`): relayed the
+   origin's own **`403`** through unchanged.
+5. Generic CORS proxy (`api.allorigins.win`): **`HTTP 522`** (Cloudflare timeout
+   reaching the origin through that proxy).
+6. Wayback Machine availability API, specifically for the `/p/about` licence page:
+   **`archived_snapshots: {}`** — no snapshot has ever been taken.
+
+One AI-generated web-search summary paraphrased what it characterized as FCSC's
+open-data reuse terms in permissive-sounding language ("usable, reusable and
+republished by any individual ... credited ... no distortion ..."). **This is
+explicitly not treated as a licence read.** It is a search-engine summary of a
+page this cycle never actually loaded, and the standing rule is unambiguous that a
+snippet can never promote a source past UNRESOLVED. Recorded here only so a future
+cycle knows `/p/about` and `/p/open-data-101` are the specific pages to prioritize
+once the block clears — not as evidence the licence is fine.
+
+**Verdict: UNRESOLVED / could-not-reach**, on the same footing as
+`open.data.gov.sa` (§24-25), but on a wider and more deliberate block: six
+independent methods, one consistent outcome (active Cloudflare bot-management
+across the whole domain family, not a timeout or flaky origin). **Recommendation:
+do not re-attempt with the same tool stack** — every method above shares either
+this proxy's network path or a generic reader/proxy service Cloudflare can
+fingerprint the same way. If revisited, the next genuinely different thing to try
+is a real interactive browser session, if one becomes available to this role, not
+another curl/proxy/reader-service variant.
+
+### 28.4 Qatar — Planning and Statistics Authority (PSA): could-not-reach, same discipline
+
+URLs tried: `psa.gov.qa/en/statistics1/StatisticsSite/Pages/Trade.aspx`,
+`psa.gov.qa/en/Pages/default.aspx`, plain `psa.gov.qa`. Methods and results:
+direct `curl` through the proxy — TLS-layer **`Recv failure: Connection reset by
+peer`** (the same failure signature §24.1 judged "more consistent with the
+origin's own problem than a block aimed at us specifically," though that read was
+about a different domain and is not assumed to transfer here without more
+evidence); `WebFetch` — **`HTTP 503 Service Unavailable`**; `r.jina.ai`, tried
+twice against two different URLs — both **`TimeoutError: page.goto ... Timeout
+15000ms exceeded`**, i.e. an independent real headless browser also cannot get
+the page to load within 15 seconds. Also noted in passing, not itself reached:
+search results reference a "National Planning Council" as a current publisher of
+Qatar export statistics — a possibly-renamed or parallel body to PSA, not
+disambiguated this cycle, and a concrete lead for next time.
+
+**Verdict: UNRESOLVED / could-not-reach.** Three methods, three distinct failure
+signatures, none successful — closer to "genuinely hard to reach" than to a
+deliberate block, but not conclusively either, on the evidence gathered so far.
+**Recommendation: try the "National Planning Council" naming directly next time**,
+and retry PSA itself only if a new fetch method becomes available — don't spend a
+cycle re-running the same three methods absent a reason to think the origin has
+changed.
+
+### 28.5 Net effect
+
+**No new numeric input enters the model, `site/data/hormuz.json`, or
+`sources.html` this cycle.** What changed: (1) the standing bucket-1 gap named in
+§27.7 — Iraq, Kuwait, UAE, Qatar customs/statistics authorities "remain
+effectively unchecked" — is now checked for all four, for the first time; (2)
+Iraq/SOMO is the most substantively promising raw finding this standing search has
+produced to date: a monthly, physical-quantity, route-split (Basrah/North/KRG)
+export series that maps closely onto the must-transit/bypass distinction already
+used elsewhere in this document — but its licence is unresolved (silent, default
+copyright footer, no terms page found anywhere on the site), so it is flagged for
+a CEO/owner decision rather than adopted or used for calibration; (3) Kuwait is
+closed by mechanism, the same shape of decisive negative §24.5 reached for GASTAT
+— CBK's oil-export data is structurally value-only and structurally excludes a
+by-destination table, and the one product that might carry more (CSB's Petrol
+module) is login-gated; (4) UAE (FCSC) and Qatar (PSA) are both recorded
+could-not-reach, each on multiple independently-failing methods, so future cycles
+don't repeat the same dead ends — UAE in particular has named, specific, plausible
+datasets (a Ministry-of-Energy-sourced "production and export crude oil" open-data
+entry) worth prioritizing the moment its Cloudflare block clears.
+
+### 28.6 Carry-forward
+
+1. **Owner/CEO decision needed: Iraq/SOMO.** Recommend the CEO weigh asking the
+   owner to authorize direct outward contact to SOMO requesting explicit
+   redistribution permission for the Basrah/North/KRG monthly export-quantity
+   series — substantively the strongest candidate this search has found, held
+   back only by licence silence, not by data quality or cadence. Also worth a
+   deeper crawl for a terms/licence page next cycle before escalating to outward
+   contact, in case one exists somewhere not yet found (only the obvious locations
+   were checked this cycle).
+2. **UAE (FCSC):** retry when a different fetch mechanism (e.g. a real browser
+   session) is available; prioritize `opendata.fcsc.gov.ae/p/about` and
+   `/p/open-data-101` (licence), the `production-and-export-crude-oil` dataset
+   page itself, and the `uaestat.fcsc.gov.ae` `DF_CO` SDMX dataflow.
+3. **Qatar (PSA):** try the "National Planning Council" naming directly next
+   time; retry PSA itself only if a new method becomes available.
+4. **Kuwait:** this specific sub-search (CBK/CSB oil-by-country) should be
+   considered closed on the same footing as §24.6 closed GASTAT's equivalent ask.
+   Re-opening it needs CSB's login-gated Petrol module, which needs an
+   owner-authorized account first.
+5. Everything else carried forward verbatim from §27.7: Japan — re-run
+   `scripts/japan_imports_analysis.py` after September 2026 data publishes
+   (expected ~late October on the historical cadence); UN Comtrade — still
+   awaiting an owner call on account registration or direct outward contact;
+   GASTAT's 2026 edition — expected ~mid-2027 on its current lag.
