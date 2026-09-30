@@ -52,6 +52,15 @@ What it does
    persistent history -- site/data/history.json, site/data/history.csv,
    site/feed.xml and site/history.html (scripts/generate_history.py,
    backlog.md "NEW 2026-09-23 (G5)"). Idempotent by for_date.
+7. Writes a plain "what changed and why" sentence comparing today's
+   published figure to the previous one (build_change_note()), shown near
+   the headline on site/index.html. It only ever cites causes already in
+   model['estimator'] (re-anchor, a revised transit-share ratio, or a new/
+   revised GPCI production figure) or falls back to a neutral sentence when
+   the number is unchanged, either day is suppressed, or the recorded
+   fields don't explain the move -- it never guesses at a cause. G5
+   follow-up (okrs.md, backlog.md 2026-09-28), tracked as the deliberate
+   scope cut on PR #19.
 
 What it deliberately will NOT do
 --------------------------------
@@ -330,6 +339,89 @@ def classify(series, companions):
 
 
 # --------------------------------------------------------------------------
+# "What changed and why" (backlog.md G5 follow-up, okrs.md G5)
+# --------------------------------------------------------------------------
+
+def build_change_note(est, model, prev_entry):
+    """A short, honest, plain-language sentence about how today's published
+    figure compares to the previous one, and -- only when we can actually
+    show it from data already in hormuz.json (model['estimator']) plus the
+    previously published row in history.json -- why.
+
+    Never invents a cause outside the model's own cleared inputs: no news,
+    no geopolitics, nothing not already in model['estimator']. When we
+    cannot honestly attribute the move to a specific recorded input (first
+    day, suppressed either side, or the recorded fields don't explain it),
+    this falls back to a neutral sentence rather than guessing.
+    """
+    estr = model.get("estimator", {})
+    anchor_period = est.get("anchor_period")
+    point = est.get("point")
+
+    if prev_entry is None:
+        return ("This is the first estimate in our published history, so there "
+                "is nothing yet to compare it to.")
+
+    if est.get("suppressed") or point is None:
+        return ("We are not publishing a point estimate today, so there is no "
+                "day-over-day change to describe &mdash; see above for why.")
+
+    prev_point = prev_entry.get("point")
+    if prev_entry.get("suppressed") or prev_point is None:
+        return ("The previous day has no published estimate to compare against "
+                "(it fell past our tested horizon on %s), so we are not "
+                "describing a change here." % prev_entry.get("for_date", "the prior day"))
+
+    if round(prev_point, 1) == round(point, 1):
+        return ("No change since our %s estimate: still %.1f million barrels "
+                "per day." % (prev_entry["for_date"], point))
+
+    direction = "rose" if point > prev_point else "fell"
+    headline = "The estimate %s from %.1f to %.1f million barrels per day" % (direction, prev_point, point)
+
+    prev_anchor = prev_entry.get("anchor_period")
+    prev_transit_share = prev_entry.get("transit_share")
+    cur_transit_share = estr.get("transit_share")
+    prev_gpci_month = prev_entry.get("gpci_latest_month")
+    cur_gpci_month = estr.get("gpci_latest_month")
+    prev_gpci = prev_entry.get("gpci_latest")
+    cur_gpci = estr.get("gpci_latest")
+
+    if prev_anchor and anchor_period and prev_anchor != anchor_period:
+        return ("%s because our anchor quarter updated: EIA published new Strait "
+                "of Hormuz figures and the anchor moved from %s to %s, which "
+                "resets the transit-share ratio (anchor Hormuz volume &divide; "
+                "anchor Gulf production) the model multiplies by." % (
+                    headline, period_words(prev_anchor), period_words(anchor_period)))
+
+    if (prev_transit_share is not None and cur_transit_share is not None
+            and prev_transit_share != cur_transit_share):
+        return ("%s. Our anchor quarter (%s) is still the same quarter, but EIA "
+                "revised the published Hormuz figure for it, which changed the "
+                "transit-share ratio the model multiplies by." % (headline, period_words(anchor_period)))
+
+    if (prev_gpci_month and cur_gpci_month and prev_gpci is not None and cur_gpci is not None
+            and (prev_gpci_month != cur_gpci_month or prev_gpci != cur_gpci)):
+        gpci_dir = "higher" if cur_gpci > prev_gpci else "lower"
+        return ("%s. The anchor quarter (%s) and its transit-share ratio are "
+                "unchanged; what moved is the latest Gulf producer crude output "
+                "figure (GPCI) the model tracks, now %.2f million b/d for %s, "
+                "%s than %.2f for %s." % (
+                    headline, period_words(anchor_period), cur_gpci, month_words(cur_gpci_month),
+                    gpci_dir, prev_gpci, month_words(prev_gpci_month)))
+
+    if (prev_transit_share is not None and cur_transit_share is not None
+            and prev_gpci_month and cur_gpci_month and prev_gpci is not None and cur_gpci is not None):
+        return ("%s. Our recorded anchor, transit-share ratio and latest GPCI "
+                "figure are all unchanged from the previous day to the precision "
+                "we store them, so this is a small move at a rounding boundary." % headline)
+
+    return ("%s. Our anchor quarter (%s) is unchanged since %s; we do not have "
+            "enough detail recorded from that previous run to say more "
+            "precisely what moved it." % (headline, period_words(anchor_period), prev_entry["for_date"]))
+
+
+# --------------------------------------------------------------------------
 # Main
 # --------------------------------------------------------------------------
 
@@ -576,6 +668,15 @@ def main(today=None, page=None, xlsx=None):
     # of duplicating it. This is a record of OUR OWN past outputs, never a
     # republished EIA series.
     history = historymod.load_history()
+    # Captured BEFORE upsert (which mutates history in place) -- the most
+    # recent entry strictly before today's date, i.e. what "yesterday"
+    # actually published, not today's own (possibly re-run) row.
+    prev_entry = next((e for e in reversed(history["entries"]) if e["for_date"] < est["for_date"]), None)
+    # G5 follow-up (okrs.md, backlog.md 2026-09-28) -- a plain "what changed
+    # and why" sentence. Computed from est/model['estimator'] (both already
+    # in hormuz.json) plus prev_entry (history.json); never from anything
+    # outside those two. See build_change_note()'s docstring.
+    change_note = build_change_note(est, model, prev_entry)
     historymod.upsert(history, {
         "for_date": est["for_date"],
         "retrieved_utc": doc["retrieved_utc"],
@@ -589,6 +690,12 @@ def main(today=None, page=None, xlsx=None):
         "regime_kind": model.get("regime_kind"),
         "suppressed": bool(est.get("suppressed")),
         "horizon_days": est.get("horizon_days"),
+        # Recorded so a FUTURE run's change note can tell "new GPCI month
+        # landed" apart from "EIA revised the anchor" apart from "nothing in
+        # our recorded fields explains it" -- see build_change_note().
+        "transit_share": model["estimator"].get("transit_share"),
+        "gpci_latest_month": model["estimator"].get("gpci_latest_month"),
+        "gpci_latest": model["estimator"].get("gpci_latest"),
     })
     historymod.save_history(history)
     historymod.save_csv(history["entries"])
@@ -624,6 +731,15 @@ def main(today=None, page=None, xlsx=None):
         new, flags=re.S)
     if n != 1:
         raise Fail("could not find exactly one GENERATED:note block in index.html")
+
+    # G5 follow-up: the "what changed and why" sentence computed above.
+    change_note_html = '  <p class="change-note">\n    %s\n  </p>\n' % change_note
+    new, n = re.subn(
+        r"<!-- GENERATED:change_note -->.*?<!-- /GENERATED:change_note -->",
+        lambda m: "<!-- GENERATED:change_note -->\n" + change_note_html + "  <!-- /GENERATED:change_note -->",
+        new, flags=re.S)
+    if n != 1:
+        raise Fail("could not find exactly one GENERATED:change_note block in index.html")
 
     # The chart is generated from `series` itself (scripts/generate_chart.py)
     # so it extends automatically as EIA quarters are added -- see that
