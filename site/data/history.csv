@@ -12,3 +12,4 @@ for_date,point,band_low,band_high,method,anchor_period,regime,regime_kind,suppre
 2026-09-26,5.6,4.9,10.8,gpci-transit-share,2Q26,disrupted,local,false,88,2026-09-27T10:31:46Z
 2026-09-27,5.6,4.9,10.8,gpci-transit-share,2Q26,disrupted,local,false,89,2026-09-28T11:39:17Z
 2026-09-28,5.6,4.9,10.8,gpci-transit-share,2Q26,disrupted,local,false,90,2026-09-29T11:20:25Z
+2026-09-29,5.6,4.9,10.8,gpci-transit-share,2Q26,disrupted,local,false,91,2026-09-30T11:08:34Z
