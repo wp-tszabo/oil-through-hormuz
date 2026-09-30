@@ -403,12 +403,19 @@ def build_change_note(est, model, prev_entry):
     if (prev_gpci_month and cur_gpci_month and prev_gpci is not None and cur_gpci is not None
             and (prev_gpci_month != cur_gpci_month or prev_gpci != cur_gpci)):
         gpci_dir = "higher" if cur_gpci > prev_gpci else "lower"
-        return ("%s. The anchor quarter (%s) and its transit-share ratio are "
-                "unchanged; what moved is the latest Gulf producer crude output "
-                "figure (GPCI) the model tracks, now %.2f million b/d for %s, "
-                "%s than %.2f for %s." % (
-                    headline, period_words(anchor_period), cur_gpci, month_words(cur_gpci_month),
-                    gpci_dir, prev_gpci, month_words(prev_gpci_month)))
+        if cur_gpci_month != prev_gpci_month:
+            gpci_clause = (
+                "what moved is the latest Gulf producer crude output figure (GPCI) "
+                "the model tracks: a new month, %s, is now the latest observed, at "
+                "%.2f million b/d, %s than %s's %.2f." % (
+                    month_words(cur_gpci_month), cur_gpci, gpci_dir, month_words(prev_gpci_month), prev_gpci))
+        else:
+            gpci_clause = (
+                "what moved is the latest Gulf producer crude output figure (GPCI) "
+                "the model tracks: %s's figure was revised from %.2f to %.2f million "
+                "b/d, %s than before." % (month_words(cur_gpci_month), prev_gpci, cur_gpci, gpci_dir))
+        return "%s. The anchor quarter (%s) and its transit-share ratio are unchanged; %s" % (
+            headline, period_words(anchor_period), gpci_clause)
 
     if (prev_transit_share is not None and cur_transit_share is not None
             and prev_gpci_month and cur_gpci_month and prev_gpci is not None and cur_gpci is not None):
