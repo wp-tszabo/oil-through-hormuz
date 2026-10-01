@@ -27,6 +27,13 @@ estimates — see `scripts/generate_history.py`).
 `data/history.json`) and `feed.xml` is the Atom feed of our own daily
 estimates. Both are rewritten each refresh run alongside `index.html`.
 
+`strait.html` is a hand-maintained static explainer about the Strait of
+Hormuz itself (geography, what normally flows through it, how it compares to
+other chokepoints, why there's no free daily measurement) — background
+content, not touched by `refresh_estimate.py` or `generate_history.py`. Its
+quarterly figures mirror `sources.html`/`hormuz.json`; if EIA publishes a new
+quarter, update this page by hand to match.
+
 Every HTML page carries the GoatCounter visitor-count snippet
 (`data-goatcounter=...`) immediately before `</body>`, outside any
 `<!-- GENERATED:... -->` block so the daily refresh never rewrites it. Any new
