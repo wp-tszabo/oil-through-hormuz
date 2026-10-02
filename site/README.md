@@ -38,3 +38,15 @@ Every HTML page carries the GoatCounter visitor-count snippet
 (`data-goatcounter=...`) immediately before `</body>`, outside any
 `<!-- GENERATED:... -->` block so the daily refresh never rewrites it. Any new
 page must include it too; `terms.html` → "Privacy" describes what it collects.
+
+`share.png` is the Open Graph/Twitter share-card image, wired into
+`og:image`/`twitter:image` on `index.html`, `history.html` and
+`strait.html`. It's generated once by `scripts/generate_share_image.py`
+(Pillow, a build-time dependency only, not shipped to the page) and
+committed as a static file — not regenerated per refresh. It deliberately
+carries no figure, date or "as of" claim, just the brand name and an
+honest one-line description (with the word "estimate"), because a static
+image can't be kept in sync with the daily-changing point figure the way
+`index.html`'s generated blocks can; see the comment in
+`scripts/generate_share_image.py` and `index.html`'s OG/Twitter block for
+why. If the branding changes, re-run the script and commit the new PNG.
