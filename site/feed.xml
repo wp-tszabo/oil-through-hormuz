@@ -5,8 +5,15 @@
   <link href="https://oilthroughhormuz.com/feed.xml" rel="self" />
   <link href="https://oilthroughhormuz.com/history.html" />
   <id>https://oilthroughhormuz.com/feed.xml</id>
-  <updated>2026-10-03T10:22:35Z</updated>
+  <updated>2026-10-04T11:05:06Z</updated>
   <author><name>Hormuz Oil Tracker</name></author>
+  <entry>
+    <title>No estimate published for 2026-10-03 — past our tested horizon</title>
+    <id>https://oilthroughhormuz.com/history.html#2026-10-03</id>
+    <link href="https://oilthroughhormuz.com/history.html#2026-10-03" />
+    <updated>2026-10-04T11:05:06Z</updated>
+    <summary>Our model did not publish a daily figure for 2026-10-03: this date falls past the one-quarter horizon the method has been back-tested over (anchor quarter 2Q26). We stop rather than extrapolate past what we have tested; see the methodology at https://oilthroughhormuz.com/sources.html.</summary>
+  </entry>
   <entry>
     <title>No estimate published for 2026-10-02 — past our tested horizon</title>
     <id>https://oilthroughhormuz.com/history.html#2026-10-02</id>
