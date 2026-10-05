@@ -17,3 +17,4 @@ for_date,point,band_low,band_high,method,anchor_period,regime,regime_kind,suppre
 2026-10-01,,,,,2Q26,disrupted,local,true,93,2026-10-02T11:04:45Z
 2026-10-02,,,,,2Q26,disrupted,local,true,94,2026-10-03T10:22:35Z
 2026-10-03,,,,,2Q26,disrupted,local,true,95,2026-10-04T11:05:06Z
+2026-10-04,,,,,2Q26,disrupted,local,true,96,2026-10-05T12:13:55Z

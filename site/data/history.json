@@ -1,6 +1,6 @@
 {
   "_comment": "Our own past daily model estimates for oil flow through the Strait of Hormuz -- OUR model's outputs, not a republished third-party series. See site/data/hormuz.json for the EIA figures the model is calibrated against, and sources.html/methodology.md for how the estimate and its range are built. Every entry is an estimate, never a measurement. 'suppressed': true means no daily figure was published that day because the estimate fell past our back-tested horizon (methodology.md section 19-20); point/band_low/band_high are null on those rows by design, not a missing-data accident. Appended and idempotently updated in place by scripts/refresh_estimate.py via scripts/generate_history.py.",
-  "generated_utc": "2026-10-04T11:05:06Z",
+  "generated_utc": "2026-10-05T12:13:55Z",
   "entries": [
     {
       "for_date": "2026-09-16",
@@ -265,6 +265,23 @@
       "regime_kind": "local",
       "suppressed": true,
       "horizon_days": 95,
+      "transit_share": 0.4099,
+      "gpci_latest_month": "202608",
+      "gpci_latest": 13.57
+    },
+    {
+      "for_date": "2026-10-04",
+      "retrieved_utc": "2026-10-05T12:13:55Z",
+      "point": null,
+      "band_low": null,
+      "band_high": null,
+      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 2Q26: from persistence (4.9, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.945, applied in the direction production moved.",
+      "anchor_period": "2Q26",
+      "method": null,
+      "regime": "disrupted",
+      "regime_kind": "local",
+      "suppressed": true,
+      "horizon_days": 96,
       "transit_share": 0.4099,
       "gpci_latest_month": "202608",
       "gpci_latest": 13.57
