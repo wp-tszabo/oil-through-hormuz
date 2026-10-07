@@ -14,7 +14,7 @@
     "provenance_caveat": "EIA analysis based on Vortexa tanker tracking data. We republish EIA's published analysis; we do not hold or license Vortexa data.",
     "publisher_caveat": "Since the end of February 2026, AIS signal data for ships transiting the Strait of Hormuz have become especially unreliable. For 2026 Hormuz volumes, tanker tracking data are being revised frequently based on the best available information."
   },
-  "retrieved_utc": "2026-10-06T12:00:06Z",
+  "retrieved_utc": "2026-10-07T11:45:11Z",
   "units": "million barrels per day",
   "series": [
     {
@@ -73,7 +73,7 @@
     "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
     "shape_function": "GPCI transit-share: the strait is assumed to carry the same share of Gulf producer crude output (GPCI) as in the latest published quarter; the estimate moves monthly with GPCI. Replaced persistence on 2026-09-23 (methodology.md section 19).",
     "estimate": {
-      "for_date": "2026-10-05",
+      "for_date": "2026-10-06",
       "point": null,
       "band_low": null,
       "band_high": null,
@@ -82,7 +82,7 @@
       "anchor_value": 4.9,
       "is_measurement": false,
       "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6.",
-      "horizon_days": 97,
+      "horizon_days": 98,
       "max_horizon_days": 92,
       "suppressed": true
     },
@@ -145,13 +145,13 @@
       "formula": "estimate = (Hormuz total oil in anchor quarter / GPCI averaged over anchor quarter) x GPCI in latest history month",
       "anchor_period": "2Q26",
       "anchor_total_oil": 4.9,
-      "gpci_anchor_quarter": 11.95,
-      "transit_share": 0.4099,
-      "gpci_latest_month": "202608",
-      "gpci_latest": 13.57,
+      "gpci_anchor_quarter": 11.93,
+      "transit_share": 0.4108,
+      "gpci_latest_month": "202609",
+      "gpci_latest": 15.42,
       "production_since_anchor": "rising",
       "band_rule": "calm: point +/- max(3%, 1.5 x worst calm back-test miss). disrupted: between persistence (anchor volume unchanged) and the estimator's worst measured disrupted miss (factor k) in the direction production has moved since the anchor quarter.",
-      "k_disrupted": 1.945,
+      "k_disrupted": 1.937,
       "calm_halfwidth": 0.03,
       "backtest": [
         {
@@ -238,9 +238,9 @@
           "target": "2Q26",
           "anchor": "1Q26",
           "gpci_month": "202604",
-          "predicted": 9.53,
+          "predicted": 9.49,
           "actual": 4.9,
-          "error_pct": 94.4,
+          "error_pct": 93.6,
           "persistence_error_pct": 204.1,
           "regime": "disrupted"
         },
@@ -248,9 +248,9 @@
           "target": "2Q26",
           "anchor": "1Q26",
           "gpci_month": "202605",
-          "predicted": 9.0,
+          "predicted": 9.02,
           "actual": 4.9,
-          "error_pct": 83.7,
+          "error_pct": 84.1,
           "persistence_error_pct": 204.1,
           "regime": "disrupted"
         }
@@ -271,8 +271,8 @@
     "dataset": "Short-Term Energy Outlook",
     "table": "Table 3d. World Crude Oil Production (workbook STEO_m.xlsx, sheet 3dtab)",
     "url": "https://www.eia.gov/outlooks/steo/xls/STEO_m.xlsx",
-    "release": "September 2026",
-    "last_historical_month": "202608",
+    "release": "October 2026",
+    "last_historical_month": "202609",
     "cadence": "monthly",
     "licence": "U.S. federal government work, public domain; free to use and distribute with acknowledgement",
     "series_used": [
