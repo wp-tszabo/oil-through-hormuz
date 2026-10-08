@@ -2729,3 +2729,102 @@ The standing mandate's biggest-named gap is a second anchor at **better than qua
 **Labelling discipline, stated because this is the first owner-risk-accepted (not licence-cleared) input this company has ever carried, even at analysis-only tier**: this must never be described as "licence-cleared" in any company-memory file or site copy. `scripts/somo_exports_analysis.py`'s docstring states this explicitly, and so does this section. If SOMO is ever promoted to a tier visible in `sources.html`, the copy must say "used under an explicit owner risk-acceptance" — not round it up to the language used for EIA, Japan, Singapore or GASTAT.
 
 No change to `site/`, `site/data/hormuz.json`, or `sources.html`. KR6 delivery classified **(a)+(b)**: a new, previously-UNRESOLVED-on-licence source is now live-data-checked and wired in at its correct tier, with the tier decision itself resting on evidence (cadence, scope) rather than on the licence question the owner had already settled.
+
+## 39. KR6, 2026-10-08 (30th cycle) — design for extending the estimate past the 92-day tested horizon (owner directive: "always show a current estimate")
+
+**Status: DESIGN ONLY, for CEO review under methodology authority. Not implemented.** `scripts/refresh_estimate.py` and `site/` are untouched by this entry; Build wires it in only after the CEO decides. Triggered by the owner's 2026-10-08 directive (GOVERNANCE.md → "Always show a current estimate") finding the live page blank: `for_date` 2026-10-06, `horizon_days` 98, `suppressed: true`, `point/band_low/band_high: null`, unchanged since the owner's note. This has been a category-1 open item every day since ~2026-10-01.
+
+### 39.1 The mechanism being replaced
+
+`scripts/refresh_estimate.py:583-585`: `if horizon > MAX_HORIZON_DAYS: est["suppressed"]=True; point=band_low=band_high=None`. This throws away a number that is **already computed** one line earlier (`point_raw = ratio * g_latest`, line 538) from the anchor's transit-share ratio times the *latest monthly* GPCI — GPCI keeps refreshing monthly regardless of horizon, so `point_raw` is not frozen persistence; it already tracks newer Gulf-production data than the quarterly Hormuz anchor. The only thing past-horizon is the **confidence in the transit-share ratio itself**, which is one quarter old and ageing. Suppressing to null discards a real, already-tracked signal to avoid overstating confidence — the right instinct in isolation, but it produces the blank page the owner has now ruled out as a resting state.
+
+### 39.2 Decision: keep publishing the GPCI-transit-share point past the horizon; widen only the band
+
+Confirmed, not rejected. Three reasons:
+1. **No alternative estimator has more evidence behind it.** Persistence (the old pre-19.2 method) was already shown to be worse than GPCI-transit-share in every back-tested quarter except 1Q26's onset, where they tied (19.3). Switching to persistence specifically for the extrapolated zone would mean using the *worse* of two already-compared methods at exactly the moment extra caution matters most.
+2. **It is already the freshest-tracking construction available from cleared inputs.** `point_raw` already moves with GPCI monthly (see standing-mandate context given for this task) — extrapolation doesn't need a new input or a new formula, only a wider, honestly-labelled band around the number already being computed.
+3. **Continuity.** Any construction that is discontinuous at the horizon boundary — e.g. switching formulas, or freezing the point at whatever it was on day 92 — would produce a visible jump in the published figure for a reason that has nothing to do with new evidence. The design below reduces to the *exact* currently-published band at `horizon == MAX_HORIZON_DAYS` (39.3) and only departs from it as real extra time (not a new event) accumulates.
+
+### 39.3 The widening rule
+
+Let `k` be the already-computed, back-tested disrupted-regime miss factor (`band_parameters()`, currently 1.937), and `MAX_HORIZON_DAYS = 92`. For `horizon_days > 92`, define
+
+```
+extra = (horizon_days - 92) / 92            # fraction of one more tested-horizon-length period, continuous
+k_ext = k ** (1 + extra)                     # geometric compounding of the SAME validated factor
+```
+
+and build the band with the existing disrupted-regime construction, substituting `k_ext` for `k`, **regardless of what `classify()` currently says the regime is**:
+
+```
+rising:  [anchor_total_oil, point_raw * k_ext]
+falling: [point_raw / k_ext, anchor_total_oil]
+```
+
+Rationale, piece by piece:
+- **Reuse `k`, introduce no new fitted parameter.** The only genuine multi-quarter-ahead evidence this company has is the four-point hindsight series in §19.6 (3Q25 +1.0%, 4Q25 +0.3%, 1Q26 +31.3%, 2Q26 +161%) — n=4, hindsight GPCI (not real-time), and explicitly **not** the realistic-timing back-test that makes the one-quarter `k` credible. Fitting a precise second-quarter or third-quarter error constant from that series would be false precision: too few independent quarters, and the test itself isn't the one the live job can run. What that series *does* support, directionally, is that error accelerates rather than grows linearly as horizon stretches (0.3% → 31% → 161% are not evenly spaced steps). Geometric compounding of the one number this company has actually validated (`k`) is the construction that (a) matches that accelerating shape directionally, and (b) needs no new statistic — only a judgment call on how to extend an existing one, which is squarely a methodology decision.
+- **Forced disrupted-style framing, not regime-dependent.** Within the tested horizon the band depends on `classify()`'s calm/disrupted call, because that call is based on a quarter-boundary move we've actually observed. Past the horizon, the anchor quarter is the same data the regime call was based on — it isn't getting any fresher, so trusting "calm" indefinitely into unobserved territory is not defensible. Using the wider, persistence-to-k construction unconditionally past 92 days is a deliberate loss of precision in exchange for honesty: it guarantees the extrapolated band is never narrower than whatever was published at `horizon == 92` (disrupted bands are wider than calm ones by construction: k=1.937 vs. calm's ±3%), satisfying the "never narrower" requirement without a regime-dependent special case.
+- **Continuity at the boundary.** At `horizon = 92`, `extra = 0`, so `k_ext = k^1 = k` — identical to §19.5's published disrupted-regime formula. Verified numerically below (39.4). No jump is introduced at the moment extrapolation starts; the only discontinuity possible is if the regime was "calm" (narrower) at `horizon=92` itself, in which case the extrapolated band at `horizon=93` is wider than the calm band at 92 — which is the direction the requirement asks for, not a jump the extrapolation itself is creating for the wrong reason.
+- **Direction stays live.** `phase` ("rising"/"falling") is read from `g_latest` vs. `g_anchor`, both already monthly-fresh — unaffected by this change.
+
+### 39.4 Worked example, today's actual numbers
+
+From `site/data/hormuz.json` as of this cycle: anchor 2Q26, `anchor_total_oil = 4.9`, `transit_share (ratio) = 0.4108`, `gpci_latest (202609) = 15.42`, `k = 1.937`, `phase = rising`. `point_raw = 0.4108 x 15.42 = 6.33`.
+
+| horizon_days | extra | k_ext | band (rising) | note |
+|---|---|---|---|---|
+| 92 (boundary) | 0.000 | 1.937 | 4.9 – 12.3 | identical to §19.5's published disrupted-regime formula — confirms continuity |
+| 99 (today, 2026-10-07 target) | 0.076 | 2.037 | 4.9 – 12.9 | what would publish today under this design, instead of null |
+| 184 (cap, 39.5) | 1.000 | 3.752 | 4.9 – 23.8 | widest the design allows before capping |
+| 276 (uncapped, for comparison) | 2.000 | 7.268 | 4.9 – 46.0 | shown only to justify why a cap is needed — not a number this design would ever publish |
+
+At the cap (184 days), the upper edge (23.8) is already comparable to or beyond the highest figure *any* cleared historical construction this company has published — the calm-ratio construction flagged in §19.5 as the aggressive edge of the historically-considered range (≈15.5 using 2026-09-23's numbers, recomputing proportionally higher with today's GPCI). That is independent, non-time-based evidence that 184 days is roughly where mechanical widening stops being informative, not just a round number.
+
+### 39.5 The cap: stop widening at 184 days (one extra tested-horizon-length period); keep tracking the point
+
+Geometric compounding is unbounded as `extra -> infinity`: by 276 days the band already spans 4.9–46.0, nearly four times the already-wide 92-day band, and with no evidence shaping it beyond the directional accelerate-not-linear read from a four-point hindsight series. An ever-widening band given no new information eventually stops being "a best estimate" and becomes a different category-4 failure — meaninglessly wide, or liable to be misread as having real structure it doesn't have.
+
+**Rule:** cap `extra` at 1.0 (i.e. `horizon_days >= 184`, double the tested horizon), beyond which `k_ext` is held at `k^2` indefinitely — the band stops growing, but the **point keeps updating** with each new monthly GPCI figure, because GPCI is still arriving at its normal cadence and nothing about the point depends on the stale part of the model. Two separate failure clocks are kept separate this way: a stale *anchor quarter* (which this design addresses) is not the same problem as a stale *GPCI month*, which is already guarded independently by `MAX_GPCI_AGE_DAYS` (39.7 flags a gap in how that guard currently applies).
+
+A horizon this long (184 days = roughly double the EIA Global Energy Security Data supplement's normal ~6–10 week lag) is itself anomalous — either EIA's release is unusually delayed or something in this company's own pipeline is broken. That's an operational signal, not a methodology one, and the disclosure text (39.6) says so explicitly so a reader (and the CEO, reviewing this every cycle per the standing requirement) can tell the two situations apart.
+
+### 39.6 Disclosure text
+
+Two new states, both distinct from both the normal in-horizon state (unchanged) and the old null "no current estimate" state (retired):
+
+**State B — extrapolated, 92 < horizon_days <= 184 days:**
+
+> Our model's estimate for {date} (UTC) — extrapolated past our tested range
+>
+> Working range **{lo}** to **{hi}**. This range is wider than usual. Our back-test only validates this model up to 92 days past the anchor quarter ({anchor_period}); we are now {horizon_days} days past it. We widen the range further for every extra day in this zone, because the one signal we have about longer-range error — measured with hindsight data our live model does not have in real time — shows the miss growing faster than the one-quarter error we actually validated. Treat this as a wider-than-tested best guess, not a backtested figure. It will tighten back to our normal range as soon as EIA publishes {next_anchor_period}.
+
+**State C — extrapolated past the cap, horizon_days > 184 days:**
+
+> Our model's estimate for {date} (UTC) — extrapolated well past our tested range; EIA's release is overdue
+>
+> Working range **{lo}** to **{hi}**. We have stopped widening this range further: past 184 days (double our tested horizon) we have no evidence at all to shape it, and continuing to widen it mechanically would create false precision in the wrong direction. The point figure above still reflects the latest available production data ({gpci_latest_month}). EIA has also gone unusually long without publishing a new Strait of Hormuz quarter — longer than its normal lag even accounting for this extrapolation — which may indicate a delay on their side or a problem in our own pipeline; this has been flagged for review. Treat this figure as our best available guess, not a validated estimate.
+
+Both states keep the existing `est-label`/`figure`/`unit`/`band` structure (no new page sections) so Build's change is additive to the existing templates in `scripts/refresh_estimate.py:657-668`, not a redesign.
+
+### 39.7 Implementation note for Build (flagged, not mine to fix)
+
+`scripts/refresh_estimate.py:534` only checks `MAX_GPCI_AGE_DAYS` staleness `if horizon <= MAX_HORIZON_DAYS` — i.e. the GPCI freshness guard is currently skipped entirely once suppression kicks in, because the suppressed point was never published anyway. If this design ships, `point_raw` is published past the horizon too, so that staleness check needs to run **unconditionally**, not just inside the `horizon <= 92` branch — otherwise State B/C could publish a point built on a GPCI month stale enough that `MAX_GPCI_AGE_DAYS` was supposed to block it. This is a correctness dependency of this design, not a new methodology question; flagging it for whoever implements this (Build), per the task's "do not touch refresh_estimate.py" instruction.
+
+### 39.8 Rejected alternatives
+
+1. **Freeze the band at the day-92 width indefinitely.** Rejected outright by the owner's own requirement ("must visibly widen with time past the horizon, never stay flat").
+2. **Linear widening (`k_ext = k * (1 + extra)`).** Rejected: the only multi-quarter evidence available (§19.6's hindsight series) shows error accelerating, not growing linearly, across quarters. Linear widening would understate growth relative to that (weak but real) directional evidence.
+3. **Fit a new, precise multi-quarter error exponent from the four-point hindsight series.** Rejected as false precision: n=4, hindsight GPCI rather than the realistic-timing data the live job actually has, and explicitly not the back-test that makes the published `k` credible (19.3 already distinguishes the two). Reusing the already-validated `k` via compounding needs no new statistic.
+4. **Switch estimators (e.g. to raw persistence, or to a pure GPCI trend-extrapolation with no transit-share term) once past the horizon.** Rejected: persistence already loses to GPCI-transit-share in back-tested comparison (19.3); switching introduces a discontinuity at the boundary justified by elapsed time alone, not by new evidence, which is the opposite of what a horizon boundary should do.
+5. **Widen indefinitely, no cap.** Rejected: by ~9 months past anchor the band already exceeds the widest scenario this company has ever considered plausible (39.4), at which point it stops being informative and risks looking structured when it isn't — a category-4 risk from the opposite direction of the one that caused the null page.
+6. **An absolute-value plausibility clamp (e.g. clamp the upper edge to the calm-ratio construction's value) instead of a time-based cap.** Considered as a secondary cross-check (39.4 uses it to validate that 184 days is a sane place to stop) but rejected as the *primary* rule: it would introduce a second, differently-shaped parameter family (a ratio-based ceiling) on top of the time-based one, adding complexity without adding real calibration evidence over the simpler time cap.
+
+### 39.9 Confirms: no new data input required
+
+This design uses only the two already-cleared EIA datasets already in the model (the quarterly Global Energy Security Data Hormuz anchor and the monthly STEO Table 3d GPCI feed) and the already-published back-test constant `k`. No new source, licence check, or model input is needed to fix the blank page. The standing search for a second numeric anchor at better-than-quarterly cadence (methodology.md's recurring top search item, still unresolved as of §38) remains open and unaffected — it would eventually let `extra` grow more slowly between real anchor updates, but it is a separate, slower-moving question and is explicitly not a blocker for this fix.
+
+### 39.10 Limits of this design
+
+1. **The widening rule is a judgment call, not a calibrated model.** It is built to be defensible (continuous, continuity-preserving, non-arbitrary, bounded) rather than to claim any specific confidence level for the extrapolated band. State B/C's disclosure text says this plainly; it must not be shortened to something that reads like a backtested figure.
+2. **It does not fix the underlying single-anchor-cadence weakness** — it manages the symptom (a blank page) honestly rather than resolving the root cause (quarterly anchor, monthly point). §39.9's search item is the actual fix for that.
+3. **The cap (184 days) has not itself been back-tested** — there is no historical episode where this company's anchor went that stale, so the choice rests on the reasoning in 39.4–39.5 (geometric blow-up, plausibility comparison, EIA's own normal lag), not an empirical test. If EIA's cadence or lag changes materially, this number should be revisited.

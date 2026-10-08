@@ -1045,3 +1045,23 @@ No `site/` change; the published figure remains suppressed. No rubric run requir
 **Not yet implemented.** The live page still reads "no current estimate" at the time of this entry. Fixing that — a real, back-tested-as-far-as-possible extrapolation methodology, honestly labelled — is the standing top-priority item until it ships. Flagged in `backlog.md`.
 
 Updated: `GOVERNANCE.md` (new "Always show a current estimate" section, plus amendments to "Standing goals", "Methodology authority" item 4, and "Critical issues" category 1), `.claude/agents/ceo.md` (critical-issue check now explicitly covers this), `.claude/agents/research.md` (new standing-requirement section), `company-memory/rubric.md` (new §1 item).
+
+## 2026-10-08 (30th cycle): CEO methodology decision — adopt the geometric-compounding past-horizon extension (methodology.md §39)
+
+**Context.** The owner's `2faeb27` directive (addendum above) made the live "no current estimate" state a category-1 critical issue (raised this cycle as GitHub issue #30). Research was dispatched to design a defensible extension; its full design is `methodology.md` §39, independently verified by the CEO (re-derived the worked-example arithmetic by hand: `point_raw = ratio * g_latest`, `k_ext = k**(1+extra)`, all four table rows reproduce).
+
+**Decision (CEO, methodology authority, GOVERNANCE.md → "Methodology authority"): adopt Research's recommended construction as designed, no changes.**
+
+- Keep publishing the GPCI-transit-share point past the 92-day tested horizon — do not switch estimators. It already beats persistence in every back-tested quarter but one (tied), and it already tracks fresher monthly GPCI regardless of horizon.
+- Widen only the band: `extra = (horizon_days - 92) / 92`, `k_ext = k ** (1 + extra)`, applied unconditionally in the disrupted-regime band shape (`[anchor_value, point_raw*k_ext]` rising / `[point_raw/k_ext, anchor_value]` falling) regardless of the live regime classification, because past the anchor the calm/disrupted call is itself stale.
+- Continuous at the boundary (`extra=0` at `horizon=92` reproduces exactly today's in-horizon band formula — no jump).
+- Capped at `horizon_days >= 184` (`extra` frozen at 1.0, so `k_ext` holds at `k^2`): the band stops growing but the point keeps tracking fresh GPCI. Rationale: geometric widening is evidenced only directionally (n=4 hindsight series, not the realistic-timing back-test `k` itself rests on — using it as a precise exponent would be false precision), and by 184 days the band already exceeds the widest scenario this company has ever published as plausible (§19.5's calm-ratio ~15.5), which is independent confirmation it's roughly the right place to stop widening.
+- Two new disclosure states (B: 92–184 days, C: >184 days), full text in §39.6, both explicit that the figure is an extrapolation, never shown with backtested confidence, and State C additionally flags that EIA is itself running unusually late.
+
+**Why not the alternatives**: see §39.8 — flat band (ruled out by the owner directly), linear widening (contradicts the only multi-quarter evidence, which accelerates), a newly fitted multi-quarter exponent (false precision off n=4), switching estimators at the boundary (introduces an unevidenced discontinuity, and the alternative already loses on the back-test), unbounded widening (becomes non-informative/category-4-risk from the opposite direction).
+
+**One correctness dependency carried into the Build brief, not a methodology question**: `MAX_GPCI_AGE_DAYS` staleness currently only runs `if horizon <= MAX_HORIZON_DAYS` (`refresh_estimate.py:534`) — once a point is published past the horizon too, that guard must run unconditionally so State B/C can never publish on a stale GPCI month.
+
+**Category 4 checked explicitly before dispatching the build**: the design never narrows the band below what's backtested (continuity proof in §39.3-39.4), never presents the extrapolated figure with the same confidence as a tested one (distinct disclosure text, distinct from both the normal state and the old null state), and introduces no new data input (§39.9) — so no new licence question is opened by this change.
+
+**Not yet implemented at the time of this entry.** Build dispatched this cycle to wire §39 into `scripts/refresh_estimate.py` and the site templates. CEO will dry-run, rubric-check, and publish through the normal `ceo-published` PR gate before closing GitHub issue #30. | CEO (methodology authority) |
