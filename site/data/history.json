@@ -1,6 +1,6 @@
 {
   "_comment": "Our own past daily model estimates for oil flow through the Strait of Hormuz -- OUR model's outputs, not a republished third-party series. See site/data/hormuz.json for the EIA figures the model is calibrated against, and sources.html/methodology.md for how the estimate and its range are built. Every entry is an estimate, never a measurement. 'suppressed': true means no daily figure was published that day because the estimate fell past our back-tested horizon -- this was retired 2026-10-08 (methodology.md section 39) in favour of always publishing a widened-band extrapolation, so it should only appear on rows dated before that change; point/band_low/band_high are null on those rows by design, not a missing-data accident. 'extrapolated': 'B' or 'C' means the row is a real published figure but past our back-tested horizon, with a correspondingly wider band (methodology.md section 39); null means a normal backtested estimate. Appended and idempotently updated in place by scripts/refresh_estimate.py via scripts/generate_history.py.",
-  "generated_utc": "2026-10-08T11:44:20Z",
+  "generated_utc": "2026-10-08T11:59:48Z",
   "entries": [
     {
       "for_date": "2026-09-16",
@@ -322,7 +322,7 @@
     },
     {
       "for_date": "2026-10-07",
-      "retrieved_utc": "2026-10-08T11:44:20Z",
+      "retrieved_utc": "2026-10-08T11:59:48Z",
       "point": 6.3,
       "band_low": 4.9,
       "band_high": 12.9,
