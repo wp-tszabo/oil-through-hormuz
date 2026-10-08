@@ -2,10 +2,17 @@
 """
 EU crude-oil import analysis (Eurostat nrg_ti_oilm) -- ANALYSIS ONLY.
 
-STATUS: this input is NOT in the published model. Its licence is CLEARED for
-non-commercial reuse and AMBIGUOUS for commercial reuse (see methodology.md
-section 17 and decisions-log.md 2026-09-22). Nothing here may feed
-site/data/hormuz.json until the owner has decided that question.
+STATUS: this input is NOT in the published model -- analysis-only corroboration,
+same tier as Japan/Singapore/GASTAT. Its licence is CLEARED for non-commercial
+reuse and AMBIGUOUS for commercial reuse; the owner adopted it non-commercial-only
+on 2026-10-08 (decisions-log.md, same date), with a BINDING CONDITION that this
+flag travel with it everywhere it is referenced and that Phase 2 graduation
+explicitly re-examine the commercial ambiguity before any promotion past this
+tier. See methodology.md section 17 (the original analysis) and section 37
+(the 2026-10-08 adoption decision and why it stays analysis-only: the data ends
+at 2026-06, the same date the EIA anchor ends, so it buys corroboration, not
+forward information). Nothing here may feed site/data/hormuz.json or
+sources.html without a fresh CEO methodology decision.
 
 What this does, and why it is built the way it is:
 
