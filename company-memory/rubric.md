@@ -24,6 +24,14 @@ critical-issue log entry.
       are all independently cleared sources (never an uncleared source used
       "just for calibration"), and it carries a visible uncertainty range —
       not a falsely precise single number.
+- [ ] **The page shows a current best estimate — a blank/suppressed state
+      fails this item** (GOVERNANCE.md → "Always show a current estimate",
+      owner directive 2026-10-08), unless Research/CEO have a logged,
+      evidenced reason no defensible extension exists yet, in which case
+      it's a critical issue, not a quiet pass. If the figure extrapolates
+      past the model's tested horizon, that is stated in plain language next
+      to it and its uncertainty band is visibly wider than a backtested
+      figure's — an extrapolation is never shown with backtested confidence.
 
 ## 2. No copied text
 

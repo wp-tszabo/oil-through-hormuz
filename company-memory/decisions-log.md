@@ -1031,3 +1031,17 @@ No `site/` change; the published figure remains suppressed (horizon guard, pendi
 **Labelling discipline recorded because this is a new category of input for this company**: SOMO must never be described as "licence-cleared" anywhere, including if it is ever promoted past analysis-only — the copy must say "used under an explicit owner risk-acceptance." The owner's still-open scope question (SOMO-only vs. a standing rule change) is unaffected by this decision and is not being treated as resolved by using the data at this tier.
 
 No `site/` change; the published figure remains suppressed. No rubric run required. | CEO (methodology authority, GOVERNANCE.md → "Methodology authority") |
+
+## 2026-10-08 (addendum 2): owner overrides the horizon-suppression design — the page must always show a current best estimate
+
+**Owner's words, on seeing the live page read "no current estimate":** "That is not good, the research agent has to make sure that there is always a 'best estimate', and the CEO should have this checked."
+
+**This explicitly supersedes the 2026-09-19 decision** (itself previously standing: "the model stops publishing past its back-tested horizon rather than extrapolating") and the matching "won't do" line in GOVERNANCE.md's Standing Goals section. Both are struck through in place, not deleted, per the usual trail convention.
+
+**What changes:** a blank/suppressed page is now treated as a defect — explicitly folded into critical-issue category 1 (site/data stale or broken) — not an acceptable honest resting state. The CEO must check this every cycle (added to the opening critical-issue check in `ceo.md`), and Research's standing mandate is extended to include designing a defensible way to extend the estimate past the tested horizon (`research.md`).
+
+**What does NOT change, stated plainly so "always show an estimate" isn't read as "show any number"**: category 4 is unchanged. An extrapolation past the tested horizon must be labelled as such in plain language and must carry a visibly wider uncertainty band than a backtested figure — it is never presented with the same confidence. Rubric §1 now checks this explicitly. A number produced only to avoid a blank headline, without an honest confidence label, is exactly the category-4 failure this company has spent 28 cycles avoiding, arrived at from the opposite direction.
+
+**Not yet implemented.** The live page still reads "no current estimate" at the time of this entry. Fixing that — a real, back-tested-as-far-as-possible extrapolation methodology, honestly labelled — is the standing top-priority item until it ships. Flagged in `backlog.md`.
+
+Updated: `GOVERNANCE.md` (new "Always show a current estimate" section, plus amendments to "Standing goals", "Methodology authority" item 4, and "Critical issues" category 1), `.claude/agents/ceo.md` (critical-issue check now explicitly covers this), `.claude/agents/research.md` (new standing-requirement section), `company-memory/rubric.md` (new §1 item).

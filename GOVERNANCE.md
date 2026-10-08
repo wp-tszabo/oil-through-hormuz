@@ -204,13 +204,56 @@ issue, however much traffic it would bring.
 - Clickbait that misrepresents the estimate, fake counters or social
   proof, keyword-stuffed or mass-generated pages, and copying other trackers'
   content or data.
-- Filling the post-horizon blank with an untested extrapolation because a
-  blank headline loses visitors.
+- ~~Filling the post-horizon blank with an untested extrapolation because a
+  blank headline loses visitors.~~ **Superseded 2026-10-08 — see "Always
+  show a current estimate" below.** The owner decided a blank page is worse
+  than a labelled extrapolation. Kept here, struck through, for the trail:
+  this used to be the rule.
 
 **The test for any headline, title, share card or teaser:** would a reader
 who sees *only that line* come away believing something that the band and
 the methodology page do not support? If so, it fails rubric §3.2, it does not
 ship, and if it already shipped it is rolled back and logged as category 4.
+
+## Always show a current estimate (owner directive, 2026-10-08)
+
+The owner, on seeing the live page read "no current estimate":
+
+> "That is not good, the research agent has to make sure that there is
+> always a 'best estimate', and the CEO should have this checked."
+
+**This supersedes the 2026-09-19 decision that the model stops publishing
+past its back-tested horizon**, and the "won't fill the post-horizon blank"
+line in "Standing goals" above (both struck through, not deleted, for the
+trail). The new standing rule:
+
+- **A blank/suppressed page is not an acceptable resting state.** It is a
+  defect, not a safe default. Treat an indefinite "no current estimate" the
+  same way the company already treats a frozen stale date (critical issues
+  #7 and its recurrence): something to fix in the cycle that finds it, not
+  something to leave standing because the honest alternative is silence.
+- **Research's job now includes making sure a best estimate always exists.**
+  When the model runs past its back-tested horizon, Research (and the CEO,
+  under methodology authority) design a defensible way to extend it —
+  continuing the last-known regime, a trend read on the most-recent cleared
+  inputs, or whatever the evidence actually supports — rather than returning
+  nothing.
+- **This does NOT relax category 4.** An extrapolation past the tested
+  horizon must say so plainly and carry a visibly wider uncertainty band than
+  a backtested figure — it is never shown with the same confidence, and
+  never implied to be validated when it isn't. "Always show an estimate"
+  means always show one *with an honest confidence label*, not quietly drop
+  the label to make the number look as solid as a backtested one. A number
+  that overstates its own certainty to avoid a blank page is exactly as much
+  a category-4 violation as a number that overstates diversity or authority.
+- **The CEO checks this every cycle, not just when told.** Add it to the
+  opening critical-issue check (GOVERNANCE.md → "Critical issues" category
+  1 now explicitly covers this): if the live page has no current estimate,
+  that is a category-1 finding the moment it's seen, raised and worked the
+  same cycle, not carried forward as a known, accepted state.
+- **Right now the page reads "no current estimate."** Fixing that — a real
+  extrapolation methodology, back-tested as far as the evidence allows,
+  honestly labelled — is the standing top-priority item until it's live.
 
 ## Methodology authority (owner grant, 2026-09-23)
 
@@ -270,12 +313,17 @@ methodology decision exactly as it did before 2026-09-23:
    input is independently cleared, and the figure carries a visible
    uncertainty range.
 4. **Explicit owner product decisions** (amended later on 2026-09-23 by
-   "Publishing authority"). Two were standing: the headline is a daily
-   *estimate* (2026-09-17), and the model stops publishing past its
-   back-tested horizon rather than extrapolating (2026-09-19). How both are
-   *presented* is now the CEO's call. Their honesty core is category 4 and
-   stays fixed: the figure is always labelled an estimate, and no
-   extrapolation past the tested horizon is ever shown as tested. The
+   "Publishing authority", and again on 2026-10-08 — see "Always show a
+   current estimate" above). Standing: the headline is a daily *estimate*
+   (2026-09-17); ~~the model stops publishing past its back-tested horizon
+   rather than extrapolating (2026-09-19)~~ **superseded 2026-10-08: the
+   model must always show a current best estimate, extrapolating past the
+   tested horizon when it has to rather than going blank.** How this is
+   *presented* is the CEO's call. The honesty core is category 4 and stays
+   fixed regardless of which way this rule points: the figure is always
+   labelled an estimate, and an extrapolation past the tested horizon is
+   never shown with the same confidence as a tested one — it gets a visibly
+   wider band and a plain statement that it's beyond the tested range. The
    horizon's *value* is still methodology (above), movable only on a measured
    error at the new horizon.
 5. **Spend, phase graduation, hard-to-reverse actions, and any outward contact
@@ -299,7 +347,10 @@ Any of the following must be raised the moment it's discovered, via the
 approval mechanics below, independent of the weekly cadence:
 
 1. **Site down / data feed broken or stale** — the tracker isn't showing
-   current, correct data.
+   current, correct data. **Since 2026-10-08, this explicitly includes the
+   page showing no current estimate at all** (see "Always show a current
+   estimate") — a blank/suppressed headline is a category-1 finding, checked
+   for every cycle, not an accepted resting state.
 2. **Spend beyond the approved ceiling** — actual or about to be incurred.
 3. **Legal/compliance exposure** — e.g. a data source's terms of service
    don't clearly permit redistribution. This is a real, specific risk for

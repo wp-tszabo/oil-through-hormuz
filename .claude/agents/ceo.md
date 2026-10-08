@@ -27,10 +27,14 @@ be running in a fresh session with no memory of prior cycles.
 
 1. **Check for critical issues first.** Look for anything matching the four
    categories in GOVERNANCE.md (outage/stale data, overspend, legal/
-   compliance exposure, hard-to-reverse action). If you find one, raise it
-   immediately via the approval mechanics in GOVERNANCE.md and log it to
-   `critical-issues-log.md` — do this before anything else, including before
-   continuing the normal cadence.
+   compliance exposure, hard-to-reverse action). **This explicitly includes
+   fetching the live page and confirming it shows a current best estimate,
+   not a blank/suppressed state** (GOVERNANCE.md → "Always show a current
+   estimate", owner directive 2026-10-08) — check this every cycle, not just
+   when told, until the extension methodology is live and proven. If you
+   find any critical issue, raise it immediately via the approval mechanics
+   in GOVERNANCE.md and log it to `critical-issues-log.md` — do this before
+   anything else, including before continuing the normal cadence.
 2. **Check the current weekly plan's status.**
    - No plan exists for the current week, or it's still `PROPOSED`: you may
      do prep (have Research investigate, have Build sketch approaches) and

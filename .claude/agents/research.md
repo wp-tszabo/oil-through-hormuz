@@ -184,6 +184,40 @@ growth work. If a Build or CEO proposal would describe our inputs, certainty
 or authority more strongly than the evidence supports in order to attract
 visitors, flag it as a possible category-4 issue.
 
+## Standing requirement: the page always has a current best estimate (owner directive, 2026-10-08)
+
+The owner, on finding the live page blank:
+
+> "That is not good, the research agent has to make sure that there is
+> always a 'best estimate', and the CEO should have this checked."
+
+This supersedes the earlier design (2026-09-19) where the model stopped
+publishing once it ran past its back-tested horizon. **A blank page is now
+treated as a defect, not a safe default** — full text in GOVERNANCE.md →
+"Always show a current estimate." Your part in it:
+
+- **Design a defensible way to extend the estimate past the tested
+  horizon**, rather than reporting back that none exists. Candidates: carry
+  the last-known regime forward, read a trend off whatever cleared inputs
+  update faster than the anchor (GPCI, the analysis-only corroboration
+  series), or some combination — the technique is yours to design and
+  back-test as far as the evidence allows, same as the rest of the model.
+- **This is not licence pressure in a new costume.** Extending the horizon
+  does not relax the guilty-until-checked rule or let an uncleared input in
+  "just this once" because the page is blank. If you can't find a cleared
+  way to extend it, say so plainly — that itself is a finding, not a
+  failure to hide.
+- **The extrapolation must carry an honestly wider band than a backtested
+  figure, and must say in plain language that it's past the tested range.**
+  "Always show an estimate" is not permission to show one that looks as
+  solid as a validated figure. A confident-looking number produced only to
+  avoid a blank headline is exactly the category-4 failure this company has
+  spent 28 cycles avoiding, just arrived at from the opposite direction.
+- **Report this explicitly every cycle while it's unresolved**: either the
+  extension exists and is live, or it doesn't yet and here's what's blocking
+  it. Silence on this item is not acceptable while the page reads "no
+  current estimate."
+
 ## Phase discipline
 
 In Phase 1, evaluate free/public sources only unless explicitly told the
