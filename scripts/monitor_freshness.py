@@ -245,9 +245,25 @@ def check_recent_scheduled_refresh_succeeded(repo, workflow_file, token, max_age
     succeeded within the last `max_age_hours` hours, per the GitHub Actions
     API -- independent of anything the page itself reports, which is what
     catches a cron GitHub silently never fired.
+
+    Deliberately filters on `event=schedule` ONLY in the query string, then
+    filters `status == "completed" and conclusion == "success"` client-side
+    in Python, rather than asking the API for `event=schedule&status=success`
+    directly. On 2026-10-07T14:38:49Z the combined-filter query returned a
+    stale/incomplete page of results -- it reported the latest successful
+    scheduled run as ~50h old (over this check's own 36h threshold, so it
+    failed loudly) when in fact a successful scheduled run had completed
+    only ~2h53m earlier. Confirmed independently via the Actions API during
+    the incident investigation, and the very next scheduled monitor run (9h
+    later, no code or data change in between) passed cleanly -- so this was
+    eventual-consistency lag in GitHub's run-list API when `event` and
+    `status` filters are combined, not an actual skipped cron
+    (critical-issues-log.md, 2026-10-08 28th cycle). Asking for a larger page
+    of `event=schedule` runs (any status) and doing the success/failure split
+    ourselves avoids relying on that combined filter at all.
     """
     url = (
-        "%s/repos/%s/actions/workflows/%s/runs?event=schedule&status=success&per_page=5"
+        "%s/repos/%s/actions/workflows/%s/runs?event=schedule&per_page=20"
         % (API_BASE, repo, workflow_file)
     )
     headers = {
@@ -272,11 +288,25 @@ def check_recent_scheduled_refresh_succeeded(repo, workflow_file, token, max_age
     except json.JSONDecodeError as exc:
         raise CheckFailed("GitHub Actions API response did not parse as JSON: %s" % exc)
 
-    runs = data.get("workflow_runs") or []
+    all_runs = data.get("workflow_runs") or []
+    # Client-side filter for event=schedule + completed + success, instead of
+    # trusting the API's own combined event+status filter (see docstring
+    # above for why). The `event=schedule` query parameter should already
+    # narrow the server-side result set, but re-checking it here too means
+    # this check does not depend on that filter being applied correctly --
+    # belt-and-suspenders, same spirit as the `max()` re-sort below.
+    runs = [
+        r
+        for r in all_runs
+        if r.get("event") == "schedule" and r.get("status") == "completed" and r.get("conclusion") == "success"
+    ]
     if not runs:
         raise CheckFailed(
-            "no successful event=schedule run of %s was found at all via the Actions API "
-            "-- either the cron has never succeeded, or it has been renamed/removed" % workflow_file
+            "no successful event=schedule run of %s was found in the most recent %d "
+            "runs fetched via the Actions API (event=schedule filter) -- either the cron "
+            "has never succeeded, or it has been renamed/removed, or failed/other-event runs "
+            "have crowded every completed+success event=schedule run out of this page"
+            % (workflow_file, len(all_runs))
         )
 
     # Defensive: don't just trust API ordering, pick the actually-latest run.
