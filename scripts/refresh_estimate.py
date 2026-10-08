@@ -745,6 +745,13 @@ def main(today=None, page=None, xlsx=None):
                     "      assumes the strait still carries the same share of Gulf oil output\n"
                     "      as it did in %s, although that output has since fallen.\n" % period_words(anchor["period"]))
         est["suppressed"] = False
+        # CEO pre-merge fix (30th cycle): the States B/C branch above is the
+        # only place that sets this key. Without an explicit reset here, a
+        # future re-anchor back into the normal (<=92 day) horizon would
+        # leave a stale "B"/"C" tag on disk from the last extrapolated day,
+        # mislabelling a normal, fully-backtested estimate as extrapolated
+        # in hormuz.json and in the history/feed consumers that read it.
+        est["extrapolated"] = None
         # No production-context block outside the suppressed state (G1):
         # the normal presentation is unchanged, only the suppressed one gains
         # this addition.

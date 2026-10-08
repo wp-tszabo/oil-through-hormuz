@@ -340,7 +340,13 @@ def render_feed(entries, max_entries=FEED_MAX_ENTRIES, now_utc=None):
     feed = (
         '<?xml version="1.0" encoding="utf-8"?>\n'
         '<feed xmlns="http://www.w3.org/2005/Atom">\n'
-        "  <title>Hormuz Oil Tracker &mdash; daily estimate history</title>\n"
+        # CEO pre-merge fix (30th cycle): "&mdash;" is an HTML entity, not a
+        # valid XML one, and this line is written raw (not through
+        # xmlescape()) -- it made the whole feed fail strict XML parsing
+        # (xml.etree.ElementTree.ParseError: undefined entity) regardless of
+        # this cycle's change. Pre-existing, found during review; same fix
+        # already used below (a literal Unicode em dash, not the entity).
+        "  <title>Hormuz Oil Tracker — daily estimate history</title>\n"
         "  <subtitle>Our own daily model estimates of oil flow through the Strait of Hormuz, each "
         "shown with its working range. Not a measurement. Full archive: %s/data/history.json and "
         "%s/data/history.csv.</subtitle>\n"
