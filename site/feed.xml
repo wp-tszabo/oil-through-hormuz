@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Hormuz Oil Tracker &mdash; daily estimate history</title>
+  <title>Hormuz Oil Tracker — daily estimate history</title>
   <subtitle>Our own daily model estimates of oil flow through the Strait of Hormuz, each shown with its working range. Not a measurement. Full archive: https://oilthroughhormuz.com/data/history.json and https://oilthroughhormuz.com/data/history.csv.</subtitle>
   <link href="https://oilthroughhormuz.com/feed.xml" rel="self" />
   <link href="https://oilthroughhormuz.com/history.html" />
   <id>https://oilthroughhormuz.com/feed.xml</id>
-  <updated>2026-10-07T11:45:11Z</updated>
+  <updated>2026-10-08T11:44:20Z</updated>
   <author><name>Hormuz Oil Tracker</name></author>
+  <entry>
+    <title>Hormuz oil flow estimate for 2026-10-07: 6.3 million b/d (range 4.9–12.9) — extrapolated past our tested horizon</title>
+    <id>https://oilthroughhormuz.com/history.html#2026-10-07</id>
+    <link href="https://oilthroughhormuz.com/history.html#2026-10-07" />
+    <updated>2026-10-08T11:44:20Z</updated>
+    <summary>This is our own model's estimate for 2026-10-07, not a measurement. Working range 4.9 to 12.9 million barrels per day; treat the range as the answer. This estimate is extrapolated past our tested horizon, so its range is wider than our normal back-tested band. Method: GPCI transit-share, anchored on 2Q26. Full methodology and today's figure at https://oilthroughhormuz.com/.</summary>
+  </entry>
   <entry>
     <title>No estimate published for 2026-10-06 — past our tested horizon</title>
     <id>https://oilthroughhormuz.com/history.html#2026-10-06</id>

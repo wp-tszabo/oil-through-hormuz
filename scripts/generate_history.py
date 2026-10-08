@@ -71,11 +71,22 @@ CHART_MAX_DAYS = 45
 
 CSV_FIELDS = ["for_date", "point", "band_low", "band_high", "method",
               "anchor_period", "regime", "regime_kind", "suppressed",
-              "horizon_days", "retrieved_utc"]
+              "extrapolated", "horizon_days", "retrieved_utc"]
 
 METHOD_LABEL = {
     "gpci-transit-share": "GPCI transit-share",
     "persistence": "Persistence (pre-2026-09-23 method)",
+}
+
+# methodology.md section 39 (owner directive 2026-10-08, "Always show a
+# current estimate"): a published row past the back-tested horizon carries
+# entry["extrapolated"] == "B" (92-184 days past horizon, widening band) or
+# "C" (>184 days, band frozen, EIA's own release overdue). Both are real
+# published figures (suppressed is False, point/band are not null) but must
+# say plainly that they are extrapolated -- see EXTRAPOLATED_LABEL below.
+EXTRAPOLATED_LABEL = {
+    "B": "extrapolated past our tested horizon",
+    "C": "extrapolated well past our tested horizon; EIA release overdue",
 }
 
 HISTORY_COMMENT = (
@@ -85,10 +96,16 @@ HISTORY_COMMENT = (
     "against, and sources.html/methodology.md for how the estimate and its "
     "range are built. Every entry is an estimate, never a measurement. "
     "'suppressed': true means no daily figure was published that day "
-    "because the estimate fell past our back-tested horizon (methodology.md "
-    "section 19-20); point/band_low/band_high are null on those rows by "
-    "design, not a missing-data accident. Appended and idempotently updated "
-    "in place by scripts/refresh_estimate.py via scripts/generate_history.py."
+    "because the estimate fell past our back-tested horizon -- this was "
+    "retired 2026-10-08 (methodology.md section 39) in favour of always "
+    "publishing a widened-band extrapolation, so it should only appear on "
+    "rows dated before that change; point/band_low/band_high are null on "
+    "those rows by design, not a missing-data accident. 'extrapolated': "
+    "'B' or 'C' means the row is a real published figure but past our "
+    "back-tested horizon, with a correspondingly wider band (methodology.md "
+    "section 39); null means a normal backtested estimate. Appended and "
+    "idempotently updated in place by scripts/refresh_estimate.py via "
+    "scripts/generate_history.py."
 )
 
 
@@ -174,6 +191,8 @@ def render_table_rows(entries, limit=None):
             figure = _fmt1(e["point"])
             rng = "%s&ndash;%s" % (_fmt1(e["band_low"]), _fmt1(e["band_high"]))
         method = METHOD_LABEL.get(e.get("method"), e.get("method") or "&mdash;")
+        if e.get("extrapolated") in ("B", "C"):
+            method = "%s (%s)" % (method, EXTRAPOLATED_LABEL[e["extrapolated"]])
         regime = e.get("regime") or "&mdash;"
         out.append(
             "      <tr>\n"
@@ -290,13 +309,21 @@ def render_feed(entries, max_entries=FEED_MAX_ENTRIES, now_utc=None):
             )
         else:
             method_label = METHOD_LABEL.get(e.get("method"), e.get("method") or "our model")
-            title = "Hormuz oil flow estimate for %s: %s million b/d (range %s–%s)" % (
-                date, _fmt1(e["point"]), _fmt1(e["band_low"]), _fmt1(e["band_high"]))
+            extrap = e.get("extrapolated")
+            # Plain unicode em dash, not the &mdash; HTML entity: this text
+            # goes through xmlescape() below, which would otherwise turn a
+            # literal "&mdash;" into the double-escaped "&amp;mdash;".
+            title_suffix = " — %s" % EXTRAPOLATED_LABEL[extrap] if extrap in ("B", "C") else ""
+            title = "Hormuz oil flow estimate for %s: %s million b/d (range %s–%s)%s" % (
+                date, _fmt1(e["point"]), _fmt1(e["band_low"]), _fmt1(e["band_high"]), title_suffix)
+            extrap_clause = (
+                " This estimate is %s, so its range is wider than our normal back-tested band." % EXTRAPOLATED_LABEL[extrap]
+                if extrap in ("B", "C") else "")
             summary = (
                 "This is our own model's estimate for %s, not a measurement. Working range "
-                "%s to %s million barrels per day; treat the range as the answer. Method: %s, "
+                "%s to %s million barrels per day; treat the range as the answer.%s Method: %s, "
                 "anchored on %s. Full methodology and today's figure at %s/." % (
-                    date, _fmt1(e["band_low"]), _fmt1(e["band_high"]), method_label,
+                    date, _fmt1(e["band_low"]), _fmt1(e["band_high"]), extrap_clause, method_label,
                     e.get("anchor_period") or "n/a", SITE_URL)
             )
         items.append(
@@ -313,7 +340,13 @@ def render_feed(entries, max_entries=FEED_MAX_ENTRIES, now_utc=None):
     feed = (
         '<?xml version="1.0" encoding="utf-8"?>\n'
         '<feed xmlns="http://www.w3.org/2005/Atom">\n'
-        "  <title>Hormuz Oil Tracker &mdash; daily estimate history</title>\n"
+        # CEO pre-merge fix (30th cycle): "&mdash;" is an HTML entity, not a
+        # valid XML one, and this line is written raw (not through
+        # xmlescape()) -- it made the whole feed fail strict XML parsing
+        # (xml.etree.ElementTree.ParseError: undefined entity) regardless of
+        # this cycle's change. Pre-existing, found during review; same fix
+        # already used below (a literal Unicode em dash, not the entity).
+        "  <title>Hormuz Oil Tracker — daily estimate history</title>\n"
         "  <subtitle>Our own daily model estimates of oil flow through the Strait of Hormuz, each "
         "shown with its working range. Not a measurement. Full archive: %s/data/history.json and "
         "%s/data/history.csv.</subtitle>\n"
