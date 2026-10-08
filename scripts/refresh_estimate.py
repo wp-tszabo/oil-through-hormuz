@@ -46,10 +46,13 @@ What it does
    that quarter, alongside what persistence would have said.
 2. Re-fetches the EIA STEO workbook and rebuilds GPCI (history months only).
 3. Re-dates the estimate to yesterday (UTC), recomputes point and band.
-4. Enforces the horizon guard (unchanged, owner decision 2026-09-19).
+4. Past the back-tested horizon, widens the band rather than suppressing the
+   estimate to null (owner directive 2026-10-08, "Always show a current
+   estimate"; methodology.md section 39). See "The horizon guard" below.
 5. Rewrites the generated block in site/index.html and site/data/hormuz.json.
-6. Appends today's published estimate (or its suppression) to the
-   persistent history -- site/data/history.json, site/data/history.csv,
+6. Appends today's published estimate (normal, or extrapolated States B/C
+   past the horizon -- see "The horizon guard" below) to the persistent
+   history -- site/data/history.json, site/data/history.csv,
    site/feed.xml and site/history.html (scripts/generate_history.py,
    backlog.md "NEW 2026-09-23 (G5)"). Idempotent by for_date.
 7. Writes a plain "what changed and why" sentence comparing today's
@@ -73,12 +76,33 @@ What it deliberately will NOT do
 
 The horizon guard
 -----------------
-The back-test measures error ONE QUARTER past the anchor ratio. Beyond
-roughly one quarter past the anchor's coverage end we would be using a
-transit share older than anything we have tested, so the script stops
-asserting a daily point estimate and publishes a staleness notice instead.
-Threshold unchanged at 92 days (owner, 2026-09-19: "one quarter is fine for
-now, we should extend it later").
+The back-test measures error ONE QUARTER past the anchor ratio. Within that
+window (MAX_HORIZON_DAYS = 92, owner 2026-09-19) the published band is the
+back-tested one, unchanged.
+
+Past 92 days, the 2026-09-19 design suppressed the estimate to null rather
+than overstate confidence -- but the owner ruled on 2026-10-08 ("Always show
+a current estimate", GOVERNANCE.md) that a blank page is a defect, not an
+acceptable resting state. methodology.md section 39 (CEO, methodology
+authority) replaces suppression with two further states, both built from the
+SAME point already being computed (point_raw = ratio * g_latest, which keeps
+tracking GPCI monthly regardless of horizon) with only the band widened:
+
+  * State B (92 < horizon <= 184 days): the disrupted-regime band shape,
+    using k_ext = k ** (1 + extra) in place of k, where
+    extra = (horizon - 92) / 92 -- a continuous geometric widening that is
+    identical to the normal disrupted band at horizon == 92 and grows from
+    there. Forced regardless of what classify() says the live regime is
+    (section 39.3).
+  * State C (horizon > 184 days): extra is capped at 1.0 (k_ext = k**2,
+    frozen) -- the band stops widening because there is no evidence to shape
+    it further, but the point keeps updating from fresh GPCI months. A
+    horizon this long also means EIA's own release is unusually overdue,
+    which the disclosure text flags as an operational signal.
+
+Both states say plainly that they are extrapolated and carry a visibly wider
+band than the backtested one, per GOVERNANCE.md's standing rule that "always
+show an estimate" never means dropping the confidence label.
 """
 
 import datetime
@@ -103,6 +127,10 @@ UA = "oilthroughhormuz.com refresh bot"
 
 # Owner decision 2026-09-19; see module docstring.
 MAX_HORIZON_DAYS = 92
+# methodology.md section 39.5: stop widening the extrapolated band at double
+# the tested horizon -- owner directive 2026-10-08 ("Always show a current
+# estimate") replacing the old null-past-horizon suppression.
+EXTRAPOLATION_CAP_DAYS = 2 * MAX_HORIZON_DAYS
 # Calm-regime floor on the band half-width (methodology.md section 4).
 CALM_FLOOR = 0.03
 # A quarter-on-quarter move beyond this is "disrupted" (methodology.md section 5).
@@ -149,6 +177,17 @@ def quarter_info(label):
     end = nxt - datetime.timedelta(days=1)
     months = ["%04d%02d" % (y, first + i) for i in range(3)]
     return start, end, months
+
+
+def next_quarter_label(label):
+    """'2Q26' -> '3Q26', '4Q26' -> '1Q27'. Used by the State B disclosure text
+    (methodology.md section 39.6) to name the quarter whose publication would
+    re-anchor the model and end the extrapolation."""
+    m = re.fullmatch(r"([1-4])Q(\d\d)", label)
+    if not m:
+        raise Fail("unexpected period label %r" % label)
+    q, y = int(m.group(1)), int(m.group(2))
+    return "1Q%02d" % (y + 1) if q == 4 else "%dQ%02d" % (q + 1, y)
 
 
 def period_words(label):
@@ -531,7 +570,13 @@ def main(today=None, page=None, xlsx=None):
     anchor_end = datetime.date.fromisoformat(anchor["end"])
     horizon = (target - anchor_end).days
     gpci_age = (target - month_end(last_hist)).days
-    if horizon <= MAX_HORIZON_DAYS and gpci_age > MAX_GPCI_AGE_DAYS:
+    # methodology.md section 39.7: this guard must run unconditionally, not
+    # just within the tested horizon. States B/C (below) publish point_raw --
+    # built from g_latest -- past the horizon too, so a stale GPCI month must
+    # block publication there exactly as it already does in the normal
+    # state; two separate staleness clocks (stale anchor quarter vs. stale
+    # GPCI month) are kept independent on purpose (section 39.5).
+    if gpci_age > MAX_GPCI_AGE_DAYS:
         raise Fail("newest GPCI month %s is %d days old for a %s estimate (limit %d); "
                    "production input stale" % (last_hist, gpci_age, target, MAX_GPCI_AGE_DAYS))
 
@@ -572,6 +617,21 @@ def main(today=None, page=None, xlsx=None):
     model["shape_function"] = ("GPCI transit-share: the strait is assumed to carry the same share of Gulf producer crude "
                                "output (GPCI) as in the latest published quarter; the estimate moves monthly with GPCI. "
                                "Replaced persistence on 2026-09-23 (methodology.md section 19).")
+    # Regenerated every run, same as shape_function above, so this description can never drift out of
+    # sync with the actual horizon behaviour the way the old hand-written copy did: it described the
+    # pre-2026-10-08 "suppress to null past the horizon" behaviour, which section 39 (below) retired.
+    model["staleness_note"] = (
+        "Regenerated daily by scripts/refresh_estimate.py (GitHub Actions). The job re-fetches both EIA "
+        "sources, re-dates the estimate, recomputes point and band from the GPCI transit-share estimator "
+        "and its own back-test, re-anchors on each new EIA quarter and scores the estimate it had "
+        "published for that quarter against the measured figure (and against persistence). It fails "
+        "loudly and publishes nothing if either fetch or parse fails, if GPCI does not cover the whole "
+        "anchor quarter, or if the newest GPCI month is more than %d days old -- checked on every run, "
+        "at any horizon (methodology.md section 39.7). Up to %d days past the anchor's coverage end, the "
+        "band is the back-tested one. Past %d days it widens geometrically (methodology.md section 39) "
+        "rather than suppressing the estimate to null; past %d days (double the tested horizon) the band "
+        "stops widening but the point keeps tracking the latest GPCI month, and EIA's own release is "
+        "flagged as unusually overdue." % (MAX_GPCI_AGE_DAYS, MAX_HORIZON_DAYS, MAX_HORIZON_DAYS, EXTRAPOLATION_CAP_DAYS))
 
     est = model["estimate"]
     est["for_date"] = target.isoformat()
@@ -581,45 +641,94 @@ def main(today=None, page=None, xlsx=None):
     est["max_horizon_days"] = MAX_HORIZON_DAYS
 
     if horizon > MAX_HORIZON_DAYS:
-        est["suppressed"] = True
-        est["point"] = est["band_low"] = est["band_high"] = None
-        block = (
-            '    <p class="est-label">No current estimate &mdash; '
-            'awaiting the next published quarter</p>\n'
-            '    <p class="figure">&mdash;</p>\n'
-            '    <p class="unit">million barrels per day</p>\n'
-            '    <p class="band">\n'
-            '      Our anchor covers %s and our method is only tested one quarter\n'
-            '      ahead. We are now %d days past that, so we have stopped publishing a\n'
-            '      daily number rather than extrapolate beyond what we have tested.\n'
-            '    </p>\n' % (anchor["period"], horizon)
-        )
-        note = "This is deliberate, not a fault &mdash; see"
-        print("HORIZON EXCEEDED (%d > %d days) -- estimate suppressed" % (horizon, MAX_HORIZON_DAYS))
-        # G1 (backlog.md, 2026-09-23/25): while the strait estimate is
-        # suppressed, still give readers *something* -- the latest Gulf
-        # production signal already in the model, clearly labelled as
-        # production, not transit, and explicitly not a replacement for the
-        # suppressed figure. Every value here is already in model.estimator /
-        # doc["production_source"]; no new source, no estimator math.
-        gpci_change_pct = round((g_latest / g_anchor - 1) * 100, 1)
-        direction_word = "up" if gpci_change_pct >= 0 else "down"
-        production_html = (
-            '<!-- GENERATED:production_context -->\n'
-            '  <p class="production-context">\n'
-            '    <strong>Production context, not a strait estimate:</strong> Gulf producer\n'
-            '    crude output (GPCI, our production index &mdash; see\n'
-            '    <a href="sources.html">sources</a>) was last observed at\n'
-            '    <strong>%.2f</strong> million barrels per day <em>of Gulf crude oil\n'
-            '    production</em> for %s, %s %.1f%% from its %s\n'
-            '    anchor-quarter average of %.2f. This is a different measure &mdash;\n'
-            '    production, not oil moving through the strait &mdash; shown for context\n'
-            '    only. It has not been back-tested as a predictor of strait flow and it\n'
-            '    does not narrow, replace or stand in for the suppressed estimate above.\n'
-            '  </p>\n'
-            '  <!-- /GENERATED:production_context -->\n'
-        ) % (g_latest, month_words(last_hist), direction_word, abs(gpci_change_pct),
-             period_words(anchor["period"]), g_anchor)
+        # methodology.md section 39 (owner directive 2026-10-08, "Always show
+        # a current estimate"): past the tested horizon we no longer
+        # suppress to null. We keep publishing point_raw (already tracking
+        # GPCI monthly, see module docstring) and widen only the band, via a
+        # geometric extension of the already-validated disrupted-regime miss
+        # factor k -- forced into the disrupted-regime band *shape*
+        # regardless of what classify() says the live regime is (39.3).
+        extra = min((horizon - MAX_HORIZON_DAYS) / MAX_HORIZON_DAYS, 1.0)  # capped at 184 days (39.5)
+        k_ext = k ** (1 + extra)
+        state = "B" if horizon <= EXTRAPOLATION_CAP_DAYS else "C"
+        point = round(point_raw, 1)
+        if phase == "rising":
+            lo, hi = anchor["total_oil"], point_raw * k_ext
+        else:
+            lo, hi = point_raw / k_ext, anchor["total_oil"]
+        est["suppressed"] = False
+        est["extrapolated"] = state
+        est["point"] = point
+        est["band_low"] = round(lo, 1)
+        est["band_high"] = round(hi, 1)
+        # No production-context block in States B/C (G1's "give readers
+        # *something*" rationale no longer applies -- there is now a real,
+        # if wide, figure): matches the normal state's empty markers.
+        production_html = '<!-- GENERATED:production_context -->\n  <!-- /GENERATED:production_context -->\n'
+        next_anchor = next_quarter_label(anchor["period"])
+        if state == "B":
+            est["band_basis"] = (
+                "Extrapolated past the 92-day tested horizon (methodology.md section 39): forced "
+                "disrupted-style band, widened geometrically from the back-tested miss factor "
+                "k=%.3f via k_ext=k^(1+extra) with extra=%.3f (horizon %d days past the %s anchor), "
+                "giving k_ext=%.3f, applied in the direction production has moved (%s) since the "
+                "anchor quarter." % (k, extra, horizon, anchor["period"], k_ext, phase))
+            note = "This estimate is extrapolated past our tested horizon &mdash; see"
+            block = (
+                '    <p class="est-label">Our model&rsquo;s estimate for %s (UTC) &mdash; '
+                'extrapolated past our tested range</p>\n'
+                '    <p class="figure">%s</p>\n'
+                '    <p class="unit">million barrels per day</p>\n'
+                '    <p class="band">\n'
+                '      Working range <strong>%s</strong> to <strong>%s</strong>. This range is\n'
+                '      wider than usual. Our back-test only validates this model up to 92 days\n'
+                '      past the anchor quarter (%s); we are now %d days past it. We widen the\n'
+                '      range further for every extra day in this zone, because the one signal\n'
+                '      we have about longer-range error &mdash; measured with hindsight data our\n'
+                '      live model does not have in real time &mdash; shows the miss growing\n'
+                '      faster than the one-quarter error we actually validated. Treat this as a\n'
+                '      wider-than-tested best guess, not a backtested figure. It will tighten\n'
+                '      back to our normal range as soon as EIA publishes %s.\n'
+                '    </p>\n' % (target.strftime("%A %-d %B %Y"), point, est["band_low"], est["band_high"],
+                                period_words(anchor["period"]), horizon, period_words(next_anchor))
+            )
+            print("EXTRAPOLATED STATE B (%d days past %d-day horizon, cap %d) -- point %s band %s-%s, k_ext=%.3f"
+                  % (horizon, MAX_HORIZON_DAYS, EXTRAPOLATION_CAP_DAYS, point, est["band_low"], est["band_high"], k_ext))
+        else:
+            est["band_basis"] = (
+                "Extrapolated past the 184-day cap (methodology.md section 39.5): forced disrupted-style "
+                "band frozen at k_ext=k^2=%.3f (k=%.3f, extra held at 1.0); the band no longer widens, but "
+                "the point keeps tracking the latest GPCI month (%s). Horizon is %d days past the %s "
+                "anchor, more than double the 92-day tested window -- EIA's release is overdue."
+                % (k_ext, k, last_hist, horizon, anchor["period"]))
+            note = ("This estimate is extrapolated well past our tested horizon, with EIA&rsquo;s "
+                    "release overdue &mdash; see")
+            block = (
+                '    <p class="est-label">Our model&rsquo;s estimate for %s (UTC) &mdash; extrapolated '
+                'well past our tested range; EIA&rsquo;s release is overdue</p>\n'
+                '    <p class="figure">%s</p>\n'
+                '    <p class="unit">million barrels per day</p>\n'
+                '    <p class="band">\n'
+                '      Working range <strong>%s</strong> to <strong>%s</strong>. We have stopped\n'
+                '      widening this range further: past 184 days (double our tested horizon) we\n'
+                '      have no evidence at all to shape it, and continuing to widen it\n'
+                '      mechanically would create false precision in the wrong direction. The point\n'
+                '      figure above still reflects the latest available production data (%s). EIA\n'
+                '      has also gone unusually long without publishing a new Strait of Hormuz\n'
+                '      quarter &mdash; longer than its normal lag even accounting for this\n'
+                '      extrapolation &mdash; which may indicate a delay on their side or a problem\n'
+                '      in our own pipeline; this has been flagged for review. Treat this figure as\n'
+                '      our best available guess, not a validated estimate.\n'
+                '    </p>\n' % (target.strftime("%A %-d %B %Y"), point, est["band_low"], est["band_high"],
+                                month_words(last_hist))
+            )
+            print("EXTRAPOLATED STATE C (%d days past %d-day horizon, cap %d) -- point %s band %s-%s, k_ext=%.3f; "
+                  "EIA release overdue" % (horizon, MAX_HORIZON_DAYS, EXTRAPOLATION_CAP_DAYS,
+                                           point, est["band_low"], est["band_high"], k_ext))
+        model["last_published"] = {"for_date": target.isoformat(), "point": point,
+                                   "band_low": est["band_low"], "band_high": est["band_high"],
+                                   "anchor_period": anchor["period"], "method": "gpci-transit-share",
+                                   "extrapolated": state}
     else:
         point = round(point_raw, 1)
         if regime == "calm":
@@ -696,6 +805,12 @@ def main(today=None, page=None, xlsx=None):
         "regime": model.get("regime"),
         "regime_kind": model.get("regime_kind"),
         "suppressed": bool(est.get("suppressed")),
+        # methodology.md section 39 (owner directive 2026-10-08): "B" or "C"
+        # when the point/band above are an extrapolation past the
+        # back-tested horizon, None for a normal in-horizon estimate. Lets
+        # history/feed/table consumers tell this apart from both the
+        # backtested normal state and the retired null-suppressed state.
+        "extrapolated": est.get("extrapolated"),
         "horizon_days": est.get("horizon_days"),
         # Recorded so a FUTURE run's change note can tell "new GPCI month
         # landed" apart from "EIA revised the anchor" apart from "nothing in

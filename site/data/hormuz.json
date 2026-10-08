@@ -14,7 +14,7 @@
     "provenance_caveat": "EIA analysis based on Vortexa tanker tracking data. We republish EIA's published analysis; we do not hold or license Vortexa data.",
     "publisher_caveat": "Since the end of February 2026, AIS signal data for ships transiting the Strait of Hormuz have become especially unreliable. For 2026 Hormuz volumes, tanker tracking data are being revised frequently based on the best available information."
   },
-  "retrieved_utc": "2026-10-07T11:45:11Z",
+  "retrieved_utc": "2026-10-08T11:39:26Z",
   "units": "million barrels per day",
   "series": [
     {
@@ -73,20 +73,21 @@
     "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
     "shape_function": "GPCI transit-share: the strait is assumed to carry the same share of Gulf producer crude output (GPCI) as in the latest published quarter; the estimate moves monthly with GPCI. Replaced persistence on 2026-09-23 (methodology.md section 19).",
     "estimate": {
-      "for_date": "2026-10-06",
-      "point": null,
-      "band_low": null,
-      "band_high": null,
-      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 2Q26: from persistence (4.9, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.945, applied in the direction production moved.",
+      "for_date": "2026-10-07",
+      "point": 6.3,
+      "band_low": 4.9,
+      "band_high": 12.9,
+      "band_basis": "Extrapolated past the 92-day tested horizon (methodology.md section 39): forced disrupted-style band, widened geometrically from the back-tested miss factor k=1.937 via k_ext=k^(1+extra) with extra=0.076 (horizon 99 days past the 2Q26 anchor), giving k_ext=2.037, applied in the direction production has moved (rising) since the anchor quarter.",
       "anchor_period": "2Q26",
       "anchor_value": 4.9,
       "is_measurement": false,
       "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6.",
-      "horizon_days": 98,
+      "horizon_days": 99,
       "max_horizon_days": 92,
-      "suppressed": true
+      "suppressed": false,
+      "extrapolated": "B"
     },
-    "staleness_note": "Regenerated daily by scripts/refresh_estimate.py (GitHub Actions). The job re-fetches both EIA sources, re-dates the estimate, recomputes point and band from the GPCI transit-share estimator and its own back-test, re-anchors on each new EIA quarter and scores the estimate it had published for that quarter against the measured figure (and against persistence). It fails loudly and publishes nothing if either fetch or parse fails, if GPCI does not cover the whole anchor quarter, or if the newest GPCI month is more than 70 days old. Past max_horizon_days beyond the anchor's coverage end the point estimate is suppressed entirely, because the method is only back-tested one quarter ahead.",
+    "staleness_note": "Regenerated daily by scripts/refresh_estimate.py (GitHub Actions). The job re-fetches both EIA sources, re-dates the estimate, recomputes point and band from the GPCI transit-share estimator and its own back-test, re-anchors on each new EIA quarter and scores the estimate it had published for that quarter against the measured figure (and against persistence). It fails loudly and publishes nothing if either fetch or parse fails, if GPCI does not cover the whole anchor quarter, or if the newest GPCI month is more than 70 days old -- checked on every run, at any horizon (methodology.md section 39.7). Up to 92 days past the anchor's coverage end, the band is the back-tested one. Past 92 days it widens geometrically (methodology.md section 39) rather than suppressing the estimate to null; past 184 days (double the tested horizon) the band stops widening but the point keeps tracking the latest GPCI month, and EIA's own release is flagged as unusually overdue.",
     "companion_series": {
       "malacca": [
         22.3,
@@ -257,12 +258,13 @@
       ]
     },
     "last_published": {
-      "for_date": "2026-09-30",
-      "point": 5.6,
+      "for_date": "2026-10-07",
+      "point": 6.3,
       "band_low": 4.9,
-      "band_high": 10.8,
+      "band_high": 12.9,
       "anchor_period": "2Q26",
-      "method": "gpci-transit-share"
+      "method": "gpci-transit-share",
+      "extrapolated": "B"
     },
     "estimator_authorised_by": "Owner closed critical issue #9 on 2026-09-23T10:34:58Z: 'Let's go with option C.' The CEO chose the construction (transit share of the latest published quarter x latest month of GPCI, i.e. option C as defined in the issue body, not the bypass-adjusted variant C-prime) under the methodology authority the owner granted in the same comment (GOVERNANCE.md). Published only on owner approval of the copy-review PR. See methodology.md section 19 and decisions-log.md 2026-09-23."
   },

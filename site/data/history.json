@@ -1,6 +1,6 @@
 {
-  "_comment": "Our own past daily model estimates for oil flow through the Strait of Hormuz -- OUR model's outputs, not a republished third-party series. See site/data/hormuz.json for the EIA figures the model is calibrated against, and sources.html/methodology.md for how the estimate and its range are built. Every entry is an estimate, never a measurement. 'suppressed': true means no daily figure was published that day because the estimate fell past our back-tested horizon (methodology.md section 19-20); point/band_low/band_high are null on those rows by design, not a missing-data accident. Appended and idempotently updated in place by scripts/refresh_estimate.py via scripts/generate_history.py.",
-  "generated_utc": "2026-10-07T11:45:11Z",
+  "_comment": "Our own past daily model estimates for oil flow through the Strait of Hormuz -- OUR model's outputs, not a republished third-party series. See site/data/hormuz.json for the EIA figures the model is calibrated against, and sources.html/methodology.md for how the estimate and its range are built. Every entry is an estimate, never a measurement. 'suppressed': true means no daily figure was published that day because the estimate fell past our back-tested horizon -- this was retired 2026-10-08 (methodology.md section 39) in favour of always publishing a widened-band extrapolation, so it should only appear on rows dated before that change; point/band_low/band_high are null on those rows by design, not a missing-data accident. 'extrapolated': 'B' or 'C' means the row is a real published figure but past our back-tested horizon, with a correspondingly wider band (methodology.md section 39); null means a normal backtested estimate. Appended and idempotently updated in place by scripts/refresh_estimate.py via scripts/generate_history.py.",
+  "generated_utc": "2026-10-08T11:39:26Z",
   "entries": [
     {
       "for_date": "2026-09-16",
@@ -316,6 +316,24 @@
       "regime_kind": "local",
       "suppressed": true,
       "horizon_days": 98,
+      "transit_share": 0.4108,
+      "gpci_latest_month": "202609",
+      "gpci_latest": 15.42
+    },
+    {
+      "for_date": "2026-10-07",
+      "retrieved_utc": "2026-10-08T11:39:26Z",
+      "point": 6.3,
+      "band_low": 4.9,
+      "band_high": 12.9,
+      "band_basis": "Extrapolated past the 92-day tested horizon (methodology.md section 39): forced disrupted-style band, widened geometrically from the back-tested miss factor k=1.937 via k_ext=k^(1+extra) with extra=0.076 (horizon 99 days past the 2Q26 anchor), giving k_ext=2.037, applied in the direction production has moved (rising) since the anchor quarter.",
+      "anchor_period": "2Q26",
+      "method": "gpci-transit-share",
+      "regime": "disrupted",
+      "regime_kind": "local",
+      "suppressed": false,
+      "extrapolated": "B",
+      "horizon_days": 99,
       "transit_share": 0.4108,
       "gpci_latest_month": "202609",
       "gpci_latest": 15.42
