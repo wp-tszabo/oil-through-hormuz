@@ -77,12 +77,20 @@ jobs:
         # issue #7, only harder to notice. Dispatching the deploy explicitly
         # is the documented exception. No `continue-on-error`: if the deploy
         # cannot be dispatched, the run must go red.
+        #
+        # --retry: GitHub's dispatch API occasionally returns a transient 500
+        # even though the dispatch itself went through (seen on run
+        # 38253354506, 2026-10-12). Retry a handful of times with backoff to
+        # ride out that flakiness; if it's a real, persistent failure the
+        # retries still exhaust and curl still exits non-zero, so the job
+        # still goes red exactly as designed.
         if: steps.commit.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           curl -sS --fail-with-body -X POST \
+            --retry 5 --retry-delay 5 --retry-all-errors \
             -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/deploy-pages.yml/dispatches" \
