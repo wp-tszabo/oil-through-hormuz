@@ -20,10 +20,14 @@ critical-issue log entry.
       such (not presented as a direct measurement).
 - [ ] Known data gaps or staleness are surfaced to the reader, not hidden.
 - [ ] If the figure comes from the daily best-guess model (see
-      `research.md`), its methodology is published and linked, its inputs
-      are all independently cleared sources (never an uncleared source used
-      "just for calibration"), and it carries a visible uncertainty range —
-      not a falsely precise single number.
+      `research.md`), its methodology is published and linked, its tier-1
+      data inputs are all independently cleared sources (never an uncleared
+      dataset used "just for calibration"), any tier-2 reported facts are
+      cited, dated and confirmed as GOVERNANCE.md → "Prediction mandate and
+      information sources" requires, no tier-3 validation data (its
+      figures, charts or text) appears anywhere on the page or in the feed,
+      and it carries a visible uncertainty range — not a falsely precise
+      single number.
 - [ ] **The page shows a current best estimate — a blank/suppressed state
       fails this item** (GOVERNANCE.md → "Always show a current estimate",
       owner directive 2026-10-08), unless Research/CEO have a logged,

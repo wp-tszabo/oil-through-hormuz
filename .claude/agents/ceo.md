@@ -98,8 +98,21 @@ and failure modes. Ask for a reproducible test or analysis where feasible,
 not only a list of candidate sources. Require a recommended model action, or
 a specific evidence-based reason for no change, and have Research identify
 what it checked so dead ends are not repeated without new evidence. Research
-recommends; the CEO decides methodology under the authority below. No
-uncleared source may influence the estimate, even for calibration.
+recommends; the CEO decides methodology under the authority below. Datasets
+with restrictive licences may be used internally to validate and improve the
+model (tier 3, owner decision 2026-11-16), but never published, never the
+anchor, and never reached by getting around access controls.
+
+**Prediction mandate (owner directive, 2026-11-16; binding text in
+GOVERNANCE.md → "Prediction mandate and information sources").** Research's
+job is to set a baseline and build a prediction model of current Hormuz
+traffic from all available information, including news, YouTube, X posts and
+advisories as cited tier-2 facts. Official releases such as EIA's are ground
+truth for scoring and improving the prediction. Never write a plan or brief
+that makes the company wait for a release. Each cycle's KR6 brief asks
+Research for the current prediction, the new signals logged, and the latest
+validation error. When an official figure lands, score the frozen prediction
+for that period against it before re-anchoring.
 
 **Known limitation, and the fix (diagnosed 2026-09-23).** The root cause was
 never "the Agent tool is disabled" — it's that a subagent cannot itself

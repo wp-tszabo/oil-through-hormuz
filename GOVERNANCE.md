@@ -138,7 +138,9 @@ past the tested horizon as if it had been tested. What the page shows
      is the trigger: raise it, don't ship it.
    - **Category 3**: no input with an unread, unclear or conditional licence
      reaches the site, and nothing published may breach a source's attribution
-     terms.
+     terms. (This governs tier-1 licensed data. Reported facts from news,
+     video or social posts, and internal-only validation data, follow
+     "Prediction mandate and information sources".)
    - **Category 1**: a publish that breaks the site or the data feed is an
      outage like any other.
 2. **Rubric §1 (accuracy) and §2 (no copied text) are unchanged.** That
@@ -311,7 +313,10 @@ methodology decision exactly as it did before 2026-09-23:
    commercial-use question is the standing example.
 3. **Rubric §1.6 is unchanged:** the method is published and linked, every
    input is independently cleared, and the figure carries a visible
-   uncertainty range.
+   uncertainty range. (Amended 2026-11-16: "cleared" means licence-cleared
+   for tier-1 data, and cited and confirmed for tier-2 reported facts.
+   Tier-3 validation data needs no clearance but is never published. See
+   "Prediction mandate and information sources".)
 4. **Explicit owner product decisions** (amended later on 2026-09-23 by
    "Publishing authority", and again on 2026-10-08 — see "Always show a
    current estimate" above). Standing: the headline is a daily *estimate*
@@ -340,6 +345,80 @@ methodology decision exactly as it did before 2026-09-23:
 
 If a methodology decision seems to need one of the exceptions above bent to
 work, that is the signal to stop and raise it, not to decide it.
+
+## Prediction mandate and information sources (owner directive, 2026-11-16)
+
+**Research's job is to predict, not to wait.** Research establishes a
+baseline for normal Strait of Hormuz traffic and builds a prediction model
+that estimates current traffic levels from all available information. When
+official figures are published (EIA's quarterly supplement, or any other
+measured series), they are **ground truth for validation**: the CEO and
+Research score the prediction against them, record the error openly, and
+improve the model. A pending official release is never a reason to pause
+model work. Plans must not make it the event the week waits on.
+
+**All kinds of information count.** That includes news reporting, YouTube
+channels, X posts, shipping and maritime advisories, insurer and market
+commentary, producer announcements and official statistics. Inputs fall
+into three tiers with different rules:
+
+1. **Licensed data.** Tables, series or datasets we republish, chart, or
+   ingest wholesale. The existing licence rule applies unchanged:
+   guilty-until-checked, an unread, unclear or conditional licence is
+   category 3, and nothing is redistributed beyond what its licence allows.
+2. **Reported facts and signals.** Discrete facts reported by a source:
+   for example "a tanker was attacked on date X", "war-risk premiums rose",
+   "escorted convoys resumed", "loadings at Ras Tanura were suspended".
+   These **may inform the prediction model** (as event, regime or level
+   signals) without a licence clearance, because the risk lies in copying a
+   source's content, not in using what happened. Conditions:
+   - **Cite, never copy.** Record each fact with its source link and date.
+     Rubric §2 (no copied text) applies in full; no bulk re-hosting of
+     articles, videos, posts or transcripts.
+   - **Read, don't scrape.** Read sources directly, through search or by
+     fetching individual pages. Do not bulk-scrape platforms whose terms
+     forbid it (X and YouTube included), and do not get around paywalls or
+     access controls.
+   - **Weigh reliability.** Each fact carries a source-reliability grade.
+     A single unconfirmed post, video or anonymous claim is a lead, not a
+     fact. A fact moves the published figure only once it is confirmed by
+     at least two independent sources, or by one primary/official source.
+     Research records how each signal entered the model.
+   - **Be honest about it.** Public copy says the figure is a model
+     prediction informed by official data and news reporting, not a
+     measurement. Overstating certainty, authority or input diversity is
+     still category 4.
+
+3. **Validation reference data (owner decision, 2026-11-16).** Any
+   publicly reachable dataset may be used **internally to validate and
+   improve** the prediction model, **whatever its licence terms say**. That
+   includes data whose terms forbid redistribution or derivative use (IMF
+   PortWatch, AIS-derived figures, others). The owner accepts this risk.
+   Using it no longer counts as a licence issue (category 3), provided:
+   - **Never republished.** Its figures, charts, tables or text never appear
+     on the site, in the data feed, in the history files or in any public
+     artifact. Public copy may say, in general terms, that the model is
+     checked against independent third-party data, without quoting their
+     numbers or implying their endorsement.
+   - **Never the published figure.** It may score the model, reveal biases
+     and justify changes to the model's structure or parameters. It may not
+     be the anchor, and the published estimate may not be a copy or simple
+     rescaling of it.
+   - **No circumvention.** Use only what is reachable without getting
+     around a paywall, login, CAPTCHA, bot block or rate limit. Create no
+     account and accept no terms in the owner's name without asking, and
+     spend nothing beyond the ceiling.
+   - **Recorded.** Each use is logged in `methodology.md` (source, date
+     fetched, what it was compared against, the result). Raw copies stay out
+     of `site/` and anything published.
+
+Tier-2 signals are kept in `company-memory/` as a dated, cited signal log
+(facts only, with links), so every prediction is traceable to its inputs.
+This directive supersedes the earlier "no uncleared source may influence the
+estimate, even for calibration" wording for tier-2 facts and tier-3
+validation use. The full licence check still binds anything we publish or
+redistribute (tier 1). The IMF PortWatch block is lifted for tier-3
+validation use only.
 
 ## Critical issues (immediate interrupt, do not wait for weekly review)
 

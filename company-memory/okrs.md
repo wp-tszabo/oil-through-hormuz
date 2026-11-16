@@ -80,6 +80,21 @@ record the concrete checks and evidence for no change. The CEO reviews the work
 and decides methodology. The existing licence, accuracy, and tested-range rules
 remain binding.
 
+### KR6 prediction mandate (owner directive, 2026-11-16)
+
+Supersedes the framing above where they conflict. Research's KR6 work is to
+**establish a baseline and build a prediction model** of current Strait of
+Hormuz traffic from all available information. That includes news, YouTube,
+X posts, maritime advisories and official statistics, under the tier-1/tier-2
+rules in GOVERNANCE.md → "Prediction mandate and information sources".
+Official figures (EIA and others) are ground truth for **validating and
+improving** the prediction, not events to wait for. Any publicly reachable
+dataset, whatever its licence (e.g. IMF PortWatch), may be used internally
+as tier-3 validation data, never published. Each cycle reports the
+current prediction and band, signals logged in `signal-log.md`, and the
+latest measured validation error. Success is a prediction whose measured
+error against official figures shrinks over time.
+
 ## Phase 1 — Prove the free-tier core product (current)
 
 **Objective**: Ship a small, honest, reliably-updating Strait of Hormuz
