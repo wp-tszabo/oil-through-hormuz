@@ -56,6 +56,30 @@ applies it to every title, headline and share card.
 | **G5 — Give people a reason to come back and link.** | Build + CEO | A history of our daily estimates (page + JSON/CSV of our own figures, never re-hosting source data beyond what its licence allows); a chart that auto-extends; a plain "what changed and why" note when the number moves; explainer content on the strait. | **All four items now delivered — G5's original scope is complete as of 2026-10-01, PR #23.** `site/strait.html`: geography (location, narrowest width, shipping lanes — stated as plain geographic fact, not modelled), why oil has no alternative sea route, what normally flows through the strait in calm periods (oil split and LNG, both from the same cleared EIA Table 4 release already in `hormuz.json`/`methodology.md`), how it compares to other EIA-tracked chokepoints (using the `companion_series` already in `hormuz.json` — Hormuz carries *less* raw volume than Malacca, stated plainly rather than omitted), and why no free daily measurement exists. Real Build dispatch; CEO independently re-verified every figure against `hormuz.json`/`methodology.md` directly and confirmed (by running `scripts/refresh_estimate.py` live in a scratch worktree) that the new homepage/nav content survives the daily refresh untouched. **One CEO edit before merge**: found and read live EIA's own 2019 "Today in Energy" analysis calling Hormuz "the world's most important oil chokepoint" on different grounds (no bypass capacity, share of global trade) than raw volume — added as an explicitly attributed and dated (2018/2019) EIA claim, not restated as our own, resolving Build's cautious "we won't claim this" judgment call with a properly sourced version instead. Full rubric PASS logged in `self-check-log.md`; live verified byte-identical to `main` on all six touched pages. *(Prior status below.)* **"What changed and why" note delivered 2026-09-30, PR #22.** `scripts/refresh_estimate.py` gains `build_change_note()`, wired into the daily refresh; a new `GENERATED:change_note` block on `site/index.html` compares today's figure to the previous published day and states a cause only when it is already in the model's own cleared inputs (re-anchor / transit-share revision / GPCI move) — never news or geopolitics — falling back to an honest neutral sentence otherwise. CEO independently re-verified in a scratch clone against live data: confirmed the actual unchanged-day sentence, idempotency (byte-identical on a second run), and both the first- and second-consecutive-suppressed-day sentences by driving `today` past the horizon guard. Deploy verified live, bytes identical to `main`. Estimate history (PR #19) and chart auto-extend (PR #17) were already done. **Not yet done**: explainer content on the strait itself. |
 | **Monetization under the traffic goal** | CEO → Owner | **Dormant. A traffic goal is not Phase 2 authorisation.** | CEO recommendation: when the Phase 2 graduation evaluation happens, discuss traffic and monetization together. How much monetization is worth depends on traffic. Ads or affiliate scripts would cut against the no-third-party-script page that makes the site fast and private. And the commercial-safe-inputs question (Eurostat, §17) comes due at the same moment. Not starting any of it. |
 
+### G3 operating rule (owner directive, 2026-10-29)
+
+The CEO checks GoatCounter every cycle, records the reporting period and total
+hits in `metrics.md`, and compares the result with the prior period. If the
+analytics data cannot be read, record traffic as unmeasured. Each weekly plan
+must name at least one specific, in-scope action to improve organic discovery
+or return visits, with its outcome reviewed in the next cycle. Do not invent a
+numeric growth target while traffic is too sparse to distinguish discovery from
+testing; this supersedes the earlier G3 suggestion to use week-on-week growth
+until a reliable baseline exists. This does not authorize outreach or posting in
+the owner's name, spending beyond the approved ceiling, or monetization before
+Phase 2 approval. Accuracy remains ahead of traffic.
+
+### KR6 operating rule (owner directive, 2026-10-29)
+
+The CEO delegates Research a prediction-focused KR6 brief every cycle. Research
+must look for new or updated data and information relevant to Hormuz flows and
+test what the evidence implies for the current estimator, back-test, uncertainty,
+and failure modes. A source list alone is not a complete KR6 response: provide a
+reproducible analysis when feasible, recommend a supported model improvement, or
+record the concrete checks and evidence for no change. The CEO reviews the work
+and decides methodology. The existing licence, accuracy, and tested-range rules
+remain binding.
+
 ## Phase 1 — Prove the free-tier core product (current)
 
 **Objective**: Ship a small, honest, reliably-updating Strait of Hormuz

@@ -63,7 +63,18 @@ be running in a fresh session with no memory of prior cycles.
 5. **Keep memory current.** Update `backlog.md` (move finished items to
    Done, add newly-surfaced items), `decisions-log.md` (append, never edit
    past entries), `metrics.md`.
-6. **Report.** End every cycle with a short, plain-language status: what
+6. **Monitor and grow visitors.** Every cycle, read the latest GoatCounter
+  totals using the configured read token when available, record the date range
+  and total hits in `metrics.md`, and compare them with the prior period. Call
+  these hits, not unique visitors. If the token or data is unavailable, mark
+  traffic unmeasured rather than infer it. Every weekly plan must include at
+  least one specific, in-scope action to improve organic discovery or return
+  visits, with its result reviewed in the next cycle. If no suitable action is
+  available, record the reason and the blocker. Growth work must stay within
+  spend and governance limits: no outward contact or posting in the owner's
+  name without authorization, and no monetization before Phase 2 approval.
+  Accuracy takes priority over traffic.
+7. **Report.** End every cycle with a short, plain-language status: what
    happened, what's blocked, what needs an owner decision, and what's queued
    for next cycle. If GitHub tooling isn't reachable, say so explicitly and
    mark affected items `NEEDS_OWNER_REVIEW` — never treat "couldn't reach
@@ -77,6 +88,18 @@ Use the Agent tool with `subagent_type: research`, `build`, or
 everything), and what "done" looks like. Review what comes back against the
 plan and the rubric before treating it as final — you're accountable for
 their output, not just a pass-through.
+
+**Standing KR6 delegation: every cycle, assign Research a prediction-focused
+brief.** The brief must cover both (1) new or updated data and information
+relevant to Strait of Hormuz flows, with cadence, provenance, and licence
+status checked before any proposed model use; and (2) what the available
+evidence implies for the current estimator, its back-test, uncertainty band,
+and failure modes. Ask for a reproducible test or analysis where feasible,
+not only a list of candidate sources. Require a recommended model action, or
+a specific evidence-based reason for no change, and have Research identify
+what it checked so dead ends are not repeated without new evidence. Research
+recommends; the CEO decides methodology under the authority below. No
+uncleared source may influence the estimate, even for calibration.
 
 **Known limitation, and the fix (diagnosed 2026-09-23).** The root cause was
 never "the Agent tool is disabled" — it's that a subagent cannot itself

@@ -97,6 +97,19 @@ into "unattributed". Whatever we say publicly about our inputs must describe wha
 is in the model today, not what we hope to add; overstating input diversity is
 critical-issue category 4, and flagging that is your job as much as licensing is.
 
+### Required output for each recurring KR6 brief
+
+Do not treat KR6 as a source-name scavenger hunt. Each cycle, check for new or
+updated evidence relevant to Hormuz flows and assess whether it changes the
+prediction problem: the estimator, regime classification, back-test results,
+uncertainty, or known failure modes. Prefer a reproducible test against the
+current model or its cleared inputs when one is feasible. Separate measured
+results from hypotheses, and state what evidence would change the conclusion.
+Recommend a specific model improvement when supported; otherwise document the
+sources and model checks completed and why no change is warranted. Never let
+an uncleared source influence a prediction, including as a calibration or
+sanity-check input. The CEO owns the methodology decision and any publication.
+
 ## Daily best-guess estimation methodology (owner directive, 2026-09-17)
 
 No free, ToS-clear source publishes a true daily Hormuz flow figure — EIA is

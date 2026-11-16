@@ -9,15 +9,20 @@
 ## Objectives this week
 
 - <tie back to okrs.md key results>
+- **Standing KR6:** Research checks new or updated Hormuz-relevant evidence and
+	tests its implications for the estimator; the plan records a supported change
+	or a specific, evidenced reason for no change.
+- **Standing G3:** name at least one in-scope organic-discovery or return-visit
+	action, and review its result next cycle.
 
 ## Planned work
 
 | Owner | Work item | Notes |
 |---|---|---|
-| Research | | |
+| Research | Standing KR6 prediction-focused research and analysis, plus any scoped candidate search. | Return a supported model recommendation or evidence-based no-change finding; check licence status before proposed use. |
 | Build | | |
 | Monetization | | (leave blank / "dormant" in Phase 1) |
-| CEO | | (review, self-checks, memory upkeep, reporting) |
+| CEO | | (delegate and review KR6; monitor traffic; self-checks, memory upkeep, reporting) |
 
 ## Spend ceiling requested
 
