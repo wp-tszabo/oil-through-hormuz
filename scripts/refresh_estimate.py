@@ -680,17 +680,11 @@ def main(today=None, page=None, xlsx=None):
                 '    <p class="figure">%s</p>\n'
                 '    <p class="unit">million barrels per day</p>\n'
                 '    <p class="band">\n'
-                '      Working range <strong>%s</strong> to <strong>%s</strong>. This range is\n'
-                '      wider than usual. Our back-test only validates this model up to 92 days\n'
-                '      past the anchor quarter (%s); we are now %d days past it. We widen the\n'
-                '      range further for every extra day in this zone, because the one signal\n'
-                '      we have about longer-range error &mdash; measured with hindsight data our\n'
-                '      live model does not have in real time &mdash; shows the miss growing\n'
-                '      faster than the one-quarter error we actually validated. Treat this as a\n'
-                '      wider-than-tested best guess, not a backtested figure. It will tighten\n'
-                '      back to our normal range as soon as EIA publishes %s.\n'
+                '      Range <strong>%s</strong> to <strong>%s</strong>, wider than usual: we are\n'
+                '      %d days past the last published quarter (%s), beyond the 92 days our\n'
+                '      back-test covers. <a href="sources.html#range">Why?</a>\n'
                 '    </p>\n' % (target.strftime("%A %-d %B %Y"), point, est["band_low"], est["band_high"],
-                                period_words(anchor["period"]), horizon, period_words(next_anchor))
+                                horizon, period_words(anchor["period"]))
             )
             print("EXTRAPOLATED STATE B (%d days past %d-day horizon, cap %d) -- point %s band %s-%s, k_ext=%.3f"
                   % (horizon, MAX_HORIZON_DAYS, EXTRAPOLATION_CAP_DAYS, point, est["band_low"], est["band_high"], k_ext))
@@ -709,18 +703,10 @@ def main(today=None, page=None, xlsx=None):
                 '    <p class="figure">%s</p>\n'
                 '    <p class="unit">million barrels per day</p>\n'
                 '    <p class="band">\n'
-                '      Working range <strong>%s</strong> to <strong>%s</strong>. We have stopped\n'
-                '      widening this range further: past 184 days (double our tested horizon) we\n'
-                '      have no evidence at all to shape it, and continuing to widen it\n'
-                '      mechanically would create false precision in the wrong direction. The point\n'
-                '      figure above still reflects the latest available production data (%s). EIA\n'
-                '      has also gone unusually long without publishing a new Strait of Hormuz\n'
-                '      quarter &mdash; longer than its normal lag even accounting for this\n'
-                '      extrapolation &mdash; which may indicate a delay on their side or a problem\n'
-                '      in our own pipeline; this has been flagged for review. Treat this figure as\n'
-                '      our best available guess, not a validated estimate.\n'
-                '    </p>\n' % (target.strftime("%A %-d %B %Y"), point, est["band_low"], est["band_high"],
-                                month_words(last_hist))
+                '      Range <strong>%s</strong> to <strong>%s</strong>. We are more than double our\n'
+                '      tested horizon past the last published quarter, so treat this as a best\n'
+                '      available guess, not a validated estimate. <a href="sources.html#range">Why?</a>\n'
+                '    </p>\n' % (target.strftime("%A %-d %B %Y"), point, est["band_low"], est["band_high"])
             )
             print("EXTRAPOLATED STATE C (%d days past %d-day horizon, cap %d) -- point %s band %s-%s, k_ext=%.3f; "
                   "EIA release overdue" % (horizon, MAX_HORIZON_DAYS, EXTRAPOLATION_CAP_DAYS,
@@ -736,14 +722,12 @@ def main(today=None, page=None, xlsx=None):
             tail = ""
         elif phase == "rising":
             lo, hi = anchor["total_oil"], point_raw * k
-            tail = ("The headline is more likely too low than too high: it\n"
-                    "      assumes the strait still carries the same share of Gulf oil output\n"
-                    "      as it did in %s, although that output has since risen.\n" % period_words(anchor["period"]))
+            tail = ("The headline is more likely too low than too high.\n"
+                    "      <a href=\"sources.html#range\">Why?</a>\n")
         else:
             lo, hi = point_raw / k, anchor["total_oil"]
-            tail = ("The headline is more likely too high than too low: it\n"
-                    "      assumes the strait still carries the same share of Gulf oil output\n"
-                    "      as it did in %s, although that output has since fallen.\n" % period_words(anchor["period"]))
+            tail = ("The headline is more likely too high than too low.\n"
+                    "      <a href=\"sources.html#range\">Why?</a>\n")
         est["suppressed"] = False
         # CEO pre-merge fix (30th cycle): the States B/C branch above is the
         # only place that sets this key. Without an explicit reset here, a
@@ -775,7 +759,7 @@ def main(today=None, page=None, xlsx=None):
             '    <p class="figure">%s</p>\n'
             '    <p class="unit">million barrels per day</p>\n'
             '    <p class="band">\n'
-            '      Working range <strong>%s</strong> to <strong>%s</strong>. '
+            '      Range <strong>%s</strong> to <strong>%s</strong>. '
             'Treat the range\n      as the answer. %s'
             '    </p>\n' % (target.strftime("%A %-d %B %Y"), point, est["band_low"], est["band_high"],
                             tail if tail else "\n")
@@ -853,13 +837,16 @@ def main(today=None, page=None, xlsx=None):
     # The sentence under the block must agree with the block's state (suppressed /
     # disrupted / calm), so it is generated too (copy decided 2026-09-23 under the
     # CEO's publishing authority; draft: pending-copy/2026-09-19-suppressed-state-note.md).
-    note_html = ('  <p class="note">\n    %s <a href="#how">how we get to a number</a>.\n  </p>\n' % note)
+    # Owner redesign 2026-11-16: the homepage shows only title, subtitle,
+    # estimate and chart, so the note and change-note blocks are optional.
+    # They are filled if their markers exist (0 or 1 allowed, never more).
+    note_html = ('  <p class="note">\n    %s <a href="sources.html#how">how we get to a number</a>.\n  </p>\n' % note)
     new, n = re.subn(
         r"<!-- GENERATED:note -->.*?<!-- /GENERATED:note -->",
         lambda m: "<!-- GENERATED:note -->\n" + note_html + "  <!-- /GENERATED:note -->",
         new, flags=re.S)
-    if n != 1:
-        raise Fail("could not find exactly one GENERATED:note block in index.html")
+    if n > 1:
+        raise Fail("found more than one GENERATED:note block in index.html")
 
     # G5 follow-up: the "what changed and why" sentence computed above.
     change_note_html = '  <p class="change-note">\n    %s\n  </p>\n' % change_note
@@ -867,8 +854,20 @@ def main(today=None, page=None, xlsx=None):
         r"<!-- GENERATED:change_note -->.*?<!-- /GENERATED:change_note -->",
         lambda m: "<!-- GENERATED:change_note -->\n" + change_note_html + "  <!-- /GENERATED:change_note -->",
         new, flags=re.S)
-    if n != 1:
-        raise Fail("could not find exactly one GENERATED:change_note block in index.html")
+    if n > 1:
+        raise Fail("found more than one GENERATED:change_note block in index.html")
+    # Since the 2026-11-16 redesign the change note lives on history.html.
+    with open(historymod.HISTORY_PAGE) as f:
+        histtext = f.read()
+    histnew, n = re.subn(
+        r"<!-- GENERATED:change_note -->.*?<!-- /GENERATED:change_note -->",
+        lambda m: "<!-- GENERATED:change_note -->\n" + change_note_html + "  <!-- /GENERATED:change_note -->",
+        histtext, flags=re.S)
+    if n > 1:
+        raise Fail("found more than one GENERATED:change_note block in history.html")
+    if histnew != histtext:
+        with open(historymod.HISTORY_PAGE, "w") as f:
+            f.write(histnew)
 
     # The chart is generated from `series` itself (scripts/generate_chart.py)
     # so it extends automatically as EIA quarters are added -- see that
@@ -876,7 +875,10 @@ def main(today=None, page=None, xlsx=None):
     # hormuz.json". Regenerated every run, not just on `changed`, so it
     # stays byte-identical to what the current data would produce even on a
     # day nothing else moved.
-    chart_svg = "\n".join("    " + line for line in chartmod.render_chart(series).splitlines())
+    # Owner redesign 2026-11-16: a line chart of the quarterly record plus our
+    # daily estimates and their range, replacing the quarterly bar chart.
+    chart_svg = "\n".join("    " + line for line in
+                          chartmod.render_line_chart(series, history["entries"]).splitlines())
     new, n = re.subn(
         r"<!-- GENERATED:chart -->.*?<!-- /GENERATED:chart -->",
         lambda m: "<!-- GENERATED:chart -->\n" + chart_svg + "\n    <!-- /GENERATED:chart -->",
