@@ -5,16 +5,16 @@
     "dataset": "Global Energy Security Data",
     "url": "https://www.eia.gov/outlooks/steo/report/energysecurity/article.php",
     "table": "Table 4. Volume of crude oil, condensate, petroleum products, and liquefied natural gas transported through the Strait of Hormuz",
-    "release_date": "2026-08-12",
+    "release_date": "2026-11-16",
     "next_release_date": null,
     "next_release_note": "EIA does not publish a specific next-release date for the Global Energy Security Data supplement. Do not copy the parent STEO's next-release date here - they are different schedules. Derive staleness from release_date and the coverage end of the latest series row.",
     "cadence": "quarterly",
     "licence": "U.S. federal government work, public domain; free to use and distribute with acknowledgement",
-    "attribution": "Source: U.S. Energy Information Administration, Global Energy Security Data, released 12 August 2026. EIA volumes are based on Vortexa tanker tracking data with additional EIA analysis.",
+    "attribution": "Source: U.S. Energy Information Administration, Global Energy Security Data, released 16 November 2026. EIA volumes are based on Vortexa tanker tracking data with additional EIA analysis.",
     "provenance_caveat": "EIA analysis based on Vortexa tanker tracking data. We republish EIA's published analysis; we do not hold or license Vortexa data.",
     "publisher_caveat": "Since the end of February 2026, AIS signal data for ships transiting the Strait of Hormuz have become especially unreliable. For 2026 Hormuz volumes, tanker tracking data are being revised frequently based on the best available information."
   },
-  "retrieved_utc": "2026-11-16T13:34:38Z",
+  "retrieved_utc": "2026-11-17T02:27:45Z",
   "units": "million barrels per day",
   "series": [
     {
@@ -29,7 +29,7 @@
       "period": "2Q25",
       "start": "2025-04-01",
       "end": "2025-06-30",
-      "total_oil": 21.0,
+      "total_oil": 21.1,
       "crude_and_condensate": 14.9,
       "products": 6.2
     },
@@ -37,8 +37,8 @@
       "period": "3Q25",
       "start": "2025-07-01",
       "end": "2025-09-30",
-      "total_oil": 21.3,
-      "crude_and_condensate": 15.0,
+      "total_oil": 21.4,
+      "crude_and_condensate": 15.1,
       "products": 6.3
     },
     {
@@ -53,17 +53,25 @@
       "period": "1Q26",
       "start": "2026-01-01",
       "end": "2026-03-31",
-      "total_oil": 14.9,
+      "total_oil": 15.0,
       "crude_and_condensate": 10.9,
-      "products": 4.0
+      "products": 4.1
     },
     {
       "period": "2Q26",
       "start": "2026-04-01",
       "end": "2026-06-30",
-      "total_oil": 4.9,
-      "crude_and_condensate": 3.7,
-      "products": 1.1
+      "total_oil": 5.1,
+      "crude_and_condensate": 3.8,
+      "products": 1.2
+    },
+    {
+      "period": "3Q26",
+      "start": "2026-07-01",
+      "end": "2026-09-30",
+      "total_oil": 9.1,
+      "crude_and_condensate": 7.3,
+      "products": 1.8
     }
   ],
   "model": {
@@ -73,86 +81,92 @@
     "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
     "shape_function": "GPCI transit-share: the strait is assumed to carry the same share of Gulf producer crude output (GPCI) as in the latest published quarter; the estimate moves monthly with GPCI. Replaced persistence on 2026-09-23 (methodology.md section 19).",
     "estimate": {
-      "for_date": "2026-11-15",
-      "point": 7.3,
-      "band_low": 4.9,
+      "for_date": "2026-11-16",
+      "point": 10.6,
+      "band_low": 9.1,
       "band_high": 19.8,
-      "band_basis": "Extrapolated past the 92-day tested horizon (methodology.md section 39): forced disrupted-style band, widened geometrically from the back-tested miss factor k=1.937 via k_ext=k^(1+extra) with extra=0.500 (horizon 138 days past the 2Q26 anchor), giving k_ext=2.696, applied in the direction production has moved (rising) since the anchor quarter.",
-      "anchor_period": "2Q26",
-      "anchor_value": 4.9,
+      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 3Q26: from persistence (9.1, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.873, applied in the direction production moved.",
+      "anchor_period": "3Q26",
+      "anchor_value": 9.1,
       "is_measurement": false,
       "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6.",
-      "horizon_days": 138,
+      "horizon_days": 47,
       "max_horizon_days": 92,
       "suppressed": false,
-      "extrapolated": "B"
+      "extrapolated": null
     },
     "staleness_note": "Regenerated daily by scripts/refresh_estimate.py (GitHub Actions). The job re-fetches both EIA sources, re-dates the estimate, recomputes point and band from the GPCI transit-share estimator and its own back-test, re-anchors on each new EIA quarter and scores the estimate it had published for that quarter against the measured figure (and against persistence). It fails loudly and publishes nothing if either fetch or parse fails, if GPCI does not cover the whole anchor quarter, or if the newest GPCI month is more than 70 days old -- checked on every run, at any horizon (methodology.md section 39.7). Up to 92 days past the anchor's coverage end, the band is the back-tested one. Past 92 days it widens geometrically (methodology.md section 39) rather than suppressing the estimate to null; past 184 days (double the tested horizon) the band stops widening but the point keeps tracking the latest GPCI month, and EIA's own release is flagged as unusually overdue.",
     "companion_series": {
       "malacca": [
-        22.3,
-        23.8,
-        23.4,
-        24.9,
-        21.3,
-        16.6
+        null,
+        23.9,
+        23.5,
+        25.0,
+        21.4,
+        16.7,
+        19.4
       ],
       "bab_el_mandeb": [
-        3.9,
+        null,
         4.5,
-        4.6,
+        4.7,
         5.4,
         5.6,
-        8.1
+        8.1,
+        6.3
       ],
       "danish_straits": [
-        5.0,
+        null,
         4.8,
-        4.9,
+        5.0,
         5.0,
         4.9,
-        4.7
+        4.7,
+        4.5
       ],
       "turkish_straits": [
-        3.8,
+        null,
         3.7,
         3.7,
         3.7,
         3.3,
-        4.1
+        4.1,
+        3.4
       ],
       "panama_canal": [
-        2.8,
+        null,
         2.5,
         2.8,
         2.8,
         2.9,
-        3.2
+        3.2,
+        3.0
       ],
       "world_total_oil_supply": [
-        105.0,
-        107.7,
-        108.2,
-        103.9,
-        96.1,
-        99.7
+        null,
+        107.9,
+        108.4,
+        103.5,
+        96.2,
+        101.8,
+        105.1
       ]
     },
     "regime_kind": "local",
-    "regime_qoq_pct": -67.1,
+    "regime_qoq_pct": 78.4,
     "companion_series_note": "Companion chokepoint volumes from Table 2 of the same EIA Global Energy Security Data supplement (same publication, same public-domain licence as the Hormuz anchor). Used by the regime detector only; they do not enter the point estimate. Danish/Turkish/Panama carry no Gulf barrels and act as a global-demand control group.",
     "estimator": {
       "name": "GPCI transit-share estimator (option C, critical issue #9)",
       "formula": "estimate = (Hormuz total oil in anchor quarter / GPCI averaged over anchor quarter) x GPCI in latest history month",
-      "anchor_period": "2Q26",
-      "anchor_total_oil": 4.9,
-      "gpci_anchor_quarter": 11.93,
-      "transit_share": 0.4108,
+      "anchor_period": "3Q26",
+      "anchor_total_oil": 9.1,
+      "gpci_anchor_quarter": 15.35,
+      "transit_share": 0.593,
       "gpci_latest_month": "202610",
       "gpci_latest": 17.85,
       "production_since_anchor": "rising",
       "band_rule": "calm: point +/- max(3%, 1.5 x worst calm back-test miss). disrupted: between persistence (anchor volume unchanged) and the estimator's worst measured disrupted miss (factor k) in the direction production has moved since the anchor quarter.",
-      "k_disrupted": 1.937,
+      "k_disrupted": 1.873,
       "calm_halfwidth": 0.03,
       "backtest": [
         {
@@ -160,9 +174,9 @@
           "anchor": "1Q25",
           "gpci_month": "202504",
           "predicted": 20.86,
-          "actual": 21.0,
-          "error_pct": -0.6,
-          "persistence_error_pct": -0.5,
+          "actual": 21.1,
+          "error_pct": -1.1,
+          "persistence_error_pct": -0.9,
           "regime": "calm"
         },
         {
@@ -170,17 +184,17 @@
           "anchor": "1Q25",
           "gpci_month": "202505",
           "predicted": 21.13,
-          "actual": 21.0,
-          "error_pct": 0.6,
-          "persistence_error_pct": -0.5,
+          "actual": 21.1,
+          "error_pct": 0.2,
+          "persistence_error_pct": -0.9,
           "regime": "calm"
         },
         {
           "target": "3Q25",
           "anchor": "2Q25",
           "gpci_month": "202507",
-          "predicted": 20.96,
-          "actual": 21.3,
+          "predicted": 21.06,
+          "actual": 21.4,
           "error_pct": -1.6,
           "persistence_error_pct": -1.4,
           "regime": "calm"
@@ -189,8 +203,8 @@
           "target": "3Q25",
           "anchor": "2Q25",
           "gpci_month": "202508",
-          "predicted": 20.87,
-          "actual": 21.3,
+          "predicted": 20.97,
+          "actual": 21.4,
           "error_pct": -2.0,
           "persistence_error_pct": -1.4,
           "regime": "calm"
@@ -199,20 +213,20 @@
           "target": "4Q25",
           "anchor": "3Q25",
           "gpci_month": "202510",
-          "predicted": 21.8,
+          "predicted": 21.9,
           "actual": 21.6,
-          "error_pct": 0.9,
-          "persistence_error_pct": -1.4,
+          "error_pct": 1.4,
+          "persistence_error_pct": -0.9,
           "regime": "calm"
         },
         {
           "target": "4Q25",
           "anchor": "3Q25",
           "gpci_month": "202511",
-          "predicted": 21.61,
+          "predicted": 21.71,
           "actual": 21.6,
-          "error_pct": 0.0,
-          "persistence_error_pct": -1.4,
+          "error_pct": 0.5,
+          "persistence_error_pct": -0.9,
           "regime": "calm"
         },
         {
@@ -220,9 +234,9 @@
           "anchor": "4Q25",
           "gpci_month": "202601",
           "predicted": 21.63,
-          "actual": 14.9,
-          "error_pct": 45.2,
-          "persistence_error_pct": 45.0,
+          "actual": 15.0,
+          "error_pct": 44.2,
+          "persistence_error_pct": 44.0,
           "regime": "disrupted"
         },
         {
@@ -230,43 +244,204 @@
           "anchor": "4Q25",
           "gpci_month": "202602",
           "predicted": 22.53,
-          "actual": 14.9,
-          "error_pct": 51.2,
-          "persistence_error_pct": 45.0,
+          "actual": 15.0,
+          "error_pct": 50.2,
+          "persistence_error_pct": 44.0,
           "regime": "disrupted"
         },
         {
           "target": "2Q26",
           "anchor": "1Q26",
           "gpci_month": "202604",
-          "predicted": 9.49,
-          "actual": 4.9,
-          "error_pct": 93.6,
-          "persistence_error_pct": 204.1,
+          "predicted": 9.55,
+          "actual": 5.1,
+          "error_pct": 87.3,
+          "persistence_error_pct": 194.1,
           "regime": "disrupted"
         },
         {
           "target": "2Q26",
           "anchor": "1Q26",
           "gpci_month": "202605",
-          "predicted": 9.02,
-          "actual": 4.9,
-          "error_pct": 84.1,
-          "persistence_error_pct": 204.1,
+          "predicted": 9.08,
+          "actual": 5.1,
+          "error_pct": 78.1,
+          "persistence_error_pct": 194.1,
+          "regime": "disrupted"
+        },
+        {
+          "target": "3Q26",
+          "anchor": "2Q26",
+          "gpci_month": "202607",
+          "predicted": 6.51,
+          "actual": 9.1,
+          "error_pct": -28.5,
+          "persistence_error_pct": -44.0,
+          "regime": "disrupted"
+        },
+        {
+          "target": "3Q26",
+          "anchor": "2Q26",
+          "gpci_month": "202608",
+          "predicted": 6.09,
+          "actual": 9.1,
+          "error_pct": -33.0,
+          "persistence_error_pct": -44.0,
           "regime": "disrupted"
         }
       ]
     },
     "last_published": {
-      "for_date": "2026-11-15",
-      "point": 7.3,
-      "band_low": 4.9,
+      "for_date": "2026-11-16",
+      "point": 10.6,
+      "band_low": 9.1,
       "band_high": 19.8,
-      "anchor_period": "2Q26",
-      "method": "gpci-transit-share",
-      "extrapolated": "B"
+      "anchor_period": "3Q26",
+      "method": "gpci-transit-share"
     },
-    "estimator_authorised_by": "Owner closed critical issue #9 on 2026-09-23T10:34:58Z: 'Let's go with option C.' The CEO chose the construction (transit share of the latest published quarter x latest month of GPCI, i.e. option C as defined in the issue body, not the bypass-adjusted variant C-prime) under the methodology authority the owner granted in the same comment (GOVERNANCE.md). Published only on owner approval of the copy-review PR. See methodology.md section 19 and decisions-log.md 2026-09-23."
+    "estimator_authorised_by": "Owner closed critical issue #9 on 2026-09-23T10:34:58Z: 'Let's go with option C.' The CEO chose the construction (transit share of the latest published quarter x latest month of GPCI, i.e. option C as defined in the issue body, not the bypass-adjusted variant C-prime) under the methodology authority the owner granted in the same comment (GOVERNANCE.md). Published only on owner approval of the copy-review PR. See methodology.md section 19 and decisions-log.md 2026-09-23.",
+    "scored_errors": [
+      {
+        "scored_on": "2026-11-17",
+        "release": "2026-11-16",
+        "quarter": "3Q26",
+        "new_actual": 9.1,
+        "last_published_estimate": {
+          "for_date": "2026-09-30",
+          "point": 5.6,
+          "band_low": 4.9,
+          "band_high": 10.8,
+          "error_pct": -38.5,
+          "band_captured": true
+        },
+        "error_pct": -38.5,
+        "scored_during_quarter": [
+          {
+            "for_date": "2026-09-16",
+            "point": 4.9,
+            "band_low": 1.5,
+            "band_high": 6.9,
+            "error_pct": -46.2,
+            "band_captured": false
+          },
+          {
+            "for_date": "2026-09-17",
+            "point": 4.9,
+            "band_low": 1.5,
+            "band_high": 6.9,
+            "error_pct": -46.2,
+            "band_captured": false
+          },
+          {
+            "for_date": "2026-09-18",
+            "point": 4.9,
+            "band_low": 1.5,
+            "band_high": 6.9,
+            "error_pct": -46.2,
+            "band_captured": false
+          },
+          {
+            "for_date": "2026-09-19",
+            "point": 4.9,
+            "band_low": 1.5,
+            "band_high": 6.9,
+            "error_pct": -46.2,
+            "band_captured": false
+          },
+          {
+            "for_date": "2026-09-20",
+            "point": 4.9,
+            "band_low": 1.5,
+            "band_high": 6.9,
+            "error_pct": -46.2,
+            "band_captured": false
+          },
+          {
+            "for_date": "2026-09-21",
+            "point": 4.9,
+            "band_low": 1.5,
+            "band_high": 6.9,
+            "error_pct": -46.2,
+            "band_captured": false
+          },
+          {
+            "for_date": "2026-09-22",
+            "point": 5.6,
+            "band_low": 4.9,
+            "band_high": 10.8,
+            "error_pct": -38.5,
+            "band_captured": true
+          },
+          {
+            "for_date": "2026-09-23",
+            "point": 5.6,
+            "band_low": 4.9,
+            "band_high": 10.8,
+            "error_pct": -38.5,
+            "band_captured": true
+          },
+          {
+            "for_date": "2026-09-24",
+            "point": 5.6,
+            "band_low": 4.9,
+            "band_high": 10.8,
+            "error_pct": -38.5,
+            "band_captured": true
+          },
+          {
+            "for_date": "2026-09-25",
+            "point": 5.6,
+            "band_low": 4.9,
+            "band_high": 10.8,
+            "error_pct": -38.5,
+            "band_captured": true
+          },
+          {
+            "for_date": "2026-09-26",
+            "point": 5.6,
+            "band_low": 4.9,
+            "band_high": 10.8,
+            "error_pct": -38.5,
+            "band_captured": true
+          },
+          {
+            "for_date": "2026-09-27",
+            "point": 5.6,
+            "band_low": 4.9,
+            "band_high": 10.8,
+            "error_pct": -38.5,
+            "band_captured": true
+          },
+          {
+            "for_date": "2026-09-28",
+            "point": 5.6,
+            "band_low": 4.9,
+            "band_high": 10.8,
+            "error_pct": -38.5,
+            "band_captured": true
+          },
+          {
+            "for_date": "2026-09-29",
+            "point": 5.6,
+            "band_low": 4.9,
+            "band_high": 10.8,
+            "error_pct": -38.5,
+            "band_captured": true
+          },
+          {
+            "for_date": "2026-09-30",
+            "point": 5.6,
+            "band_low": 4.9,
+            "band_high": 10.8,
+            "error_pct": -38.5,
+            "band_captured": true
+          }
+        ],
+        "persistence_counterfactual": 4.9,
+        "persistence_error_pct": -46.2,
+        "note": "New quarter published; re-anchored and scored (methodology.md sections 3, 19 and 81.5)."
+      }
+    ]
   },
   "production_source": {
     "publisher": "U.S. Energy Information Administration",
