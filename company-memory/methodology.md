@@ -4942,3 +4942,557 @@ Per the CEO's 68th-cycle decision (§79.4/weekly plan `2026-11-15.md`) to redire
 **Decision: ratify all three verdicts as read.** IMO is closed in full — a clean licence bar, not a proportionality call, so it does not join the OFAC/NAVCENT/INTERTANKO/GECF/UK-Sanctions-List "CLEARED-but-declined" shelf; it is simply never buildable absent a clause change. UKMTO and MARAD stay UNRESOLVED/could-not-reach — a different status from "checked and declined": the licence question has never even been reached for either, so the CEO's standing proportionality bar (a qualitative event signal needs an evidenced lag to flow to justify its recurring engineering cost, applied consistently since OFAC on 2026-10-09) has nothing yet to apply to. Recorded explicitly, per Research's own flag, so a future cycle does not mistake "reachable" for "automatically worth building" if either source's block ever lifts — reaching the source would still only clear the licence question, not the construction-cost question.
 
 **Net effect on the standing mandate, stated plainly**: of the three event-signal candidates the mandate names by example, one is now permanently closed and two remain blocked at the network layer exactly as they have been for roughly 25 cycles — this is not new ground broken, but it is a genuine, evidenced answer rather than a repeat of "still blocked" without re-checking. The event-signal side is not as exhausted as the numeric-anchor side overall (NAVCENT/INTERTANKO/GECF/UK-Sanctions-List show it still has structural variety beyond these three named sources), but on the specific UKMTO/IMO/MARAD triad named in the redirect decision, there is now little left to re-try without a different network path or a licence-clause change. **Not deciding to abandon the event-signal search generally** — only noting that the next cycle's search time may be better spent on sources beyond this specific triad, or back on EIA re-fetching, which remains the dominant open lever. No input adopted, no model change, no publish this cycle.
+
+## 81. KR6 cycle — 2026-11-17 (70th cycle): EIA posted 3Q26 — first real re-anchor, first real score of the option-C estimator and the State-B extrapolation rule since launch
+
+**Delivery type this cycle: (a) + (b).** A new quarter's figures are in hand
+(bucket-1 anchor data, already cleared, no new licence surface), the
+estimator's first real out-of-sample score is computed (honestly, both ways
+— see 81.3/81.4), a concrete, reproducible bug in the model's own
+self-scoring code is found and demonstrated, and a specific (but
+appropriately caveated) model-v2 hypothesis is proposed. No change made to
+`site/`, `site/data/hormuz.json`, or `sources.html` by this role — the
+re-anchor/publish decision is the CEO's, under methodology/publishing
+authority, following this report.
+
+### 81.1 EIA Global Energy Security Data supplement: 3Q26 is live — fetched and parsed in full
+
+Fetched directly (`curl`, full browser user-agent, 2026-11-17):
+`https://www.eia.gov/outlooks/steo/report/energysecurity/article.php` →
+**HTTP 200, 79,114 bytes** (up from 78,814 the prior cycle — the page grew,
+consistent with a new quarter's worth of table cells, not a truncation).
+`grep -c "3Q26"` → **21 occurrences** (up from 0). `grep -c "2Q26"` → **10**
+(down from 21 — consistent with 2Q26 moving from "latest, mentioned
+everywhere" to "one of six columns," not a data loss). Release line:
+`<span class="releasedate">Release Date: November 16, 2026</span>` —
+confirms the release landed the day before this fetch, as the CEO's opening
+critical-issue check this cycle also found independently.
+
+**Parsed with the production parser itself** (`scripts/refresh_estimate.py:
+parse_supplement()`), not a hand-grep, run against the live fetched page in
+an isolated scratch copy of the repo (never against the live site or the
+checked-out working tree — confirmed via `git status` before and after that
+no file under version control was touched by this role this cycle). The
+parser's release-date regex (anchored on "Global Energy Security Data
+Supplements ... Release Date: ...", chosen in 2026-09-17 specifically to
+avoid conflating this with the parent STEO's own release banner) matched
+**without any code change** — `release = "2026-11-16"`.
+
+**Table 4 (Hormuz), exact figures, m b/d (LNG in bcf/d):**
+
+| | 2Q25 | 3Q25 | 4Q25 | 1Q26 | **2Q26** | **3Q26 (NEW)** |
+|---|---|---|---|---|---|---|
+| Total oil | 21.1 | 21.4 | 21.6 | **15.0** | **5.1** | **9.1** |
+| Crude oil & condensate | 14.9 | 15.1 | 15.9 | 10.9 | 3.8 | 7.3 |
+| Petroleum products | 6.2 | 6.3 | 5.7 | 4.1 | 1.2 | 1.8 |
+
+**Table 2 (companion chokepoints, control), exact figures, m b/d:**
+
+| | 2Q25 | 3Q25 | 4Q25 | 1Q26 | 2Q26 | 3Q26 |
+|---|---|---|---|---|---|---|
+| Malacca | 23.9 | 23.5 | 25.0 | 21.4 | 16.7 | 19.4 |
+| Bab el-Mandeb | 4.5 | 4.7 | 5.4 | 5.6 | 8.1 | 6.3 |
+| Danish Straits | 4.8 | 5.0 | 5.0 | 4.9 | 4.7 | 4.5 |
+| Turkish Straits | 3.7 | 3.7 | 3.7 | 3.3 | 4.1 | 3.4 |
+| Panama Canal | 2.5 | 2.8 | 2.8 | 2.9 | 3.2 | 3.0 |
+| World total oil supply | 107.9 | 108.4 | 103.5 | 96.2 | 101.8 | 105.1 |
+
+**Two things changed that are not "a new quarter appeared" and are worth
+flagging explicitly, per the brief's "note any format/layout changes"
+instruction:**
+
+1. **EIA revised the two most recent prior quarters alongside adding the new
+   one.** 1Q26 total oil moved from the previously-anchored **14.9 → 15.0**
+   (crude 10.9 unchanged, products 4.0 → 4.1); 2Q26 moved from **4.9 → 5.1**
+   (crude 3.7 → 3.8, products 1.1 → 1.2). Small (≤4%) revisions, consistent
+   with EIA's own standing caveat that 2026 Hormuz AIS data "has been
+   unreliable since end-February 2026" and "is being revised frequently"
+   (first logged §2.1/§10). `scripts/refresh_estimate.py`'s `merge_series()`
+   is built to treat a revised historical value as `changed = True` exactly
+   like a brand-new quarter — confirmed this fires correctly in the scratch
+   run (see 81.2).
+2. **Table 4's own displayed window rolled forward**: the caption now reads
+   "2Q25–3Q26" (six columns), having dropped 1Q25 and gained 3Q26 — EIA
+   displays a rolling six-quarter window, not a growing one. **This does not
+   truncate our own retained history.** `merge_series()` only adds/updates
+   rows present in the newly-fetched page; it never deletes a row already in
+   `doc["series"]` that the new page no longer displays. Verified this
+   directly in the scratch run: after processing the 3Q26 page (which no
+   longer shows 1Q25), the output `series` still contains 1Q25 untouched
+   (`{'period': '1Q25', ..., 'total_oil': 20.9, ...}`). This was a real,
+   previously-untested edge case — this is the first time EIA's own display
+   window has rolled past this model's launch anchor — and it held up
+   exactly as the code's own design intended, not just as the code comment
+   claimed.
+
+No table/column-count or structural change that broke the parser. The parser
+required **zero modification** to handle 3Q26.
+
+### 81.2 GPCI / STEO Table 3d: unchanged through October 2026 — confirmed independently, not re-derived from the CEO's prior reading
+
+Fetched `STEO_m.xlsx` directly (`curl`, 2026-11-17, HTTP 200, 1,096,645
+bytes) and parsed with the production `scripts/gpci.py` unmodified.
+`last_hist = "202610"` ("November 2026" vintage label) — **the same month as
+every cycle since §76** — confirming STEO itself has not yet rolled to a new
+month this cycle. GPCI values for the months that matter to this score:
+
+| Month | GPCI (m b/d) |
+|---|---|
+| 202606 | 13.17 |
+| 202607 | 15.22 |
+| 202608 | 14.25 |
+| 202609 | 16.56 |
+| 202610 | **17.85** (latest observed, unchanged from last cycle) |
+
+Quarter averages derived from this: GPCI(2Q26) = (11.59+11.02+13.17)/3 =
+**11.93**; GPCI(3Q26) = (15.22+14.25+16.56)/3 = **15.34**.
+
+### 81.3 Scoring the frozen pre-release estimate against the new ground truth — the comparison the brief specifies
+
+The honest frozen stand-in, per the brief: the model's own last live output
+computed **before** this release, `for_date` 2026-11-15, **point 7.3, band
+4.9–19.8**, option-C GPCI estimator, extrapolated State B, 138 days past the
+2Q26 anchor. Independently re-confirmed live this cycle by fetching
+`https://oilthroughhormuz.com/data/hormuz.json` directly: byte-for-byte
+matches the brief's stated figures (`for_date: "2026-11-15"`, `point: 7.3`,
+`band_low: 4.9`, `band_high: 19.8`, `horizon_days: 138`, `extrapolated:
+"B"`).
+
+**New ground truth: 3Q26 total oil = 9.1 m b/d** (§81.1).
+
+| | Value | vs. actual 9.1 |
+|---|---|---|
+| Model point (7.3) | miss | **−19.8%** (point too low) |
+| Model band (4.9–19.8) | — | **actual falls inside the band** |
+| Persistence counterfactual (carry forward 2Q26's pre-revision 4.9) | miss | **−46.2%** (more than double the model's point error) |
+
+**Verdict: a measured success for the band-capture criterion (G1(a)), and a
+clear win over naive persistence, with an honestly-diagnosable point
+undershoot.** The actual value lands inside the published band, and the
+model's point error (−19.8%) is less than half the size of the persistence
+error (−46.2%) it is required to be scored against. This is the first real
+out-of-sample evidence that option-C (critical issue #9, live since
+2026-09-23) beats the thing it replaced, on real data, not a back-test. It
+is **not** a clean validation of the point estimate itself — see 81.4 and
+81.8 for why the undershoot is systematic, not noise, and what that implies.
+
+### 81.4 A more rigorous score: what the model actually published *during* the quarter being measured
+
+81.3 scores a single snapshot (the Nov-15 extrapolated estimate) against the
+quarterly average. A more rigorous test — and the one `refresh_estimate.py`'s
+own scoring code is *trying* to do (see 81.5) — is to ask what the model
+published on days that actually fell inside 3Q26 (2026-07-01 to -09-30), and
+score those against the same 9.1 actual.
+
+Read `site/data/history.json` directly: the site launched 2026-09-16, so no
+published estimate exists for 3Q26's first two and a half months
+(2026-07-01 to -09-15) — a real, honestly-reportable gap, not a result to
+paper over. For the 15 days of 3Q26 that **were** covered:
+
+| Dates (within 3Q26) | Published point | Published band | Estimator live then | Actual 9.1 inside band? | Point error vs. 9.1 |
+|---|---|---|---|---|---|
+| 2026-09-16 to -21 (6 days) | 4.9 | 1.5–6.9 | **Pre-option-C** (pure persistence; option C launched 2026-09-23, PR #11) | **No — band_high 6.9 < 9.1** | −46.2% |
+| 2026-09-22 to -30 (9 days) | 5.6 | 4.9–10.8 | **Option C**, first live days | **Yes — just inside, near the top** | −38.5% |
+
+**Reading this honestly:** the only days of 3Q26 the option-C estimator was
+actually live and published (2026-09-22 to -30, 9 days — the site did not
+exist for the first ~11 weeks of the quarter) show the band *barely*
+capturing the eventual outcome, and the point already undershooting by
+−38.5% even then, before the horizon-extrapolation widening in 81.3 had
+started (horizon was still well inside the 92-day tested window on those
+dates). This is a **more conservative, and arguably more honest, reading
+than 81.3's single-snapshot comparison**: the band-capture "win" in 81.3 is
+helped by 23 extra days of geometric widening (State B) that happened to
+land on the generous side, not purely by the estimator being well-calibrated
+throughout the quarter. Both readings are reported — neither is suppressed
+in favour of the better-looking one.
+
+### 81.5 A concrete, reproducible bug found in the model's own self-scoring mechanism
+
+Ran the actual production `scripts/refresh_estimate.py` (unmodified) against
+the fetched 3Q26 page and STEO workbook, in an isolated scratch copy of the
+repo (confirmed via `git status` that nothing in the real working tree was
+touched). Output:
+
+```
+RE-ANCHORED on 3Q26 (EIA release 2026-11-16)
+OK: estimate dated 2026-11-16, horizon 47 d, regime disrupted/local, GPCI 202610=17.85
+    (anchor 3Q26 15.35, rising), point 10.6 band 9.1-19.8, k=1.873
+```
+
+And the `scored_errors` entry it actually wrote:
+
+```json
+{
+  "scored_on": "2026-11-17",
+  "release": "2026-11-16",
+  "quarter": "3Q26",
+  "new_actual": 9.1,
+  "last_published_estimate": null,
+  "error_pct": null,
+  "persistence_counterfactual": 4.9,
+  "persistence_error_pct": -46.2,
+  "note": "New quarter published; re-anchored and scored (methodology.md sections 3 and 19)."
+}
+```
+
+**`error_pct` and `last_published_estimate` are `null`.** This is the exact
+mechanism okrs.md's G1(a) names as the KR — "the miss is scored against
+persistence and logged either way" — and on its very first real
+opportunity to fire for real, it logged a null. Diagnosed why: the scoring
+code (`main()` in `refresh_estimate.py`) checks `in_q = lp.get("for_date")
+and start.isoformat() <= lp["for_date"] <= end.isoformat()`, where `start`/
+`end` are the **newly-landed** quarter's own date range (2026-07-01 to
+-09-30 here) and `lp` is `model["last_published"]` — a single field holding
+only the **most recently published** estimate (2026-11-15 in this case).
+Because EIA's own release lag is always roughly 6–10 weeks past quarter-end
+(confirmed across every release this company has observed), and the daily
+refresh runs every day, **`last_published`'s `for_date` will structurally
+always have moved past the quarter's end by the time EIA's release lands**.
+This is not a one-off glitch; it is a design flaw that will fire silently on
+**every future re-anchor**, exactly the "silent" failure mode this
+company's own rubric and prior critical issues (#7 and its recurrence) were
+built to catch — except this one produces no visibly wrong output (the
+headline still re-anchors and publishes correctly), it just quietly never
+populates the one field the KR is counting on to show the measured-error
+history shrinking over time.
+
+**81.4 shows what the correct score would look like**: look up the entries
+in `history.json` whose `for_date` falls inside the landed quarter's window
+(there can be several, spanning a model change, as there were here), not
+just the single `last_published` field. **Recommended fix** (an engineering
+change to the scoring code, not a methodology change to the estimator):
+replace the `in_q`/`lp` check with a lookup against `history.json`'s
+entries for the relevant date range, scoring each one (or at minimum the
+last one before the quarter's end) against the new actual. This is reported
+as a specific, concrete, low-risk fix Build/CEO can act on directly — not a
+hypothesis needing more data, unlike 81.8 below.
+
+### 81.6 Baseline: normal Hormuz traffic, seasonality, and how it behaved in three real disruptions
+
+**Calm-period volume and composition (EIA Table 4, 1Q25–4Q25, the last four
+quarters before the 2026 disruption):**
+
+| | 1Q25 | 2Q25 | 3Q25 | 4Q25 |
+|---|---|---|---|---|
+| Total oil (m b/d) | 20.9 | 21.1 | 21.4 | 21.6 |
+| Crude & condensate | 14.8 | 14.9 | 15.1 | 15.9 |
+| Petroleum products | 6.2 | 6.2 | 6.3 | 5.7 |
+| LNG (bcf/d) | 11.7 | 11.0 | 10.9 | 10.5 |
+
+Oil composition is steady: crude/condensate is consistently **~70–74%** of
+total oil, products **~26–30%**, across all four calm quarters. LNG, a
+separate unit (bcf/d, not folded into the oil total), runs **10.5–11.7
+bcf/d** and if anything drifts gently *down* across 2025 while oil total
+drifts gently *up* — not a strong joint seasonal pattern, more plausibly two
+independent slow trends over only four data points. **Seasonality**: with
+only four quarters of calm-period history available (the Global Energy
+Security Data product itself only started 2026-05-13; nothing further back
+is cleared), there is not enough history to separate a real seasonal cycle
+from quarter-to-quarter noise. The total range across the four calm quarters
+is small — 20.9 to 21.6, a **3.3% peak-to-trough spread** — which at minimum
+bounds how big "typical" week-to-week/quarter-to-quarter variance is in a
+calm regime: whatever the true seasonal pattern is, it is a few percent, not
+tens of percent. **This is the honest limit of what the cleared quarterly
+series alone can say about seasonality** — not enough history to fit a
+cycle, only enough to bound its size.
+
+**Week-to-week variance, partially answered by an existing analysis-only
+series** (§16, `scripts/weekly_arrivals_analysis.py`, EIA weekly US imports
+by country of origin — analysis-only, never an anchor): the pre-disruption
+baseline computed there shows Gulf-origin US arrivals moving materially
+week to week even in calm conditions (a few tens of percent swings are
+visible in that series' own 2025 calm-period range per §16), consistent
+with weekly data for a single destination-country's arrivals being a noisier
+signal than a quarterly, strait-wide total — expected, not surprising, and
+already flagged there as "a 2–4% sample... it can corroborate a direction,
+it cannot set a level."
+
+**Disruption timeline, cross-referencing the cleared EIA series against
+cited news reporting (tier-2, confirmed per the rules in signal-log.md):**
+
+| Period | Hormuz total oil | vs. 4Q25 baseline (21.6) | What was happening |
+|---|---|---|---|
+| 4Q25 (calm) | 21.6 | — | Baseline |
+| 1Q26 | 15.0 | **−30.6%** | Partial-quarter effect: news reporting (search this cycle, not independently re-verified against a primary date source) places the onset of open US-Iran hostilities and an Iranian move to close/restrict the strait around **28 February 2026** — i.e. two calm months (Jan–Feb) blended with one disrupted month (March) in this quarter's average. Consistent with the company's own prior independently-derived finding (methodology.md §13.3) that GPCI production data dates the onset to **March 2026**. |
+| 2Q26 | 5.1 (revised from 4.9) | **−76.4%** | First full disrupted quarter. |
+| **3Q26 (new)** | **9.1** | **−57.9%** (still deeply depressed, but **+78.4%** q/q recovery from 2Q26) | Partial recovery, but — per this cycle's signal-log entries — one happening *during* renewed attacks ("hostilities resumed in early July 2026" per UKMTO's cumulative strike count) and under active US Navy blockade-enforcement/escort, not a return to calm. JMIC held its threat assessment at "severe" through early November. |
+
+The regime detector (`classify()`) reads this transition as **"disrupted,
+local"** (quarter-on-quarter change +78.4%, companion-chokepoint control
+basket roughly flat at −9.2%) — i.e. correctly flags this as a Hormuz-
+specific event, not a global shipping swing, exactly as the control was
+designed to distinguish (methodology.md §5).
+
+**Comparison to two named historical disruptions (tier-2, news-sourced —
+the EIA quarterly Hormuz product itself only exists from 2026, so neither
+historical episode can be checked against our own cleared data; this
+section is explicitly narrative/tier-2, not a numeric back-test):**
+
+- **2019 tanker attacks (May–June 2019).** Multiple tankers were sabotaged
+  in the Gulf of Oman just outside the strait. News reporting from the
+  period (not independently re-fetched this cycle beyond the search
+  results themselves, so graded Medium, not High) describes a brief oil-
+  price spike (up to ~4%) and increased shipping caution (convoys, daylight-
+  only transits, reduced anchoring times at Fujairah), but **no sustained
+  volume drop** — the opposite shape to 2026: in 2019 the market "shrugged
+  off" the attacks on volume while reacting on price; in 2026 volume itself
+  collapsed by over three-quarters while this company has not modeled a
+  price effect at all (out of scope). **Why the difference, as best this
+  cycle can tell**: 2019's attacks were sporadic and did not come with a
+  sustained military blockade/counter-blockade on either side; 2026's
+  disruption is state-level (open hostilities, an attempted strait closure,
+  an opposing naval blockade-enforcement operation) — a different order of
+  event, not more of the same kind.
+- **2024 Red Sea diversions.** EIA reporting (cited secondhand via search
+  this cycle, not independently re-fetched from EIA's own 2024 publication)
+  describes Bab el-Mandeb oil-and-products flow falling **by more than
+  half** in the first eight months of 2024 as shippers rerouted around the
+  Cape of Good Hope — but this is a **different chokepoint**: Hormuz itself
+  was not disrupted by the 2024 Red Sea campaign, because Gulf-origin cargo
+  continues to exit via Hormuz regardless of whether it then turns toward
+  Suez/Bab-el-Mandeb or around Africa. This company's own companion-
+  chokepoint control (Table 2) independently shows the mechanism: Bab el-
+  Mandeb's own 2Q25–3Q26 figures (4.5 to 8.1 m b/d) sit far below Hormuz's
+  calm-period ~21 m b/d, consistent with (though not, on its own, proof of)
+  a chokepoint still operating well under its pre-2024 norm, while Hormuz in
+  the same window was transiting 15–21.6 m b/d right up to its own 2026
+  disruption. **The useful lesson for this model**: Hormuz and Bab el-Mandeb
+  are largely independent risk factors for this company's purposes — a
+  companion-chokepoint collapse does not imply a Hormuz collapse, and
+  vice versa, which is exactly why the regime detector's "local vs.
+  systemic" control (§5) uses Danish Straits/Turkish Straits/Panama rather
+  than Bab el-Mandeb as its control basket (Bab el-Mandeb is itself
+  disruption-prone, not a clean control).
+
+### 81.7 Signal log
+
+Started this cycle: `company-memory/signal-log.md`. Seven entries this
+cycle (six confirmed, one explicitly flagged low-reliability/unconfirmed,
+one explicitly logged as not-read/paywalled). Net reading: every confirmed
+tier-2 signal this cycle corroborates the EIA-measured regime
+("disrupted," recovering but far below normal, under active military
+enforcement) without contradicting it, and none crosses the two-source-or-
+one-primary bar for moving a numeric input. Full detail, sources and
+reliability grades in that file — not duplicated here.
+
+### 81.8 Model v1/v2 recommendation
+
+**Recommendation: do not change the published estimator's formula this
+cycle. Fix the scoring bug (81.5) — that is unambiguous and low-risk. Name
+one evidenced-but-thin hypothesis for future tracking, not adoption.**
+
+**What the evidence shows.** The only two disrupted-regime quarter
+transitions in the entire back-tested record now available are:
+
+| Transition | Direction | Model error | Sign |
+|---|---|---|---|
+| 1Q26 → 2Q26 (anchor 1Q26, target 2Q26) | Flow **falling** | **+78.1% to +87.3%** (model too high) | Overshoot |
+| 2Q26 → 3Q26 (anchor 2Q26, target 3Q26) | Flow **rising** | **−28.5% to −33.0%** (model too low) | Undershoot |
+
+Both transitions show the same underlying pattern: the estimator holds the
+anchor quarter's **transit share** (ratio = Hormuz total oil ÷ GPCI,
+computed once at the anchor and then only multiplied by fresh GPCI) frozen,
+and in both cases the *true* transit share moved **faster than GPCI did** in
+the direction of the regime change. Computed directly this cycle: transit
+share was 0.411 at the 2Q26 anchor and has already moved to **0.593** by
+3Q26 — a +44% change in the ratio itself within one quarter, not explained
+by GPCI's own (much smaller) movement. In other words: **when the regime is
+deteriorating, the frozen ratio overshoots because the true share is falling
+faster than production; when the regime is recovering, the frozen ratio
+undershoots because the true share is recovering faster than production.**
+This is consistent with the mechanism this company's own analysis-only
+corroboration series (§15/§16/§17, Eurostat and EIA weekly arrivals) already
+named: Saudi/UAE bypass capacity (Yanbu, Fujairah) and US-escorted transit
+capacity act as a **separate bottleneck/release valve** from underlying Gulf
+crude output — exactly what "transit share" is supposed to capture but can
+only capture with a one-quarter lag under the current formula.
+
+**Why this is not recommended for adoption yet.** It is a real, same-
+direction pattern — but **n=2**. Two data points is enough to notice a
+pattern, not enough to fit a parameter on without a serious overfitting
+risk (a model tuned to correct for exactly these two misses would be
+guaranteed to fit them and tells us nothing about the next one). The
+standing methodology-authority rule applies here with particular force:
+"narrowing a band below what the back-test supports" and "extending
+inference without evidence at the new [sample size]" are both category-4-
+adjacent risks, and adopting a momentum/correction term on n=2 would be
+exactly that.
+
+**What would change this conclusion.** The first genuinely out-of-sample
+test is **4Q26**, whenever EIA publishes it. If 4Q26 continues the "rising"
+phase and the frozen-ratio estimator undershoots again (same sign as
+2Q26→3Q26), that is n=3, same-direction, and would be real evidence for a
+momentum term. If 4Q26 instead shows the frozen-ratio estimator overshoot,
+or hit cleanly, the pattern breaks and should be dropped, not rationalized.
+**Recommend tracking this explicitly as a named, falsifiable hypothesis**
+("H1: the GPCI transit-share estimator systematically lags turning points
+in the true transit share, undershooting in recoveries and overshooting in
+collapses") rather than letting it either disappear unrecorded or get
+adopted prematurely.
+
+**One mechanical, no-controversy improvement already happening on its own,
+worth noting rather than acting on:** the back-tested disrupted-regime miss
+factor `k` **fell** from 1.937 (pre-3Q26) to **1.873** (post-3Q26,
+recomputed from the full back-test including the new 3Q26 row) — the
+self-tightening-as-more-data-arrives design (band only ever derived from the
+measured back-test, methodology.md §4-5) is working exactly as intended.
+No action needed; recorded as evidence the mechanism functions, not as a
+new finding.
+
+**Tier-3 validation (IMF PortWatch), status this cycle:** attempted a quick
+reachability check of PortWatch's public Hormuz page
+(`https://portwatch.imf.org/pages/hormuz-strait-transit-call`) via WebFetch.
+The page is client-side-rendered (JavaScript dashboard); WebFetch returned
+only the bare page title, no transit figures. Not pursued further this
+cycle — this dispatch's brief did not name PortWatch validation as one of
+its numbered priorities, and getting past a JS-rendered dashboard without a
+browser-automation tool is a real technical constraint, not a licence one.
+Logged per the owner's 2026-11-16 directive to record every tier-3 use
+(source: IMF PortWatch; fetch date: 2026-11-17; comparison attempted: none,
+page did not render figures via the available tool; result: inconclusive,
+not a validation data point either way). Flagging for a future cycle with
+either a different tool or a direct CSV/API endpoint, if one is found and is
+publicly reachable without circumventing any access control.
+
+### 81.9 OPEC MOMR re-probe
+
+`https://www.opec.org/opec_web/en/publications/202.htm` → **HTTP 403**,
+`<title>Attention Required! | Cloudflare</title>`, 5,955 bytes — the 26th
+consecutive "back" reading (chain: §79 24th, §80 25th, this cycle 26th),
+against the single 2026-10-21 exception (§53). No change.
+
+### 81.10 Net effect and carry-forward
+
+**Delivery type: (a) + (b).** A new licence-cleared quarter is in hand with
+no new licence surface (same two already-cleared EIA products); the
+estimator's first-ever real out-of-sample score is computed two ways (81.3,
+81.4) and reported honestly, including the less flattering of the two
+readings; a concrete, reproducible, low-risk scoring-code bug is found and
+demonstrated with a worked fix (81.5); a baseline write-up with seasonality
+limits honestly stated and two historical disruption comparisons is
+produced (81.6); `signal-log.md` is started with seven graded entries
+(81.7); a specific, falsifiable, appropriately-uncertain model-v2 hypothesis
+is named rather than prematurely adopted or silently dropped (81.8). No
+`site/`, `site/data/hormuz.json`, or `sources.html` change made by this
+role — re-anchoring and publishing is the CEO/Build's next step, using the
+figures in 81.1/81.2 directly (independently reproducible: this cycle's
+scratch-copy run, 81.5, is a full dry-run of exactly that re-anchor).
+
+**Carry-forward priority order for the next cycle:**
+
+1. **CEO/Build: re-anchor and publish.** The figures needed are all in
+   81.1/81.2; the scratch-copy dry run (81.5) shows the exact resulting
+   `estimate`/`estimator`/`regime` block the real refresh would produce
+   (point 10.6, band 9.1–19.8, horizon 47 days, back inside the 92-day
+   tested window, `extrapolated: null`). Run the rubric before publishing.
+2. **Fix the scoring bug (81.5)** — a `history.json`-based lookup replacing
+   the single-field `last_published` check — so the next re-anchor (4Q26)
+   actually populates `error_pct` instead of logging `null` again. This is
+   an engineering fix, not a methodology change, and does not require
+   CEO methodology authority to implement, only Build time and a CEO
+   rubric pass before merge.
+3. **Track hypothesis H1 (81.8)** against 4Q26 when it lands — the first
+   genuinely out-of-sample test of whether the transit-share lag pattern is
+   real (n=3) or an artefact of n=2.
+4. **OPEC MOMR** — re-probe every cycle without skipping; 26th confirmed
+   "back" reading.
+5. **UKMTO/JMIC-via-news-reporting is now a confirmed, readable tier-2
+   source class** (signal-log.md) even though UKMTO's own domain stays
+   blocked — keep reading it directly every cycle rather than treating the
+   UKMTO/MARAD network block as closing off that information entirely.
+6. **PortWatch tier-3 validation remains open and unresolved on tooling
+   grounds, not licence grounds** (81.8) — worth a future cycle's attention
+   if a non-JS-rendered endpoint (CSV/API) can be found, since it is the
+   fastest plausible route to a better-than-quarterly error measurement per
+   the standing mandate.
+
+## 82. CEO review of §81 (70th cycle, 2026-11-17): figures independently re-verified; methodology decision — no formula change, H1 tracked for 4Q26; scoring bug confirmed and routed to Build; real re-anchor to follow
+
+**Independent re-verification before acting on any of §81's numbers**, same
+standing discipline as every prior cycle. Re-fetched
+`eia.gov/outlooks/steo/report/energysecurity/article.php` directly: Table 4
+Hormuz total oil **2Q25 21.1, 3Q25 21.4, 4Q25 21.6, 1Q26 15.0, 2Q26 5.1, 3Q26
+9.1** — matches Research's figures exactly, including both minor revisions
+(1Q26 14.9→15.0, 2Q26 4.9→5.1). Table 2 companions independently re-fetched
+and matched: Malacca 16.7→19.4, Bab el-Mandeb 8.1→6.3 (2Q26→3Q26) — confirms
+§81's "disrupted, local, not systemic" regime read; the companion basket is
+not making the same move. Confirmed 1Q25 has dropped from the *displayed*
+window (table now shows 2Q25–3Q26) — Research's claim that our own retained
+`doc["series"]` does not drop it needs confirming at the real re-anchor
+below, not just in Research's scratch run. One new wrinkle not in §81: the
+live page's top banner (shared STEO release-date field) now reads
+**"November 10, 2026"** while the article's own "What's New" sidebar entry
+reads **"November 16, 2026"** — the same parent-STEO-vs-Hormuz-supplement
+split-cadence pattern this company has documented since §73/§78 (the parent
+STEO rolls on its own schedule; the Hormuz-specific supplement article has
+its own date). The article-specific date (Nov 16) is the one that governs
+what "the release" means for this table, consistent with every prior
+cycle's convention.
+
+**Methodology decision (methodology authority): accept Research's
+recommendation, do not change the estimator formula this cycle.**
+`methodology.md` §81.6's observed pattern — the frozen transit-share ratio
+overshooting in the 1Q26→2Q26 collapse and undershooting in the 2Q26→3Q26
+recovery — is a real, evidenced, directionally consistent read of the two
+transitions the company has lived through. It is also **n=2**, and GPCI
+(the pacing input the ratio is built on) is itself revised after the fact,
+so some of the apparent lag could be an artefact of GPCI's own August→October
+revision path rather than a structural property of the transit-share ratio.
+Fitting a correction term to two data points, in a company whose whole
+rubric exists to catch exactly this kind of overconfident pattern-fitting,
+would be the wrong lesson to draw from a genuinely interesting finding.
+**Decision: track it as hypothesis H1, explicitly named, with its falsification
+condition stated in advance** (per §81.8's framing) — if 4Q26, when it lands,
+shows the *same-direction* lag (overshoot-then-undershoot shape) a third
+time, that is real evidence for a correction term and the next cycle after
+that release should act on it under methodology authority; if it does not,
+H1 is rejected and the frozen-ratio design stands as-is with no further
+testing needed. Recorded here, not left to be rediscovered, so the test is
+pre-committed before the data that will judge it exists.
+
+**Scoring bug (§81.5): confirmed by independent code read, not accepted on
+the report alone.** Read `scripts/refresh_estimate.py` lines 520–537 directly:
+`in_q = lp.get("for_date") and start.isoformat() <= lp["for_date"] <=
+end.isoformat()` compares the landed quarter's window only against the
+single `model["last_published"]` snapshot — which, given EIA's own ~6–10
+week release lag, will structurally never fall inside a quarter that has
+just landed. This is a real, general defect (not specific to this quarter)
+that would have silently logged `error_pct: null` at **every** future
+re-anchor, forever, including this one — exactly the kind of "check passes
+while not checking the thing" failure this company has hit before (the TLS
+proxy check, §23; the GITHUB_TOKEN deploy-trigger gap, decisions-log
+2026-09-19). **This is an engineering fix, not a methodology change** — it
+changes how an error is measured and logged, not the published figure, the
+band, or the estimator — so it does not need the owner and does not change
+what a reader sees. Dispatched to Build (not done by the CEO directly, per
+the standing division of labour) along with the independently-confirmed
+stale `sources.html` date strings (12 August 2026 / "through April–June
+2026"; the Table 3d "September 2026 edition" / "through August 2026" label,
+independently stale on its own since §76's GPCI advance). Build's PR to
+be reviewed and merged by the CEO before the real re-anchor runs, so the
+first live score of 3Q26 is computed with the bug already fixed rather than
+computed broken and corrected after the fact.
+
+**Scoring, both ways, independently reproduced from the live figures above
+(persistence counterfactual only — the full history-window score waits on
+Build's fix and the real re-anchor)**: the pre-release live point/band for
+`for_date` 2026-11-15 was 7.3 / 4.9–19.8 (independently re-confirmed live
+earlier this cycle, see `critical-issues-log.md` 2026-11-17). Against the
+actual 9.1: point error $(7.3/9.1-1)\times100=-19.8\%$; persistence-from-2Q26
+counterfactual (4.9) error $(4.9/9.1-1)\times100=-46.2\%$ — the band captures
+the actual, and the point beats naive persistence by more than 2×, matching
+§81.3 exactly. **This is the first real, non-hypothetical evidence that the
+option-C re-anchor (adopted 2026-09-23, critical issue #9) was the right
+call over the persistence model it replaced** — recorded as a genuine,
+measured result, with §81.3's more rigorous caveat (the in-quarter track
+record is thinner than this single snapshot) carried forward rather than
+dropped for the flattering headline number.
+
+**Next in this cycle**: once Build's PR merges, trigger the real
+`refresh-estimate.yml` run (not wait for the next scheduled fire ~11h out —
+this is the weekly plan's named top-priority item, "ahead of everything
+else") so the live site re-anchors on 3Q26 today; verify the live page and
+`hormuz.json` byte-for-byte; run the rubric; log it. Full baseline,
+signal-log and model-v1 material from §81.4/81.5-logs/81.6 carried into
+`backlog.md`'s KR6 row and `decisions-log.md` without duplication here.

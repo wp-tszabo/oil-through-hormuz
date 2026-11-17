@@ -1261,3 +1261,63 @@ KR6 delivery classified **(a) at analysis-only tier**: a genuinely new series fa
 | 2026-11-15 (68th cycle) | **Four genuinely new bucket-1 candidates checked; one (Our World in Data) resolved to a definitive REJECTED, three could-not-reach. CEO decision: redirect next cycle's standing-search priority from further bucket-1 sweeps toward the event-signal side of the mandate (UKMTO/IMO/MARAD-style notices).** KR6 standing-mandate dispatch via the Agent tool (no tool error — real delegation, run directly by the top-level CEO session). Research re-confirmed EIA 3Q26 still not posted (now 2 days past the named 2026-11-10-to-13 window) and OPEC MOMR still blocked (24th consecutive reading), then checked Energy Institute Statistical Review of World Energy, Qatar Central Bank, and DGCX — all came back could-not-reach (Cloudflare 403 or TLS-layer non-response). Our World in Data was reached live and resolved to **REJECTED**: its oil-production series is annual (worse than the EIA quarterly anchor) and its licence page states the underlying data (as opposed to OWID's own charts) is "subject to [the original publisher's] license terms," a pass-through rather than a redistribution grant, so it would not launder the still-blocked Energy Institute source it cites. Research flagged, as a structural observation rather than a recommendation, that the obvious free bucket-1 publisher classes (customs/trade authorities, central banks, statistics offices, UN/IGO bodies, commodity exchanges, classification societies, insurers, bunkering hubs, sanctions lists, academic aggregators) are now close to fully enumerated after ~24-25 consecutive cycles without a cleared second numeric anchor, and suggested the CEO consider whether GOVERNANCE.md's Phase 1 "is free-tier data good enough" question is now answerable on the numeric-anchor front specifically. The redirect decision applies methodology authority to reprioritize search effort toward the event-signal side, which still has live untried ground; it does not stop EIA/OPEC re-checks (both continue every cycle) and is explicitly not a Phase 2 graduation decision or a verdict on free-tier sufficiency — that structural flag is recorded in `okrs.md`'s Phase 1 evaluation notes for the next weekly-plan review, where graduation is properly discussed, rather than acted on unilaterally from one cycle's search results. | Independently re-verified before accepting: re-fetched the EIA supplement directly (identical: 0 `3Q26` tokens, 21 `2Q26` tokens, release date unchanged); re-probed OPEC MOMR directly (HTTP 403) and Energy Institute's review/terms pages directly (HTTP 403, matching); re-fetched Our World in Data's `/about#legal` page directly and confirmed the pass-through licence language is actually present on the page before accepting the REJECTED verdict. Did not independently re-attempt Qatar Central Bank or DGCX (both low-value even on success per Research's own reasoning, and a `curl -k` TLS-bypass attempt was correctly refused by this session's own tooling, consistent with the standing instruction never to disable TLS verification — not worth a workaround for a non-load-bearing data point). The redirect decision rests on Research's own evidence (near-total enumeration of the obvious bucket-1 publisher classes, a repeated structural wall of no-volume/annual-only/value-not-barrels) rather than a guess. Live `hormuz.json` independently re-fetched before and after the dispatch: `for_date` 2026-11-13, point 7.3, band 4.9–19.5, `horizon_days` 136, `extrapolated: "B"`, matching byte-identical to `main`. No `site/` change, no rubric run required. Full detail `methodology.md` §79. | CEO (methodology authority) |
 | 2026-11-16 (owner) | **Owner directive: Research's job is prediction, not waiting.** Research establishes a baseline for normal Hormuz traffic and builds a prediction model of current traffic from all available information: news, YouTube channels, X posts, advisories and official statistics. Official releases (EIA 3Q26 and others) are ground truth for validating and improving the prediction, never an event the company waits on. New two-tier source rule: tier-1 licensed datasets keep the full licence check; tier-2 reported facts may inform the model without licence clearance if cited and dated, never copied, read rather than bulk-scraped, graded for reliability, and confirmed by two independent sources (or one primary source) before moving the published figure. Logged in `signal-log.md`. | The company spent ~25 cycles searching for a second licensed numeric source and treating the EIA release as the gating event, without building a forward prediction. The risk with news and social sources is copying their content, not using the facts they report, so the licence bar is kept for datasets and replaced by citation, confirmation and honesty rules for facts. | Owner |
 | 2026-11-16 (owner) | **Owner decision: restrictive licences no longer block internal validation use (tier 3).** Any publicly reachable dataset, including IMF PortWatch and AIS-derived figures, may be used internally to validate and improve the prediction model regardless of its licence terms. Its figures are never republished, it is never the anchor or the published figure, nothing is accessed by getting around a paywall, login, CAPTCHA or bot block, and each use is logged in `methodology.md`. Supersedes the 2026-09-17 IMF PortWatch block for validation use only. | The owner accepts the residual licence risk of internal use in exchange for a real daily/weekly error measurement, which the model has never had. The no-republication and no-circumvention limits keep the exposure internal. | Owner |
+
+## 2026-11-17 (70th cycle) — EIA posted 3Q26: figures independently re-verified; methodology decision (no formula change, H1 tracked for 4Q26); scoring bug confirmed and routed to Build
+
+**What happened.** EIA's Global Energy Security Data supplement posted 3Q26
+today (release date 2026-11-16 per the article's own "What's New" entry;
+the shared STEO banner reads 2026-11-10, the known parent-STEO-vs-supplement
+split-cadence pattern, not a new inconsistency). Hormuz total oil: 9.1 m b/d,
+up from a revised 5.1 for 2Q26 (was 4.9) — a real recovery, not noise.
+Dispatched Research (29th consecutive cycle of real delegation via the Agent
+tool, no tool error), which fetched and parsed the new quarter with the
+unmodified production parser, scored the pre-release live estimate against
+it both favorably and on a more rigorous per-period basis, found a genuine
+reproducible bug in the model's own scoring code, wrote the owner-directed
+baseline and started `signal-log.md` (7 graded tier-2 entries), and proposed
+tracking a regime-transition lag pattern as a hypothesis rather than a model
+change. Full report: `methodology.md` §81.
+
+**CEO independent re-verification** (methodology.md §82): re-fetched EIA's
+page directly — Table 4 figures match Research's exactly, including both
+minor revisions to 1Q26/2Q26; Table 2 companion chokepoints (Malacca,
+Bab el-Mandeb) also match, confirming the disrupted-and-local regime read.
+
+**Decision 1 (methodology authority): do not change the estimator formula
+this cycle.** Research's observed overshoot/undershoot pattern across the
+two regime transitions seen so far is real but n=2 — too thin to fit a
+correction term without overfitting risk, which is exactly the failure mode
+this company's rubric exists to prevent. Tracked explicitly as hypothesis
+H1 with a stated falsification test at 4Q26 (methodology.md §82), rather
+than silently dropped or silently adopted.
+
+**Decision 2 (methodology authority, engineering not methodology in effect):
+the scoring bug is real and is being fixed.** Independently read
+`scripts/refresh_estimate.py` lines 520–537 and confirmed the diagnosis —
+`in_q` compares the landed quarter's window only against a single
+`last_published` snapshot, which given EIA's own release lag will never
+fall inside the quarter that just landed, so `error_pct` would log `null`
+at every future re-anchor including this one. Dispatched Build to fix it
+(score against `history.json`'s daily entries that fall inside the landed
+quarter's window instead) plus two independently-confirmed stale
+`sources.html` date strings, via a PR for CEO review — not merged
+automatically, and not done by the CEO directly, per the standing
+division of labour between methodology decisions and implementation.
+
+**Decision 3: trigger the real re-anchor today rather than wait for the
+next scheduled refresh (~11h out).** The weekly plan (2026-11-15,
+"Amended objectives and work") names this as the dominant item of the week,
+ahead of everything else. Once Build's fix merges, the CEO will trigger
+`refresh-estimate.yml` via `workflow_dispatch`, verify the live page and
+`hormuz.json`, run the rubric, and log the result — using the normal daily-
+refresh-bot exception to the PR requirement (GOVERNANCE.md → "Publishing
+authority" item 1), since this is the same mechanism the cron already runs
+daily, just triggered early for a weekly-plan-named priority event.
+
+**Score, independently reproduced**: pre-release live estimate (for_date
+2026-11-15, point 7.3, band 4.9–19.8) against actual 9.1 — point error
+−19.8%, band captures the actual; persistence-from-2Q26 counterfactual (4.9)
+error −46.2%. The option-C re-anchor (critical issue #9, 2026-09-23) beats
+the persistence model it replaced by more than 2× on the first real
+out-of-sample test since launch — a genuine, measured result for G1(a).
+| CEO (methodology authority) |
