@@ -88,7 +88,8 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: var(--bg); color: var(--ink); line-height: 1.55;
     }
-    h1 { font-size: 1.35rem; font-weight: 600; margin: 0 0 1.5rem; letter-spacing: -0.01em; }
+    h1 { font-size: 1.35rem; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+    .subtitle { font-size: 0.95rem; color: var(--muted); margin: 0.35rem 0 2.25rem; }
     .est-label {
       font-size: 0.78rem; font-weight: 600; text-transform: uppercase;
       letter-spacing: 0.09em; color: var(--bar-latest); margin: 0 0 0.55rem;
@@ -96,24 +97,20 @@
     .figure { font-size: clamp(3rem, 12vw, 4.75rem); font-weight: 650; line-height: 1; letter-spacing: -0.03em; margin: 0; }
     .unit { font-size: 1.05rem; font-weight: 500; color: var(--muted); margin: 0.6rem 0 0; }
     .band { font-size: 1rem; color: var(--ink); margin: 1rem 0 0; }
-    .note { font-size: 0.95rem; color: var(--muted); margin: 1.1rem 0 0; }
-    .change-note { font-size: 0.9rem; color: var(--muted); margin: 0.6rem 0 0; }
     .production-context {
       font-size: 0.9rem; color: var(--muted); margin: 1.1rem 0 0;
       padding: 0.75rem 1rem; border-left: 3px solid var(--rule);
     }
     .production-context strong { color: var(--ink); }
-    figure { margin: 3rem 0 0; }
-    figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 0.6rem; }
+    figure { margin: 2.75rem 0 0; }
     svg { width: 100%; height: auto; display: block; }
     .grid-line { stroke: var(--rule); stroke-width: 1; }
     .grid-label, .x-label { fill: var(--muted); font-size: 11px; font-family: inherit; }
-    .bar { fill: var(--bar); }
-    .bar-latest { fill: var(--bar-latest); }
-    .bar-value { fill: var(--ink); font-size: 11px; font-weight: 600; font-family: inherit; text-anchor: middle; }
-    .method { margin: 3.25rem 0 0; }
-    .method h2 { font-size: 1.05rem; font-weight: 600; margin: 0 0 0.8rem; letter-spacing: -0.01em; }
-    .method p { margin: 0 0 0.9rem; }
+    .q-line { fill: none; stroke: var(--bar); stroke-width: 2; }
+    .est-line { fill: none; stroke: var(--bar-latest); stroke-width: 2; stroke-linejoin: round; }
+    .est-band { fill: var(--bar-latest); fill-opacity: 0.16; stroke: none; }
+    .est-dot { fill: var(--bar-latest); }
+    .est-value { fill: var(--ink); font-size: 12px; font-weight: 600; font-family: inherit; }
     footer {
       margin-top: 3.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
       font-size: 0.85rem; color: var(--muted);
@@ -127,119 +124,59 @@
 <body>
 
   <h1>Estimated oil flow through the Strait of Hormuz</h1>
+  <p class="subtitle">A daily model estimate, not a live measurement, published with the range we stand behind.</p>
 
   <!-- GENERATED:estimate -->
     <p class="est-label">Our model&rsquo;s estimate for Sunday 15 November 2026 (UTC) &mdash; extrapolated past our tested range</p>
     <p class="figure">7.3</p>
     <p class="unit">million barrels per day</p>
     <p class="band">
-      Working range <strong>4.9</strong> to <strong>19.8</strong>. This range is
-      wider than usual. Our back-test only validates this model up to 92 days
-      past the anchor quarter (April&ndash;June 2026); we are now 138 days past it. We widen the
-      range further for every extra day in this zone, because the one signal
-      we have about longer-range error &mdash; measured with hindsight data our
-      live model does not have in real time &mdash; shows the miss growing
-      faster than the one-quarter error we actually validated. Treat this as a
-      wider-than-tested best guess, not a backtested figure. It will tighten
-      back to our normal range as soon as EIA publishes July&ndash;September 2026.
+      Range <strong>4.9</strong> to <strong>19.8</strong>, wider than usual: we are
+      138 days past the last published quarter (April&ndash;June 2026), beyond the 92 days our
+      back-test covers. <a href="sources.html#range">Why?</a>
     </p>
   <!-- /GENERATED:estimate -->
   <!-- GENERATED:production_context -->
   <!-- /GENERATED:production_context -->
-  <!-- GENERATED:note -->
-  <p class="note">
-    This estimate is extrapolated past our tested horizon &mdash; see <a href="#how">how we get to a number</a>.
-  </p>
-  <!-- /GENERATED:note -->
-  <!-- GENERATED:change_note -->
-  <p class="change-note">
-    No change since our 2026-11-14 estimate: still 7.3 million barrels per day.
-  </p>
-  <!-- /GENERATED:change_note -->
-  <p class="note">
-    <a href="history.html">See every past estimate &rarr;</a> &mdash; table, chart, and a
-    JSON/CSV/Atom feed of our own daily figures.
-  </p>
-  <p class="note">
-    New to the strait itself? <a href="strait.html">Geography, what normally
-    flows through it, and why &rarr;</a>
-  </p>
 
   <figure>
     <!-- GENERATED:chart -->
-    <svg viewBox="0 0 600 240" role="img" aria-label="Quarterly average oil flow through the Strait of Hormuz, in million barrels per day: first quarter 2025, 20.9; second quarter 2025, 21.0; third quarter 2025, 21.3; fourth quarter 2025, 21.6; first quarter 2026, 14.9; second quarter 2026, 4.9.">
-      <line class="grid-line" x1="40" y1="190.00" x2="590" y2="190.00"></line>
-      <line class="grid-line" x1="40" y1="156.00" x2="590" y2="156.00"></line>
-      <line class="grid-line" x1="40" y1="122.00" x2="590" y2="122.00"></line>
-      <line class="grid-line" x1="40" y1="88.00" x2="590" y2="88.00"></line>
-      <line class="grid-line" x1="40" y1="54.00" x2="590" y2="54.00"></line>
-      <line class="grid-line" x1="40" y1="20.00" x2="590" y2="20.00"></line>
-      <text class="grid-label" x="32" y="193.00" text-anchor="end">0</text>
-      <text class="grid-label" x="32" y="159.00" text-anchor="end">5</text>
-      <text class="grid-label" x="32" y="125.00" text-anchor="end">10</text>
-      <text class="grid-label" x="32" y="91.00" text-anchor="end">15</text>
-      <text class="grid-label" x="32" y="57.00" text-anchor="end">20</text>
-      <text class="grid-label" x="32" y="23.00" text-anchor="end">25</text>
-      <rect class="bar" x="55.83" y="47.88" width="60.00" height="142.12"></rect>
-      <rect class="bar" x="147.50" y="47.20" width="60.00" height="142.80"></rect>
-      <rect class="bar" x="239.17" y="45.16" width="60.00" height="144.84"></rect>
-      <rect class="bar" x="330.83" y="43.12" width="60.00" height="146.88"></rect>
-      <rect class="bar" x="422.50" y="88.68" width="60.00" height="101.32"></rect>
-      <rect class="bar-latest" x="514.17" y="156.68" width="60.00" height="33.32"></rect>
-      <text class="bar-value" x="85.83" y="41.88">20.9</text>
-      <text class="bar-value" x="177.50" y="41.20">21.0</text>
-      <text class="bar-value" x="269.17" y="39.16">21.3</text>
-      <text class="bar-value" x="360.83" y="37.12">21.6</text>
-      <text class="bar-value" x="452.50" y="82.68">14.9</text>
-      <text class="bar-value" x="544.17" y="150.68">4.9</text>
-      <text class="x-label" x="85.83" y="208" text-anchor="middle">Jan&ndash;Mar 25</text>
-      <text class="x-label" x="177.50" y="208" text-anchor="middle">Apr&ndash;Jun 25</text>
-      <text class="x-label" x="269.17" y="208" text-anchor="middle">Jul&ndash;Sep 25</text>
-      <text class="x-label" x="360.83" y="208" text-anchor="middle">Oct&ndash;Dec 25</text>
-      <text class="x-label" x="452.50" y="208" text-anchor="middle">Jan&ndash;Mar 26</text>
-      <text class="x-label" x="544.17" y="208" text-anchor="middle">Apr&ndash;Jun 26</text>
-      <text class="x-label" x="40" y="232">Quarterly average, million barrels per day</text>
+    <svg viewBox="0 0 600 270" role="img" aria-label="Oil flow through the Strait of Hormuz, million barrels per day. Published quarterly averages: first quarter 2025, 20.9; second quarter 2025, 21.0; third quarter 2025, 21.3; fourth quarter 2025, 21.6; first quarter 2026, 14.9; second quarter 2026, 4.9. Our daily estimates since 2026-09-16, latest 7.3 on 2026-11-15, range 4.9 to 19.8.">
+      <line class="grid-line" x1="40" y1="200.00" x2="590" y2="200.00"></line>
+      <text class="grid-label" x="32" y="203.00" text-anchor="end">0</text>
+      <line class="grid-line" x1="40" y1="163.20" x2="590" y2="163.20"></line>
+      <text class="grid-label" x="32" y="166.20" text-anchor="end">5</text>
+      <line class="grid-line" x1="40" y1="126.40" x2="590" y2="126.40"></line>
+      <text class="grid-label" x="32" y="129.40" text-anchor="end">10</text>
+      <line class="grid-line" x1="40" y1="89.60" x2="590" y2="89.60"></line>
+      <text class="grid-label" x="32" y="92.60" text-anchor="end">15</text>
+      <line class="grid-line" x1="40" y1="52.80" x2="590" y2="52.80"></line>
+      <text class="grid-label" x="32" y="55.80" text-anchor="end">20</text>
+      <line class="grid-line" x1="40" y1="16.00" x2="590" y2="16.00"></line>
+      <text class="grid-label" x="32" y="19.00" text-anchor="end">25</text>
+      <text class="x-label" x="40.00" y="218" text-anchor="middle">Jan 25</text>
+      <text class="x-label" x="112.47" y="218" text-anchor="middle">Apr 25</text>
+      <text class="x-label" x="185.75" y="218" text-anchor="middle">Jul 25</text>
+      <text class="x-label" x="259.84" y="218" text-anchor="middle">Oct 25</text>
+      <text class="x-label" x="333.92" y="218" text-anchor="middle">Jan 26</text>
+      <text class="x-label" x="406.40" y="218" text-anchor="middle">Apr 26</text>
+      <text class="x-label" x="479.68" y="218" text-anchor="middle">Jul 26</text>
+      <text class="x-label" x="553.76" y="218" text-anchor="middle">Oct 26</text>
+      <polygon class="est-band" points="541.68,149.22 542.49,149.22 543.29,149.22 544.10,149.22 544.90,149.22 545.71,149.22 546.52,120.51 547.32,120.51 548.13,120.51 548.93,120.51 549.74,120.51 550.54,120.51 551.35,120.51 552.15,120.51 552.96,120.51 552.96,163.94 552.15,163.94 551.35,163.94 550.54,163.94 549.74,163.94 548.93,163.94 548.13,163.94 547.32,163.94 546.52,163.94 545.71,188.96 544.90,188.96 544.10,188.96 543.29,188.96 542.49,188.96 541.68,188.96"></polygon>
+      <polygon class="est-band" points="558.59,105.06 559.40,104.32 560.20,103.58 561.01,102.85 561.82,102.11 562.62,101.38 563.43,100.64 564.23,99.90 565.04,99.17 565.84,98.43 566.65,97.70 567.45,96.96 568.26,96.22 569.06,95.49 569.87,94.75 570.67,94.02 571.48,93.28 572.28,92.54 573.09,91.81 573.89,91.07 574.70,90.34 575.51,89.60 576.31,88.86 577.12,88.13 577.92,87.39 578.73,86.66 579.53,85.18 580.34,84.45 581.14,83.71 581.95,82.98 582.75,82.24 583.56,81.50 584.36,80.77 585.17,79.30 585.97,59.42 586.78,58.69 587.58,57.95 588.39,56.48 589.19,55.74 590.00,54.27 590.00,163.94 589.19,163.94 588.39,163.94 587.58,163.94 586.78,163.94 585.97,163.94 585.17,163.94 584.36,163.94 583.56,163.94 582.75,163.94 581.95,163.94 581.14,163.94 580.34,163.94 579.53,163.94 578.73,163.94 577.92,163.94 577.12,163.94 576.31,163.94 575.51,163.94 574.70,163.94 573.89,163.94 573.09,163.94 572.28,163.94 571.48,163.94 570.67,163.94 569.87,163.94 569.06,163.94 568.26,163.94 567.45,163.94 566.65,163.94 565.84,163.94 565.04,163.94 564.23,163.94 563.43,163.94 562.62,163.94 561.82,163.94 561.01,163.94 560.20,163.94 559.40,163.94 558.59,163.94"></polygon>
+      <polyline class="est-line" points="541.68,163.94 542.49,163.94 543.29,163.94 544.10,163.94 544.90,163.94 545.71,163.94 546.52,158.78 547.32,158.78 548.13,158.78 548.93,158.78 549.74,158.78 550.54,158.78 551.35,158.78 552.15,158.78 552.96,158.78"></polyline>
+      <polyline class="est-line" points="558.59,153.63 559.40,153.63 560.20,153.63 561.01,153.63 561.82,153.63 562.62,153.63 563.43,153.63 564.23,153.63 565.04,153.63 565.84,153.63 566.65,153.63 567.45,153.63 568.26,153.63 569.06,153.63 569.87,153.63 570.67,153.63 571.48,153.63 572.28,153.63 573.09,153.63 573.89,153.63 574.70,153.63 575.51,153.63 576.31,153.63 577.12,153.63 577.92,153.63 578.73,153.63 579.53,153.63 580.34,153.63 581.14,153.63 581.95,153.63 582.75,153.63 583.56,153.63 584.36,153.63 585.17,153.63 585.97,146.27 586.78,146.27 587.58,146.27 588.39,146.27 589.19,146.27 590.00,146.27"></polyline>
+      <polyline class="q-line" points="40.00,46.18 112.47,46.18 112.47,45.44 185.75,45.44 185.75,43.23 259.84,43.23 259.84,41.02 333.92,41.02 333.92,90.34 406.40,90.34 406.40,163.94 479.68,163.94"></polyline>
+      <circle class="est-dot" cx="590.00" cy="146.27" r="3.5"></circle>
+      <text class="est-value" x="584.00" y="139.27" text-anchor="end">7.3</text>
+      <line class="q-line" x1="40" y1="248" x2="58" y2="248"></line>
+      <text class="x-label" x="64" y="252">Published quarterly average (EIA)</text>
+      <rect class="est-band" x="290" y="243" width="18" height="10"></rect>
+      <line class="est-line" x1="290" y1="248" x2="308" y2="248"></line>
+      <text class="x-label" x="314" y="252">Our daily estimate and range</text>
     </svg>
     <!-- /GENERATED:chart -->
-    <figcaption>
-      Quarterly averages from the published record our model is calibrated
-      against &mdash; total oil: crude, condensate and products. The 2026
-      figures are provisional and get revised as better information arrives.
-      <a href="sources.html">Where these come from &rarr;</a>
-    </figcaption>
   </figure>
-
-  <section class="method" id="how">
-    <h2>How we get to a number</h2>
-    <p>
-      Nobody publishes a daily figure for the Strait of Hormuz that is free to
-      republish. The public record arrives a quarter at a time, months after the
-      fact. The trackers that watch the strait day by day are locked behind
-      commercial licences.
-    </p>
-    <p>
-      So we build our own. Our model takes the public evidence we can legally
-      stand behind, calibrates against the quarterly record, moves with monthly
-      Gulf oil production data, and carries the result forward to the most
-      recent completed day (UTC) &mdash; with a range that reflects how
-      much we genuinely know rather than how confident we would like to sound.
-      That range widens while the strait is unsettled and narrows toward
-      &plusmn;3% in calm periods &mdash; flows fell from 21.6 to 4.9 million
-      barrels per day in three quarters during 2026, and our model has been
-      estimating through that disruption. When our back-tested horizon runs
-      out before the next published quarter arrives, we stop publishing a
-      number rather than guess past what we have tested; see above if that is
-      what you are seeing right now.
-    </p>
-    <p>
-      This is our estimate, not an official measurement &mdash; and that is the
-      product. The method is ours, it is published in full, and it is scored
-      against every new figure that lands. Widening what feeds it &mdash; more
-      public data, official reports, credible reporting &mdash; is continuous
-      work, and the <a href="sources.html">sources and method</a> page always
-      says exactly what is in the model today.
-    </p>
-  </section>
 
   <footer>
     <nav>

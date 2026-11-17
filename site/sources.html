@@ -61,6 +61,17 @@
     to republish.
   </p>
 
+  <h2>Why we model it</h2>
+  <p>
+    Nobody publishes a daily figure for the Strait of Hormuz that is free to
+    republish. The public record arrives a quarter at a time, months after the
+    fact. The trackers that watch the strait day by day are locked behind
+    commercial licences. So we build our own estimate, carry it forward to the
+    most recent completed day (UTC), and publish it with a range that reflects
+    how much we genuinely know. This is our estimate, not an official
+    measurement, and it is scored against every new published figure.
+  </p>
+
   <h2>What is in it today</h2>
   <p>
     Two cleared datasets, both from one publisher: the <strong>U.S. Energy
@@ -114,7 +125,7 @@
     calibrate&rdquo; &mdash; if it moves the number, it needs a licence.
   </p>
 
-  <h2>How the estimate is built</h2>
+  <h2 id="how">How the estimate is built</h2>
   <p>
     Two numbers do the work. The first is the strait&rsquo;s share: in the
     latest quarter EIA has measured, how much oil passed through Hormuz
@@ -147,22 +158,28 @@
     from.
   </p>
 
-  <h2>When we stop answering</h2>
+  <h2 id="range">Why the range is wide right now</h2>
   <p>
-    That back-test only tells us how wrong this method gets <em>one quarter</em>
-    past its anchor. It says nothing about how wrong it gets two or three
-    quarters past, because we have never been there and measured it. So the
-    model carries a hard limit: once the day being estimated is more than about
-    one quarter beyond the end of the latest published quarter, we stop showing
-    a daily number and say so plainly, instead of quietly stretching a range
-    that was never tested that far.
+    Our back-test tells us how wrong this method gets up to about one quarter
+    (92 days) past the latest published quarter. Beyond that we have never
+    measured its error. We keep publishing an estimate anyway, but we widen the
+    range for every extra day past that point, because the one signal we have
+    about longer-range error shows the miss growing faster than the
+    one-quarter error we actually validated.
   </p>
   <p>
-    Our current anchor covers April to June 2026, so that limit falls at the end
-    of September 2026. If EIA has not published a newer quarter by then, this
-    page will show no headline figure until it does. We would rather answer
-    &ldquo;not right now&rdquo; than answer confidently and be unable to say why
-    we believed it.
+    Treat a figure in this zone as a wider-than-tested best guess, not a
+    back-tested one. Past 184 days (double the tested horizon) we stop widening
+    the range, because we have no evidence left to shape it; the headline
+    still follows the latest monthly production data. The range tightens back
+    to normal as soon as EIA publishes the next quarter.
+  </p>
+  <p>
+    The range is also lopsided on purpose. While the strait is disrupted, the
+    headline assumes the strait still carries the same share of Gulf oil output
+    as in the last published quarter. If that output has since risen, the
+    headline is more likely too low than too high; if it has fallen, the
+    reverse.
   </p>
 
   <h2>Where this is going</h2>
