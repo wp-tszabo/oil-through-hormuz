@@ -494,6 +494,47 @@ def merge_series(doc, hormuz, release):
     return changed, latest_published != prev_latest, prev_latest
 
 
+def score_published_in_quarter(start, end, actual):
+    """Score every published daily estimate whose `for_date` falls inside
+    [start, end] (a landed quarter's own date range) against `actual`.
+
+    Bug fix (methodology.md section 81.5): the previous version of this
+    scorer compared the new quarter's date range only against
+    `model["last_published"]` -- a single field holding whatever estimate
+    was most recently published, which by the time any new quarter's EIA
+    release lands (release lag is routinely 6-10 weeks past quarter-end) has
+    always already moved past that quarter's own end date. That made
+    `error_pct` structurally null on every real re-anchor. Scoring instead
+    against every entry in site/data/history.json that actually falls
+    inside the landed quarter's window lets days that were genuinely
+    published *during* that quarter be scored for real.
+
+    Returns (scored_list, last_entry_in_quarter_or_None), where scored_list
+    is a list of {"for_date", "point", "band_low", "band_high", "error_pct",
+    "band_captured"} dicts, sorted by for_date (oldest first).
+    """
+    history = historymod.load_history()
+    start_s, end_s = start.isoformat(), end.isoformat()
+    scored = []
+    for e in history.get("entries", []):
+        for_date = e.get("for_date")
+        if not for_date or not (start_s <= for_date <= end_s):
+            continue
+        point = e.get("point")
+        band_low, band_high = e.get("band_low"), e.get("band_high")
+        scored.append({
+            "for_date": for_date,
+            "point": point,
+            "band_low": band_low,
+            "band_high": band_high,
+            "error_pct": round((point / actual - 1) * 100, 1) if point and actual else None,
+            "band_captured": (band_low <= actual <= band_high)
+                if band_low is not None and band_high is not None else None,
+        })
+    scored.sort(key=lambda s: s["for_date"])
+    return scored, (scored[-1] if scored else None)
+
+
 def main(today=None, page=None, xlsx=None):
     today = today or datetime.datetime.now(datetime.timezone.utc).date()
     with open(DATA) as f:
@@ -516,21 +557,34 @@ def main(today=None, page=None, xlsx=None):
     if changed:
         entry = {"scored_on": today.isoformat(), "release": release}
         if new_quarter:
-            # Score what we actually published for the quarter that just landed.
-            lp = model.get("last_published") or {}
+            # Score what we actually published for the quarter that just
+            # landed -- against every daily estimate in history.json whose
+            # for_date falls inside that quarter's own window, not just the
+            # single most-recently-published snapshot (methodology.md
+            # section 81.5 bug fix; see score_published_in_quarter()).
             actual = anchor["total_oil"]
             start, end, _ = quarter_info(anchor["period"])
-            in_q = lp.get("for_date") and start.isoformat() <= lp["for_date"] <= end.isoformat()
+            scored_in_q, last_in_q = score_published_in_quarter(start, end, actual)
             entry.update({
                 "quarter": anchor["period"],
                 "new_actual": actual,
-                "last_published_estimate": lp if in_q else None,
-                "error_pct": round((lp["point"] / actual - 1) * 100, 1) if in_q and lp.get("point") and actual else None,
+                "last_published_estimate": last_in_q,
+                "error_pct": last_in_q["error_pct"] if last_in_q else None,
+                "scored_during_quarter": scored_in_q,
                 "persistence_counterfactual": prev_anchor_value,
                 "persistence_error_pct": round((prev_anchor_value / actual - 1) * 100, 1) if actual else None,
-                "note": "New quarter published; re-anchored and scored (methodology.md sections 3 and 19).",
+                "note": "New quarter published; re-anchored and scored (methodology.md sections 3, 19 and 81.5).",
             })
             print("RE-ANCHORED on %s (EIA release %s)" % (anchor["period"], release))
+            if scored_in_q:
+                for s in scored_in_q:
+                    print("    scored %s: point %.1f vs actual %.1f (%+.1f%%), band %.1f-%.1f (%s)"
+                          % (s["for_date"], s["point"], actual, s["error_pct"],
+                             s["band_low"], s["band_high"],
+                             "captured" if s["band_captured"] else "missed"))
+            else:
+                print("    no published estimate fell inside %s's window (%s to %s) to score"
+                      % (anchor["period"], start.isoformat(), end.isoformat()))
         else:
             entry["note"] = "EIA revised the published series or re-released it; re-read, no new quarter to score."
             print("EIA series revised/re-released (%s)" % release)
