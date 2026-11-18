@@ -5496,3 +5496,234 @@ else") so the live site re-anchors on 3Q26 today; verify the live page and
 `hormuz.json` byte-for-byte; run the rubric; log it. Full baseline,
 signal-log and model-v1 material from §81.4/81.5-logs/81.6 carried into
 `backlog.md`'s KR6 row and `decisions-log.md` without duplication here.
+
+## 83. KR6 cycle -- 2026-11-18 (71st cycle): EIA/OPEC re-confirmed unchanged; three new tier-2 signals read directly; a real ArcGIS data endpoint found for IMF PortWatch and a reproducible tier-3 divergence measured against the EIA-based model for the first time
+
+**Delivery type this cycle: (a) confirmation-only on the licensed anchors, (b) tier-2 signal reading, (c) a genuinely new tier-3 validation result.** No change made to `site/`, `site/data/hormuz.json`, or `sources.html` by this role. No new licensed numeric input is proposed. The headline result this cycle is 83.5: a real, working, non-JS-rendered data path into IMF PortWatch was found (closing the open tooling question from section 81.8), and it produces a reproducible, material divergence from the EIA-anchored model's current "recovering" read -- reported in full below with its caveats, per the owner's 2026-11-16 tier-3 directive (log every use; never let it become the anchor or the published figure).
+
+### 83.1 EIA Global Energy Security Data supplement: independently re-fetched, byte-for-byte unchanged
+
+Fetched directly (`curl`, full browser user-agent, 2026-11-18):
+`https://www.eia.gov/outlooks/steo/report/energysecurity/article.php` ->
+**HTTP 200, 79,114 bytes** -- the exact same byte count as section 81.1's
+2026-11-17 fetch. `grep -c "3Q26"` -> **21** (unchanged). `grep -c "4Q26"` ->
+**0** (no new quarter). Table 4's values were re-parsed directly from the
+raw HTML (not the production parser this cycle, a direct read) and match
+section 81.1/82 exactly: 2Q25 21.1, 3Q25 21.4, 4Q25 21.6, 1Q26 15.0, 2Q26
+5.1, 3Q26 9.1 (total oil); companion Table 2 also unchanged. The release
+banner still reads `Release Date: November 16, 2026` and the site-wide
+"What's New" sidebar still lists "Global Energy Security Data ... Nov 16,
+2026" as the most recent entry for that product (the two other "What's
+New" items, Wholesale Electricity Market Data and the Monthly Densified
+Biomass Fuel Report, both Nov 12, are unrelated products). **No 4Q26
+posting; EIA unchanged for the second cycle running since the 3Q26
+release.**
+
+### 83.2 GPCI / STEO Table 3d: independently re-fetched, unchanged
+
+Fetched `STEO_m.xlsx` directly (`curl`, 2026-11-18, HTTP 200, 1,096,645
+bytes -- identical size to section 81.2's fetch) and parsed with the
+production `scripts/gpci.py` unmodified, in an isolated scratch copy (never
+against the real working tree; confirmed via `git status` before and after
+that nothing under version control was touched by this role this cycle).
+`last_hist = "202610"`, `release_label = "November 2026"` -- both unchanged.
+GPCI values reproduced exactly: 202606 13.17, 202607 15.22, 202608 14.25,
+202609 16.56, 202610 17.85 (latest), 202611 not yet present. No new month.
+
+### 83.3 OPEC MOMR re-probe
+
+`https://www.opec.org/opec_web/en/publications/202.htm` -> **HTTP 403**,
+`<title>Attention Required! | Cloudflare</title>`, 5,955 bytes -- the
+**27th consecutive** "back" reading (chain: section 81.9 26th, this cycle
+27th), against the single 2026-10-21 exception (section 53). No change.
+
+### 83.4 Current live estimate and prediction, independently re-verified
+
+Fetched `https://oilthroughhormuz.com/data/hormuz.json` live: byte-for-byte
+identical to the repo's checked-in `site/data/hormuz.json`, both showing
+`for_date: "2026-11-16"`, `point: 10.6`, `band_low: 9.1`, `band_high: 19.8`,
+`horizon_days: 47`, `max_horizon_days: 92`, `extrapolated: null`,
+`anchor_period: "3Q26"`, `anchor_value: 9.1`, regime `disrupted/local`. The
+page is live and **not blank** -- the "always show a current estimate"
+standing requirement is satisfied this cycle with no extrapolation needed
+(horizon is still inside the 92-day tested window). One observational note,
+not a finding: `retrieved_utc` on both the live site and the checked-in file
+is still `2026-11-17T14:19:27Z` as of this cycle's fetch (2026-11-18) --
+i.e. the daily refresh does not appear to have run again since section 82's
+re-anchor. Given both licensed inputs (83.1/83.2) are confirmed unchanged,
+a same-content re-run would not change the published figures, so this is
+not reported as an error, only flagged in case Build/CEO want to confirm the
+scheduled job itself is still firing on its normal cadence.
+
+### 83.5 Tier-3 validation: IMF PortWatch's real data endpoint found, and a reproducible divergence measured against the model
+
+**Closing the open tooling question from section 81.8.** Last cycle's
+WebFetch of `portwatch.imf.org/pages/hormuz-strait-transit-call` returned
+only the bare page title because the dashboard is client-rendered. This
+cycle, a public web search surfaced the dashboard's actual backend: IMF
+PortWatch is built on Esri ArcGIS Online, and its daily chokepoint-transit
+data is served from a public ArcGIS **FeatureServer** (owned by the
+`IMF-portwatch_imf_dataviz` account) with **no login, API key, or other
+access control** --
+
+```
+https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query
+```
+
+Confirmed this is the real underlying dataset, not a guess: querying
+`?where=1=1&outFields=portname&returnDistinctValues=true&f=json` returns
+exactly the 28 named world chokepoints PortWatch is known to track (Luzon
+Strait, Bab el-Mandeb Strait, Suez Canal, Panama Canal, Malacca Strait,
+Bosporus Strait, **Strait of Hormuz**, etc.) -- this is PortWatch's own
+"Daily Chokepoint Transit Calls" product, reachable directly as JSON, with
+fields `date, portname, n_tanker, n_total (all vessel types), n_container,
+n_dry_bulk, capacity_tanker (summed tanker DWT), capacity`. This is a
+**publicly reachable route with no access control to circumvent** -- no
+login, no CAPTCHA, no paywall, consistent with the brief's bar for a
+legitimate "found a non-JS-rendered endpoint," not a workaround.
+
+**Per the owner's 2026-11-16 tier-3 directive, this is logged here in full,
+used only for internal validation, and none of its numbers are published,
+displayed, or go anywhere near `site/` or `sources.html`.**
+
+**Fetched the full available history for "Strait of Hormuz"** (2019-01-01
+through 2026-11-15, 2,876 daily rows, paginated via `resultOffset` since the
+service caps at 2,000 rows/request) and for the four chokepoints EIA's own
+Table 2 uses as the regime-detector control basket's closest PortWatch
+equivalents (Bab el-Mandeb Strait, Malacca Strait, Panama Canal, Bosporus
+Strait as a Turkish-Straits proxy). Quarterly averages, Hormuz:
+
+| Quarter | avg n_total/day | avg n_tanker/day | avg tanker capacity (DWT)/day | EIA total oil (m b/d) |
+|---|---|---|---|---|
+| 1Q25 | 76.1 | 43.1 | 1,967,412 | 20.9 |
+| 2Q25 | 102.5 | 57.7 | 2,688,359 | 21.1 |
+| 3Q25 | 92.6 | 52.4 | 2,444,900 | 21.4 |
+| 4Q25 | 70.8 | 39.4 | 1,908,783 | 21.6 |
+| 1Q26 | 45.6 | 24.6 | 1,143,984 | 15.0 |
+| 2Q26 | 8.0 | 3.3 | 144,382 | 5.1 |
+| **3Q26** | **6.2** | **2.6** | **104,249** | **9.1** |
+| 4Q26 (partial, through 11-15, 46 days) | 3.5 | 0.7 | 11,848 | n/a (unreleased) |
+
+**The headline, reproducible finding: PortWatch's own vessel-count series
+moves in the opposite direction from EIA's measured Hormuz volume in the
+exact quarter the model is currently anchored on.** EIA shows 2Q26 -> 3Q26
+as a **+78.4% recovery** (5.1 -> 9.1). PortWatch's Hormuz tanker count over
+the same two quarters shows a **further 21% decline** (3.3 -> 2.6
+tankers/day), and the tanker-capacity proxy shows an even larger **28%
+decline** (144,382 -> 104,249 DWT/day). Breaking 2Q26/3Q26 into months
+(n_total/day): Apr 7.1, May 3.9, **Jun 12.9, Jul 10.2** (a brief
+early-recovery bump spanning the 2Q26/3Q26 boundary), then **Aug 4.7, Sep
+3.6, Oct 3.8, Nov (partial) 2.9** -- i.e. PortWatch shows the apparent
+recovery concentrated in June-July and then resuming its decline for the
+rest of 3Q26 and into 4Q26 so far, with **no sign of EIA's 3Q26-wide
+recovery holding, let alone the model's current extrapolation that the
+point should keep *rising*** (the live model's point is 10.6, up from the
+9.1 anchor, because GPCI/Gulf production is rising -- section 81.8's
+transit-share estimator). On the control basket, PortWatch independently
+corroborates the regime detector's "local, not systemic" call: Bab
+el-Mandeb, Malacca, Panama and Bosporus each show only mild declines
+(roughly -10% to -20%) from 4Q25 to the 4Q26 partial quarter, nothing close
+to Hormuz's >90% collapse.
+
+**Why this is reported as a flagged divergence, not a contradiction of the
+model, and why it is not acted on directly:**
+
+1. **Different units and methodology.** PortWatch counts AIS-visible vessel
+   *transits* through a geofenced box; EIA reports a Vortexa-plus-analysis
+   *volume* (m b/d) that explicitly tries to correct for exactly the AIS
+   gaps PortWatch cannot see. EIA's own standing caveat (quoted in
+   `hormuz.json`'s `source.publisher_caveat`) is that Hormuz AIS data "has
+   been unreliable since end-February 2026" and is "being revised
+   frequently" -- a raw AIS vessel count (PortWatch) would be expected to
+   *undercount* exactly where EIA's analysis is trying to correct for
+   undercounting. This is a plausible, not proven, explanation for the
+   divergence; this cycle did not have a way to test it directly.
+2. **PortWatch's own pre-war variance is much larger than EIA's.** In the
+   four calm quarters (1Q25-4Q25), EIA's total-oil volume barely moves
+   (20.9-21.6, a 3.3% range), while PortWatch's own vessel count swings
+   ±35% quarter to quarter in the same calm period (76.1 to 102.5).
+   Vessel-count and barrel-volume are genuinely different quantities (fleet
+   mix, vessel size, and multi-stop AIS box transits all move count without
+   moving volume by the same amount), so a count-based series is a noisier
+   instrument than EIA's volume series even before any conflict-era AIS
+   problem is added. This tempers, without erasing, the significance of the
+   3Q26 divergence.
+3. **No action taken on the published model from this alone.** Per the
+   owner's directive this is tier-3: it may inform how the model's
+   structure is judged, but it is never the anchor, never published, and a
+   single-quarter divergence against a noisier instrument is not grounds
+   for a methodology change on its own (the same overfitting-on-n=2 logic
+   section 81.8/82 already applied to H1 applies with even more force to a
+   single comparison against an uncleared, higher-variance series).
+
+**What this *is* grounds for:** a concrete, falsifiable thing to watch.
+If EIA's 4Q26 release (whenever it lands) shows total oil **falling** rather
+than continuing to rise, that would be consistent with what PortWatch has
+been showing in real time since August, and would argue that the 3Q26
+EIA figure (or the frozen-ratio GPCI estimator's extrapolation off it) was
+the more surprising reading, not PortWatch. If 4Q26 instead confirms the
+rise, PortWatch's divergence this quarter is better explained by caveat #1
+above (AIS undercounting that EIA's analysis is specifically designed to
+correct for) and should be weighted down accordingly next time. Recommend
+tracking this as a second named, falsifiable item alongside H1 --
+provisionally "H2: PortWatch's raw AIS vessel-tanker count under-reads the
+true recovery direction during the disrupted regime, because dark/AIS-off
+shipping is proportionally higher exactly when EIA's volume figure is
+rising" -- not adopted, not scored into the band, logged so it is not
+rediscovered from scratch next time PortWatch is checked.
+
+**Tooling/access note for the record:** this was reached via a public,
+unauthenticated ArcGIS REST query endpoint discovered through a normal web
+search, with no login, no CAPTCHA, no paywall and no terms-of-service
+click-through encountered at any point in the query path. No account was
+created. No attempt was made to reach anything behind PortWatch's own
+dashboard login or export-to-file features. This is reported as a
+could-reach outcome, not a circumvention.
+
+### 83.6 Hypothesis H1 status
+
+EIA has not posted 4Q26 (83.1). H1 ("the GPCI transit-share estimator
+systematically lags turning points in the true transit share") remains
+pending, exactly as expected; no new analysis needed or attempted this
+cycle. Note (83.5): PortWatch's divergence, if anything, cuts the *other*
+way from H1's framing for the 2Q26->3Q26 transition specifically -- H1 says
+the frozen ratio undershot because the *true* share recovered faster than
+GPCI; PortWatch's vessel-count data this cycle suggests the true physical
+transit count did *not* recover as much as EIA's volume figure implies.
+These are not necessarily in tension (volume and vessel-count can diverge
+for the reasons in 83.5), but it is noted here so a future cycle revisiting
+H1 at 4Q26 has this cross-check on record rather than treating H1 as the
+only candidate explanation for the quarter's miss.
+
+### 83.7 Net effect and carry-forward
+
+**Delivery type: (a) + (b) + (c).** Both licensed anchors independently
+re-confirmed unchanged for a second cycle (83.1/83.2); OPEC MOMR's 27th
+consecutive block confirmed (83.3); the live estimate independently
+re-verified live and non-blank (83.4); three new tier-2 signals read
+directly and logged with full reliability grading in `signal-log.md`, plus
+one dating error caught and discarded rather than mistakenly logged as a
+2026 fact; and a genuinely new, reproducible tier-3 result (83.5) --  a
+working PortWatch data endpoint, a full quarterly comparison against the
+model's own anchor history, and a named, falsifiable divergence hypothesis
+(H2) to track going forward, not adopted into the published figure. No
+`site/`, `site/data/hormuz.json`, or `sources.html` change made by this
+role.
+
+**Carry-forward priority order for the next cycle:**
+
+1. **EIA 3Q26/STEO**: keep re-probing every cycle without skipping, now 2
+   days unchanged since the 2026-11-16 release.
+2. **OPEC MOMR**: re-probe every cycle; 27th confirmed "back" reading.
+3. **PortWatch tier-3 validation is now a live, reusable tool, not a dead
+   end.** The ArcGIS endpoint in 83.5 can be re-queried cheaply every cycle
+   to track whether the Hormuz tanker-count/capacity series keeps
+   diverging from or converges back toward the EIA-measured direction --
+   recommend doing so each cycle as a standing tier-3 check, same cadence
+   as the EIA/OPEC re-probes, and comparing fresh data against H2's
+   falsification condition (83.6's framing) as 4Q26 approaches.
+4. **Track H1 (section 81.8) and the new H2 (83.5)** together against
+   4Q26 when it lands -- both are about the same quarter transition and a
+   single release will bear on both.
+5. **UKMTO/JMIC-via-news-reporting**: keep reading directly every cycle;
+   three more entries logged this cycle in `signal-log.md`.

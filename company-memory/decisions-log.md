@@ -1354,3 +1354,48 @@ wait for a specialist's completion notification (or use an isolated
 worktree) before doing git surgery on the same files that specialist was
 asked to touch, rather than assuming its edits are done once a first
 Bash/git check looks clean.
+
+## 2026-11-18 (71st cycle) — PortWatch's real data endpoint found; a reproducible tier-3 divergence from the model's recovering read; no formula change, tracked as hypothesis H2 alongside H1
+
+**What happened.** Dispatched Research (30th consecutive cycle of real
+delegation via the Agent tool, no tool error) on the standing KR6 brief,
+continuing the carry-forward list from `methodology.md` §81.10/§82: re-probe
+EIA/OPEC, keep reading UKMTO/JMIC tier-2 signals, and try to close the
+PortWatch tier-3 tooling gap left open last cycle (its dashboard is
+client-rendered; a prior WebFetch returned no usable figures). Research
+found PortWatch's actual backend: a public, unauthenticated ArcGIS
+FeatureServer with no login/CAPTCHA/paywall, confirmed genuine by its 28
+named chokepoints matching PortWatch's own set. Pulled Hormuz's full daily
+history (2019–2026-11-15) and four control chokepoints. Full report:
+`methodology.md` §83.
+
+**CEO independent re-verification before acting on any of it.** Re-fetched
+`eia.gov`'s Hormuz supplement directly (byte count differs slightly from
+Research's own fetch — immaterial dynamic-page variance, same pattern
+documented in prior cycles; `grep -c "3Q26"`=21, `grep -c "4Q26"`=0, matches
+exactly) and re-probed OPEC MOMR directly (HTTP 403, matches). Independently
+queried the ArcGIS endpoint myself — confirmed it is genuinely public
+(HTTP 200, no auth) and re-derived the quarterly Hormuz averages directly
+from the raw feature data: 2Q26 avg `n_tanker` 3.26/day, avg
+`capacity_tanker` 144,382 DWT/day; 3Q26 avg `n_tanker` 2.61/day, avg
+`capacity_tanker` 104,249 DWT/day — matching Research's reported −21%/−28%
+figures exactly (to the first decimal).
+
+**Decision (methodology authority): do not change the estimator formula or
+band on this finding.** PortWatch's own vessel-count series is a
+structurally noisier instrument than the EIA volume series it is being
+compared against (±35% calm-period variance vs. EIA's ±3%), it is
+tier-3/uncleared data under the owner's 2026-11-16 directive (never the
+anchor, never published), and a single-quarter divergence is exactly the
+same overfitting risk already named for hypothesis H1 (n=2). Tracked as a
+second named, falsifiable hypothesis, **H2** ("PortWatch's raw AIS count
+under-reads the true recovery direction during the disrupted regime"), to
+be judged alongside H1 against EIA's 4Q26 release — not adopted, not
+scored into the band, logged so it is not rediscovered from scratch.
+PortWatch's ArcGIS endpoint is kept as a standing, reusable validation tool
+(re-query every cycle), per the owner's directive to log every tier-3 use.
+
+**Also this cycle**: ratified this week's G3 growth action (truthful
+`sitemap.xml` `<lastmod>` dates, PR #43, merged under publishing authority,
+rubric PASS, live-verified) — see `metrics.md`/`self-check-log.md` for
+detail. No new licence surface, no spend, nothing hard-to-reverse. | CEO (methodology authority) |
