@@ -64,6 +64,10 @@ What it does
    fields don't explain the move -- it never guesses at a cause. G5
    follow-up (okrs.md, backlog.md 2026-09-28), tracked as the deliberate
    scope cut on PR #19.
+8. Sets site/sitemap.xml's <lastmod> for / and history.html to today's UTC
+   run date, since both are rewritten by this run (update_sitemap_lastmod();
+   backlog.md G3, 2026-11-18). The other three sitemap entries are static,
+   hand-set to each page's actual last-edit date, and are not touched here.
 
 What it deliberately will NOT do
 --------------------------------
@@ -121,6 +125,20 @@ import generate_history as historymod  # noqa: E402
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(REPO, "site", "data", "hormuz.json")
 PAGE = os.path.join(REPO, "site", "index.html")
+SITEMAP = os.path.join(REPO, "site", "sitemap.xml")
+
+# site/sitemap.xml <lastmod> for these two pages only -- both are rewritten
+# every run (the estimate/history blocks above), so their lastmod is kept
+# truthful by recomputing it here on every refresh rather than hand-editing
+# it once and letting it go stale (backlog.md G3, 2026-11-18: the company has
+# already been burned once by a frozen hand-written date, see parse_supplement
+# above and critical-issues-log.md). The other three pages (sources.html,
+# strait.html, terms.html) change rarely and are NOT touched here -- their
+# <lastmod> is set by hand to that file's actual last git-commit date.
+SITEMAP_DAILY_LOCS = (
+    "https://oilthroughhormuz.com/",
+    "https://oilthroughhormuz.com/history.html",
+)
 
 EIA_URL = "https://www.eia.gov/outlooks/steo/report/energysecurity/article.php"
 UA = "oilthroughhormuz.com refresh bot"
@@ -465,6 +483,37 @@ def build_change_note(est, model, prev_entry):
     return ("%s. Our anchor quarter (%s) is unchanged since %s; we do not have "
             "enough detail recorded from that previous run to say more "
             "precisely what moved it." % (headline, period_words(anchor_period), prev_entry["for_date"]))
+
+
+# --------------------------------------------------------------------------
+# Sitemap lastmod (backlog.md G3, 2026-11-18)
+# --------------------------------------------------------------------------
+
+def update_sitemap_lastmod(path, run_date, locs=SITEMAP_DAILY_LOCS):
+    """Set <lastmod>run_date</lastmod> (YYYY-MM-DD) for each <url> in the
+    sitemap whose <loc> is in `locs`, leaving every other <url> block (and
+    the rest of the file) untouched.
+
+    Idempotent and byte-stable: re-running with the same run_date on a file
+    that already has it produces no change, so a same-day re-run of this
+    script does not dirty the working tree just by touching the sitemap.
+    """
+    with open(path) as f:
+        text = f.read()
+
+    def _one_url(block):
+        loc_m = re.search(r"<loc>(.*?)</loc>", block)
+        if not loc_m or loc_m.group(1) not in locs:
+            return block
+        if re.search(r"<lastmod>.*?</lastmod>", block):
+            return re.sub(r"<lastmod>.*?</lastmod>", "<lastmod>%s</lastmod>" % run_date, block)
+        # No existing <lastmod>: insert one right after <loc>.
+        return re.sub(r"(<loc>.*?</loc>\n)", r"\1    <lastmod>%s</lastmod>\n" % run_date, block, count=1)
+
+    new_text = re.sub(r"<url>.*?</url>", lambda m: _one_url(m.group(0)), text, flags=re.S)
+    if new_text != text:
+        with open(path, "w") as f:
+            f.write(new_text)
 
 
 # --------------------------------------------------------------------------
@@ -945,6 +994,12 @@ def main(today=None, page=None, xlsx=None):
     with open(DATA, "w") as f:
         json.dump(doc, f, indent=2)
         f.write("\n")
+
+    # Keep sitemap.xml's <lastmod> for / and history.html truthful: both are
+    # rewritten on every run (above), so lastmod is today's UTC run date,
+    # not a hand-maintained value that can go stale (backlog.md G3).
+    update_sitemap_lastmod(SITEMAP, today.isoformat())
+
     print("OK: estimate dated %s, horizon %d d, regime %s/%s, GPCI %s=%.2f (anchor %s %.2f, %s), "
           "point %s band %s-%s, k=%.3f"
           % (target, horizon, regime, kind, last_hist, g_latest, anchor["period"], g_anchor, phase,
