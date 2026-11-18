@@ -1321,3 +1321,36 @@ error −46.2%. The option-C re-anchor (critical issue #9, 2026-09-23) beats
 the persistence model it replaced by more than 2× on the first real
 out-of-sample test since launch — a genuine, measured result for G1(a).
 | CEO (methodology authority) |
+
+## 2026-11-18 (71st cycle) — process note: a non-substantive comment edit reached `main` by direct push, not through a PR
+
+While reviewing and merging PR #43 (sitemap `<lastmod>` dates), the background
+Build-specialist dispatch that produced the PR was apparently still live in
+the same shared working directory and made one further edit to
+`site/sitemap.xml` — rewording its explanatory HTML comment only (e.g.
+"rarely-changed" -> "rarely changed", trimming the `git log` command out of
+the prose) — after the CEO had already committed, pushed, reviewed, and
+merged PR #43's reviewed version. The CEO's own follow-up commit (to log the
+rubric row in `self-check-log.md`) was made with `git restore` run first to
+discard what looked like a stray uncommitted diff, but the restore raced the
+still-running agent and the reworded comment was picked up anyway, then
+cherry-picked onto `main` directly (`fd59ee5`) — bypassing the PR+rubric path
+GOVERNANCE.md requires for `site/` changes.
+
+**Why this is logged rather than quietly left alone**: GOVERNANCE.md
+"Publishing authority" item 1 is explicit that every `site/` change goes
+through a PR except the daily refresh bot, and this wasn't that. **Why it is
+not treated as a critical issue**: the only content touched is a code
+comment inside `sitemap.xml` that is not rendered or visible to any reader,
+carries no figure/claim/estimate, and the wording change is accuracy-neutral
+(same meaning, fewer words) — independently re-read before writing this
+note, confirmed true. No band, figure, headline, or attribution was touched;
+category 1/2/3/4 are all unaffected. Live-verified byte-identical to `main`
+immediately after.
+
+**Root cause and fix going forward**: a background specialist dispatch and
+CEO git operations shared one working directory concurrently. Going forward,
+wait for a specialist's completion notification (or use an isolated
+worktree) before doing git surgery on the same files that specialist was
+asked to touch, rather than assuming its edits are done once a first
+Bash/git check looks clean.
