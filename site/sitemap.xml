@@ -1,27 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- lastmod for / and history.html is rewritten daily by
+     scripts/refresh_estimate.py (update_sitemap_lastmod()) to the UTC run
+     date, since both pages are regenerated every run. lastmod for the three
+     rarely-changed pages below is set by hand to that file's actual last
+     commit date (git log -1 --format=%ad --date=short, per file under
+     site/); update it only when that page is actually edited, not on
+     every run. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://oilthroughhormuz.com/</loc>
+    <lastmod>2026-11-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://oilthroughhormuz.com/history.html</loc>
+    <lastmod>2026-11-17</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://oilthroughhormuz.com/sources.html</loc>
+    <lastmod>2026-11-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://oilthroughhormuz.com/strait.html</loc>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://oilthroughhormuz.com/terms.html</loc>
+    <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.2</priority>
   </url>
