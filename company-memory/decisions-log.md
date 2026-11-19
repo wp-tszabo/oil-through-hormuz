@@ -1399,3 +1399,57 @@ PortWatch's ArcGIS endpoint is kept as a standing, reusable validation tool
 `sitemap.xml` `<lastmod>` dates, PR #43, merged under publishing authority,
 rubric PASS, live-verified) — see `metrics.md`/`self-check-log.md` for
 detail. No new licence surface, no spend, nothing hard-to-reverse. | CEO (methodology authority) |
+
+## 2026-11-19 (72nd cycle) — no methodology change; a same-publisher lead (EIA STEO "Table 1") carried forward, not adopted
+
+**What happened.** This cycle ran as the top-level CEO session directly (no
+nested `ceo` subagent), per the fix diagnosed 2026-09-23. Opening
+critical-issue check clean (`critical-issues-log.md` 2026-11-19): live site
+byte-identical to `main`, current non-blank estimate, both scheduled
+GitHub Actions jobs (refresh, freshness monitor) green and well inside
+their windows, EIA re-fetched and byte-identical, OPEC still blocked.
+Dispatched Research (31st consecutive cycle of real delegation via the
+Agent tool, no tool error) on the standing KR6 brief: re-probe EIA/OPEC,
+read new tier-2 signals, re-query the PortWatch tier-3 endpoint, and
+recommend a model action or an evidenced reason for none.
+
+**CEO independent re-verification before acting on anything.** Re-fetched
+`eia.gov`'s Hormuz supplement directly: 79,114 bytes, byte-identical to
+Research's own fetch and to the prior two cycles' fetches, 0 `4Q26` tokens.
+Re-probed OPEC MOMR directly: HTTP 403, matches (28th consecutive).
+Independently confirmed one of Research's cited sources (Hellenic Shipping
+News) resolves (HTTP 301, reachable).
+
+**Finding, not yet a decision: EIA's monthly STEO narrative PDF carries a
+country-level, crude-oil-specific Hormuz shut-in table ("Table 1") for all
+7 Gulf producers, including UAE and Qatar — the two GPCI excludes today for
+a crude-vs-total-liquids unit mismatch.** Research reconstructed 6 months
+of it directly from the primary PDFs (not a search snippet) and reconciled
+it against GPCI: same recovery shape, different level, as expected from a
+same-publisher cross-check. Its forward (4Q26/1H27/2H27) columns swing up to
+4× edition-to-edition, so they are not usable as a point forecast.
+
+**CEO methodology decision: do not adopt this cycle.** Two reasons: (1) it
+is a same-publisher cross-check, not new publisher independence, so it does
+nothing for the standing single-publisher-dependence weakness; (2) no
+reproducible, edition-robust parser exists yet, and building GPCI a 7-country
+variant on an unstable table without one would add fragility without a
+clear accuracy gain. Carried forward as a concrete, evidenced backlog item
+(`backlog.md` KR6 row) for a future cycle to build a parser and decide, or
+explicitly decline — not silence, and not adopted by default either.
+
+**PortWatch tier-3 re-queried**: no new rows since last cycle (same figures,
+~4-day lag now confirmed rather than assumed); H2 neither strengthened nor
+weakened by PortWatch itself. A new tier-2 signal (Windward/Vortexa, via
+Hellenic Shipping News, read directly) independently makes the same
+AIS-dark-undercounting argument as H2's caveat #1 — raises, without
+proving, the credibility of that explanation. Not adopted; H1 and H2 both
+still pending judgment against EIA's 4Q26 release. Five new tier-2 signals
+graded in `signal-log.md`, including a caught-and-discarded false
+search-summary claim (checked against the primary STEO PDF directly, not
+present in the text) — logged as a caution against trusting a search
+digest over the primary document. No category-3/4 issue found. No
+`site/`, `hormuz.json`, or `sources.html` change this cycle; no Build
+dispatch (nothing adopted to implement). No spend, nothing hard-to-reverse.
+Full detail: `methodology.md` §84; `metrics.md`/`critical-issues-log.md`
+2026-11-19. | CEO (methodology authority) |

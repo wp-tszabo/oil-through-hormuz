@@ -5727,3 +5727,235 @@ role.
    single release will bear on both.
 5. **UKMTO/JMIC-via-news-reporting**: keep reading directly every cycle;
    three more entries logged this cycle in `signal-log.md`.
+
+## 84. KR6 cycle -- 2026-11-19 (72nd cycle): EIA/OPEC re-confirmed unchanged; PortWatch tier-3 unchanged (same data, no new rows); a previously-unnoticed EIA STEO table found -- "Table 1. Estimated Strait of Hormuz closure-related disruptions in crude oil production" -- monthly, country-level, same already-cleared publisher, with a six-month-back history pulled and reconciled
+
+**Delivery type this cycle: (a) confirmation on both licensed anchors, (b) a
+new same-publisher table discovered and its history reconstructed (candidate
+for closing a known GPCI gap and for informing the post-horizon
+extrapolation), (c) tier-3 re-check (no new data), (d) five new tier-2
+entries read and graded, logged in `signal-log.md`.** No change made to
+`site/`, `site/data/hormuz.json`, or `sources.html` by this role. No
+methodology change is decided here -- that is the CEO's call -- but §84.2 is
+the strongest concrete lead this standing mandate has produced since the
+PortWatch endpoint (§83.5), and it is **evidenced**, not a search-snippet
+hunch: every number below was extracted directly from the EIA PDF.
+
+### 84.1 EIA Global Energy Security Data supplement and OPEC MOMR: re-probed directly, unchanged
+
+Fetched directly (`curl`, full browser user-agent, 2026-11-19):
+`https://www.eia.gov/outlooks/steo/report/energysecurity/article.php` ->
+**HTTP 200, 79,114 bytes** -- byte-identical to the 2026-11-17 and
+2026-11-18 fetches (§81.1, §83.1). `grep -c "3Q26"` -> 21, `grep -c "4Q26"`
+-> 0. **No new quarter, third consecutive cycle unchanged.**
+
+`https://www.opec.org/opec_web/en/publications/202.htm` -> **HTTP 403**,
+Cloudflare challenge page, 5,955 bytes -- the **28th consecutive** "back"
+reading. No change. Per the brief, not re-probed beyond this one check.
+
+### 84.2 A previously-unnoticed EIA STEO table: "Table 1. Estimated Strait of Hormuz closure-related disruptions in crude oil production"
+
+**What it is.** The EIA's monthly *Short-Term Energy Outlook* narrative PDF
+(`https://www.eia.gov/outlooks/steo/archives/<mon><yy>.pdf` -- the same
+report `scripts/gpci.py` already draws Table 3d from, via `STEO_m.xlsx`)
+carries, in its "Global Oil Markets" section, a standing table that this
+company has never before extracted: **country-level crude-oil production
+shut-ins attributed explicitly to the Strait of Hormuz closure**, for
+Bahrain, Iran, Iraq, Kuwait, Qatar, Saudi Arabia and the UAE (all seven --
+critically, this includes **UAE and Qatar**, the two countries GPCI
+currently excludes because STEO's structured workbook (`STEO_m.xlsx`) only
+carries them as total-liquids `papr_` series, not crude-only `copr_`,
+`gpci.py`'s docstring, line 17-18). The table gives a **pre-war baseline
+production** (Feb-26) per country, a historical shut-in average for the
+early months of the war, 2-3 of the most recent months as **estimated**
+(revised each edition as more data comes in), and a **forecast** for the
+current/next quarter and beyond (aggregate only -- "We only forecast
+aggregate disruptions for future months").
+
+**Access mechanism and licence.** PDF, not the structured `.xlsx` -- found
+and read via `curl`+`pdftotext -layout`, no login, no paywall, no
+JavaScript rendering needed, same domain and same monthly cadence as the
+file `gpci.py` already fetches. **This is the same EIA STEO product already
+relied on for GPCI**, not a new publisher and not a new licence surface --
+consistent with the standing finding (`okrs.md` Phase 1 evaluation §1,
+§127) that the recurring miss in this company's sourcing has been failing
+to read everything inside a publication it had already cleared, not a new
+licence question. Not formally re-read as a distinct terms page this cycle
+(there isn't one -- it's the same STEO report), so treating it as covered
+by STEO's existing clearance is a reasonable inference, not a fresh
+first-hand licence read; flagging that distinction so a future cycle (or
+the CEO) can decide if it wants an explicit confirmation before this table
+is built into anything that ships.
+
+**History reconstructed by pulling five more monthly archive PDFs** (`jul26`
+through `nov26`, all `https://www.eia.gov/outlooks/steo/archives/<mon>26.pdf`,
+all HTTP 200, all read with `pdftotext -layout`). The table revises recent
+months as more data comes in, so the cleanest read is "latest-published
+value for each calendar month," taking the most recent edition's figure for
+each month where more than one edition covers it:
+
+| Month | Total Hormuz-attributed shut-in (kb/d), latest-published estimate | Edition that published it |
+|---|---|---|
+| Mar-26 | 8,890 | Jul-26 STEO (only edition with Mar standalone, in the set pulled) |
+| Apr-26 | 10,400 | Jul-26 STEO |
+| May-26 | 11,200 | Jul-26 STEO |
+| Jun-26 | 7,480 (revised down from Jul edition's 8,290) | Aug-26 STEO |
+| Jul-26 | 4,980 (revised down from Aug edition's 5,460) | Sep-26 STEO |
+| Aug-26 | 5,760 (revised down from Sep edition's 6,720) | Oct-26 STEO |
+| Sep-26 | 4,770 | Oct-26 STEO (not yet re-revised in Nov edition, which only shows Mar-Sep as a quarter-plus average) |
+| **Oct-26** | **2,540** | **Nov-26 STEO (newest, 2026-11-16 release)** |
+
+Forecast-for-4Q26, as published by each successive edition (shown to
+demonstrate how much this specific forward column moves month to month --
+a direct caution against leaning on it): Jul edition 1,440 -> Aug edition
+4,200 -> Sep edition 5,663 -> Oct edition 4,470 -> **Nov edition 2,520**
+(now anchored on the Oct-26 actual-estimate of 2,540, i.e. essentially a
+flat-month assumption, not an independent forecast signal). Nov edition
+additionally gives **1H27: 1,900** and **2H27: 1,300**, continuing the
+gradual-recovery shape, the first time this company has seen an EIA-sourced
+forward number for the Hormuz disruption specifically.
+
+**The actual/estimated (non-forecast) monthly series shows the same
+recovery direction already established from the quarterly anchor and from
+GPCI, but at monthly resolution and reconciled down to whole-region
+production**: converting to "implied regional production" (fixed Feb-26
+baseline of 25,200 kb/d minus the month's shut-in) gives Jun 17.72, Jul
+20.22, Aug 19.44, Sep 20.43, **Oct 22.66 million b/d** (7-country total,
+crude only). GPCI (5-country subset, same crude-only basis, §83.2) over the
+same months: Jun 13.17, Jul 15.22, Aug 14.25, Sep 16.56, **Oct 17.85**.
+**Same direction, same month-to-month wiggle shape (a dip in Aug, a bigger
+step in Oct), different level** -- expected, since the 7-country table adds
+UAE+Qatar and uses a fixed pre-war baseline rather than Table 3d's own
+production series. This is read as an internal-consistency cross-check
+that **passed** (no contradiction found), not as new independent evidence
+(same publisher, same month, correlated construction).
+
+**Caution found and checked directly, not left as a search-engine claim.**
+A WebSearch digest this cycle asserted the November STEO said the strait
+"remains effectively closed in the near term." **That phrase does not
+appear anywhere in the actual PDF** (`grep -i "effectively closed"` and
+`grep -i "near term"` on the extracted text, zero hits) -- the PDF instead
+describes shut-ins "essentially flat through the remainder of 2026" and
+Brent averaging "around $100/b during November and December." Logged so no
+future cycle repeats the unverified phrase: it is a search-summary artifact,
+not something EIA said. This is the same "don't grade a search snippet as
+CLEARED" discipline the brief asks for, applied to a factual claim instead
+of a licence verdict.
+
+**What this is a lead for, not a decision:**
+
+1. **Closing the known UAE/Qatar crude-vs-liquids gap in GPCI.** If this
+   table's per-country shut-in figures are crude-oil-specific (its own
+   header says so) and can be reconciled against Table 3d's and Table 4's
+   definitions, GPCI could plausibly be extended to a 7-country basis using
+   this table's Feb-26 baseline plus monthly shut-ins, rather than Table
+   3d's `copr_`-only 5-country basis. Not attempted this cycle -- it needs a
+   reproducible parser (the PDF table has no download as structured data;
+   column headers shift position and width edition to edition, visible in
+   the raw `pdftotext` output above) and a CEO/Research decision on whether
+   the gain (2 more countries) is worth the new parsing fragility.
+2. **A same-publisher monthly cross-check with within-quarter granularity.**
+   This is not a second *independent* anchor -- it is EIA checking EIA, so
+   it does nothing for the standing "single-publisher dependence" weakness
+   named in the mandate. It does give within-quarter (monthly, not
+   quarterly) detail, which the current estimator does not have.
+3. **Possible input to the post-horizon extrapolation.** The owner's
+   standing requirement is to extend the estimate past the 92-day tested
+   horizon with "a trend read on the most-recent cleared inputs" rather than
+   a contentless geometric widening alone. This table's forecast columns are
+   demonstrably volatile (4Q26 forecast swung 1,440 -> 5,663 -> 2,520 across
+   five editions) and should **not** be read as a reliable point forecast,
+   but the *direction* (gradual further recovery, 1H27 lower than 4Q26,
+   2H27 lower still) is at least a second EIA-published trajectory to check
+   the extrapolation's own shape against, rather than an atheoretical band
+   widen. Flagging for the CEO rather than building it in -- this is a
+   methodology call, not mine.
+
+**Not done this cycle, and explicitly left open rather than guessed at:**
+whether this table exists further back than Mar-26 (only the five archives
+actually pulled were checked); whether a structured (non-PDF) version of
+this exact table exists anywhere on eia.gov; and a reproducible parser.
+Recommended as the first concrete follow-up if the CEO wants to pursue this
+lead.
+
+### 84.3 Tier-3 PortWatch re-check: no new data, same figures as §83.5
+
+Re-queried the same public ArcGIS FeatureServer endpoint
+(`https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query`,
+no login/key, same as §83.5) for "Strait of Hormuz," both a date-filtered
+query (2026-08-01 onward) and an unfiltered `orderByFields=date DESC` query
+for the 10 most recent rows. **The dataset's most recent row is still
+2026-11-15** -- identical to last cycle's fetch, taken one cycle (about a
+day) later. No new rows have been added in the interim; the feed itself
+appears to lag real time by several days, which was already true last
+cycle and is now confirmed rather than assumed. Recomputed monthly
+averages from the full re-fetched series are **identical to §83.5**: Aug
+4.71, Sep 3.63, Oct 3.84, Nov (partial, through 11-15, 15 days) 2.93
+avg n_total/day. **H2 is neither strengthened nor weakened this cycle --
+there is simply no new PortWatch data point to test it against.** Next
+cycle should re-check whether the feed has caught up (if the lag is a fixed
+few days rather than a stalled feed, late-November data should start
+appearing in the next cycle or two).
+
+**New context from a different, independent source bears directly on H2's
+caveat #1 (AIS undercounting) and is reported here rather than invented as
+a new hypothesis**: see signal-log.md's 2026-11-19 entries for the Windward/
+Vortexa finding (hellenicshippingnews.com, read directly) that explicitly
+attributes an apparent AIS-visible collapse in Saudi Gulf tanker-call counts
+to AIS-dark shipping rather than halted crude movement, with Vortexa's own
+non-AIS cargo-tracking data showing the opposite (recovering) direction over
+the same weeks -- the same PortWatch-vs-EIA shape as H2, measured
+independently by a third data provider (Windward) rather than argued from
+EIA's own caveat text alone. This raises, without proving, the credibility
+of caveat #1 over H2's raw reading; still not adopted, still tier-3/tier-2
+respectively, still never the anchor.
+
+### 84.4 Current live estimate, independently re-verified
+
+Fetched `https://oilthroughhormuz.com/data/hormuz.json` live: byte-for-byte
+identical to the repo's checked-in `site/data/hormuz.json` and to §83.4's
+2026-11-18 read -- `for_date: "2026-11-16"`, `point: 10.6`, `band_low: 9.1`,
+`band_high: 19.8`, `horizon_days: 48`, `max_horizon_days: 92`,
+`extrapolated: null`, `anchor_period: "3Q26"`, `anchor_value: 9.1`, regime
+`disrupted/local`. The page is live and not blank -- standing requirement
+satisfied, no extrapolation currently needed (within the 92-day tested
+window). `retrieved_utc` is unchanged from §83.4 (`2026-11-17T14:19:27Z`),
+consistent with both licensed inputs being unchanged (84.1) -- same
+non-finding as last cycle, flagged again only so Build/CEO can confirm the
+scheduled refresh job is still firing if that matters independent of the
+figures being unchanged.
+
+### 84.5 Net effect and carry-forward
+
+**Delivery type: (a) + (b) + (c) + (d).** Both licensed anchors
+independently re-confirmed unchanged for a third cycle (84.1); a genuinely
+new, previously-unused EIA STEO table found and its six-month history
+reconstructed and reconciled against GPCI (84.2) -- the clearest concrete
+lead for closing a model gap since §83.5's PortWatch endpoint, but
+correctly scoped as a same-publisher cross-check, not new independence;
+PortWatch re-probed with no new data, H2 status unchanged but given
+independent-ish corroboration on its caveat #1 via the Windward/Vortexa
+tier-2 signal (84.3); live estimate re-verified non-blank (84.4); five new
+tier-2 signals read directly and logged in `signal-log.md`.
+
+**Carry-forward priority order for the next cycle:**
+
+1. **EIA 3Q26/STEO**: keep re-probing every cycle, now 3 cycles unchanged
+   since the 2026-11-16 release.
+2. **OPEC MOMR**: keep re-probing; 28th confirmed "back" reading.
+3. **Decide whether to pursue the STEO Table 1 lead (84.2)**: this is the
+   most concrete, evidenced next step this mandate has produced in several
+   cycles. If pursued: build a reproducible parser (PDF table, not
+   structured data, column layout shifts edition to edition), check
+   further back than Mar-26 and check for a non-PDF structured source, and
+   decide whether extending GPCI to 7 countries is worth the added parsing
+   fragility. This is a methodology call for the CEO, not a unilateral
+   Research action.
+4. **PortWatch tier-3**: keep re-querying every cycle; watch for the
+   ~4-day lag to close so late-November data becomes checkable against H2.
+5. **Track H1 and H2 together against 4Q26** when it lands.
+6. **UKMTO/JMIC and maritime-data-provider reporting (Lloyd's List
+   Intelligence, S&P Global via secondary coverage, Windward)**: keep
+   reading directly every cycle -- this cycle surfaced genuinely new
+   quantitative corroboration (Lloyd's List Transit Monitor, Windward/
+   Vortexa) beyond the incident-count reporting read in prior cycles.
