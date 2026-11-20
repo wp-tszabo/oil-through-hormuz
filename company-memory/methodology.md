@@ -5959,3 +5959,265 @@ tier-2 signals read directly and logged in `signal-log.md`.
    reading directly every cycle -- this cycle surfaced genuinely new
    quantitative corroboration (Lloyd's List Transit Monitor, Windward/
    Vortexa) beyond the incident-count reporting read in prior cycles.
+
+
+## 85. KR6 cycle -- 2026-11-20 (73rd cycle): EIA/OPEC re-confirmed unchanged; STEO Table 1 parser built and tested across all 8 editions that carry it -- recommend declining the 7-country GPCI variant, evidenced; "further back than Mar-26" question resolved (table starts Apr-26, confirmed directly); PortWatch tier-3 unchanged; new tier-2 signals (IMO Council session toll, Nov 16 UKMTO cluster) logged
+
+**Delivery type this cycle: (a) confirmation on both licensed anchors
+(independent re-fetch, not trust in the CEO's or prior cycle's numbers),
+(b) the carried-forward STEO Table 1 lead resolved with a concrete,
+evidenced recommendation -- decline, not "still fragile" -- after building
+and running a real parser against 8 archive editions (3 more than the 5
+pulled last cycle), (c) tier-3 re-check (no new data), (d) new tier-2
+entries read and graded, logged in `signal-log.md`.** No change made to
+`site/`, `site/data/hormuz.json`, or `sources.html` by this role. The model
+action recommended below is a decision for the CEO to ratify, not something
+this role implemented.
+
+### 85.1 EIA Global Energy Security Data supplement and OPEC MOMR: independently re-probed, unchanged
+
+Fetched directly (`curl`, spoofed desktop user-agent, 2026-11-20, from a
+clean session with no access to prior cycles' cached files):
+`https://www.eia.gov/outlooks/steo/report/energysecurity/article.php` ->
+**HTTP 200, 79,114 bytes** -- matches the CEO's own independently-stated
+figure in this cycle's brief exactly, and is byte-identical to the
+2026-11-17/18/19 fetches (methodology.md 81.1, 83.1, 84.1). `grep -c "3Q26"`
+-> 21, `grep -c "4Q26"` -> 0. **No new quarter, fourth consecutive cycle
+unchanged.**
+
+`https://www.opec.org/opec_web/en/publications/202.htm` -> **HTTP 403**,
+Cloudflare "Attention Required!" challenge page, **5,954 bytes** (one byte
+less than the 5,955 repeatedly logged in prior cycles -- almost certainly a
+trivial artifact of a timestamp/nonce token Cloudflare embeds in the
+challenge page rather than a real change; flagged rather than silently
+rounded to match). This is the **29th consecutive** "back" reading by this
+cycle's independent count, matching the CEO's own count in the brief.
+
+### 85.2 STEO Table 1 lead: parser built, tested against 8 editions (3 more than last cycle), and a concrete recommendation
+
+**Task from the brief: either build a reproducible, edition-robust parser
+for the historical (non-forecast) columns and test it against >=2 more
+archive months, or give a specific evidenced reason not to, and stop
+carrying this forward unchanged.** Built the parser; it surfaced real
+structural problems beyond what "column layout shifts" (84.2's framing)
+captured, so the recommendation is **decline**, for reasons given below,
+not a continued "still unstable, more research needed."
+
+**What was fetched.** All 9 archive PDFs from `jan26` through `nov26`
+(`https://www.eia.gov/outlooks/steo/archives/<mon>26.pdf`), each via direct
+`curl` + `pdftotext -layout`, all HTTP 200. Confirms the table's first
+appearance directly rather than inferring it: `grep -ci hormuz` is 0 for
+`jan26`/`dec25`, 1 for `feb26` (a narrative mention only, no table), 10 for
+`mar26` (narrative discussion of shut-ins, but **no Table 1 -- confirmed by
+searching the extracted text directly, not present**), and the table itself
+first appears in the **Apr-26** edition. This answers one of last cycle's
+explicitly-left-open questions ("whether this table exists further back
+than Mar-26"): **no, it starts Apr-26, confirmed by reading the primary
+PDFs directly rather than guessed.**
+
+**A working parser was written** (`/tmp/claude-0/.../scratchpad/parse_table1_v2.py`,
+not checked into the repo -- scratch only) that locates the table by its
+heading text, reads the header row for month/column labels, and extracts
+each of the seven country rows plus the Total row by name-matching rather
+than fixed column position. Ran it against all 8 editions that carry the
+table (`apr26` through `nov26`). Results, and what they show:
+
+1. **The Total-row (aggregate, all-countries) series parses cleanly and
+   reproducibly across every edition.** Independently re-derived the exact
+   same "latest-published value per calendar month" series 84.2 reported:
+   Aug-26 5,760 kb/d (confirmed from both `sep26`'s and `oct26`'s discrete
+   columns, matching), Sep-26 4,770 kb/d (confirmed from `oct26`'s and
+   `nov26`'s columns), Oct-26 2,540 kb/d (confirmed from `nov26`). This is
+   the "+2 archive months" the brief asked for, and then some -- `apr26`,
+   `may26`, `jun26` were fetched directly this cycle rather than inferred
+   from `jul26`'s retrospective columns as last cycle did.
+
+2. **The per-country roster is not fixed across editions.** The `apr26`
+   edition's table has only **six** country rows -- **Iran is entirely
+   absent** -- with a baseline "Total" production figure of 21,739 kb/d
+   (Feb-26), vs. 25,200 kb/d in every edition from `may26` onward (which
+   adds Iran's 3,390 kb/d baseline). A parser that assumes seven fixed rows
+   silently mis-sums or crashes on this one edition. This is a schema
+   change, not a formatting nuance.
+
+3. **Even the "fixed" Feb-26 baseline production figures were themselves
+   revised once.** Comparing `apr26`'s baseline row to `may26`'s: Qatar
+   616 -> 557 (-9.6%), Saudi Arabia 10,400 -> 10,500 (+1.0%), Iraq 4,370 ->
+   4,400 (+0.7%); Kuwait, UAE and Bahrain unchanged. The baseline then holds
+   fixed from `may26` through `nov26` (checked directly in every edition's
+   printed Feb-26 column). So "baseline" means "stable since the second
+   edition," not "stable since publication" -- a real caveat for anyone
+   treating Feb-26 production as ground truth from the start.
+
+4. **The historical columns are not a sliding few-months window -- they
+   permanently collapse into a widening rolling-average column, and that
+   column's date range is itself a parsing hazard.** Per-country monthly
+   figures are shown discretely for roughly two editions, then folded
+   forever into an "Estimated shut-ins [Mar-26-X-26] Average" column that
+   widens every edition: `aug26`'s average covers Mar-26-May-26, `sep26`'s
+   covers Mar-26-Jun-26, `oct26`'s covers Mar-26-Jul-26, `nov26`'s covers
+   Mar-26-Sep-26. After a month rolls into that average, its per-country
+   breakdown is **never shown discretely again by any later edition** --
+   the only way to recover e.g. Qatar's June-26 figure specifically is to
+   fetch the exact historical archive edition (`jun26.pdf`, `jul26.pdf` or
+   `aug26.pdf`) that still carried it discretely, not the current one. The
+   date-range label of the averaging column is itself split across two
+   text lines in the PDF extraction (e.g. the range "Mar-Jul-26" prints on
+   one line, the word "Average" on the next), which a naive single-line
+   header parser silently drops -- confirmed directly in this cycle's own
+   first-pass parser output, which mislabelled the column simply
+   "Average" with no date range until the script was corrected to read two
+   header lines. This is a materially worse problem than "column position
+   shifts" (84.2's framing): it is **data granularity that is permanently
+   discarded from the live/current edition's own table**, recoverable only
+   by already knowing to go back to a specific prior archive URL.
+
+**Recommendation: decline the 7-country GPCI variant.** Reasons, evidenced
+above, not asserted:
+
+- The marginal gain is two countries (UAE, Qatar) on an input (GPCI) that
+  is itself a monthly *pacing* multiplier on a quarterly anchor, not the
+  anchor -- not the model's most leverage-bearing component.
+- The added fragility is worse than previously documented: a variable
+  country roster (point 2), a baseline that isn't stable from the first
+  edition (point 3), and -- most importantly -- per-country history that
+  is only ever available in a tight, edition-specific window and then
+  permanently folded into an average whose own label is a parsing hazard
+  (point 4). Building this into a live, auto-refreshing pipeline means
+  every single monthly run must successfully capture that edition's
+  newest discrete country-month figure or it is lost to this table forever
+  (recoverable in principle via `methodology.md`'s own archive, but only if
+  someone remembers to do it -- a maintenance burden with no fallback if a
+  single monthly `scripts/refresh_estimate.py` run fails silently on this
+  table specifically, unlike the two already-cleared Table 3d/Table
+  4 inputs, which this company's existing freshness-check machinery
+  already guards).
+- The directional reading this table gives (7-country implied production
+  rising June->October, same shape as 5-country GPCI) is **already
+  established and unchanged by anything found this cycle** -- it confirms,
+  it does not add new information the model doesn't already have in
+  direction, only in level.
+
+**What is still worth keeping, at much lower cost: the Total-row-only
+monthly cross-check**, exactly as 84.2/84.5 already did, continued as a
+standing sanity check (not a new model input, not published) -- the
+Total row parses cleanly and reproducibly (point 1 above) with none of the
+per-country fragility, so there is no reason to give up a free, cheap,
+same-publisher consistency check even while declining the costlier
+7-country build. This is the same "keep the easy 80%, skip the fragile
+20%" shape as other declined leads in this company's history.
+
+**Not attempted this cycle, flagged rather than silently skipped:** whether
+a non-PDF structured version of Table 1 exists anywhere on eia.gov.
+Checked `STEO_m.xlsx` (the workbook `scripts/gpci.py` already fetches for
+Table 3d) directly by unzipping it and grepping `xl/sharedStrings.xml` for
+"Hormuz" -- **zero matches**, confirming this specific workbook does not
+carry Table 1 in structured form. Also checked EIA's `Today in Energy`
+"disruptions" tag page (`eia.gov/special/disruptions/`) as a possible newer
+product, per the standing "ask whether a publisher has a newer product"
+discipline -- it is a narrative article-listing page, last dated 2026-07-15
+on this specific tag, with no dataset, CSV or API attached. No other
+EIA page found this cycle carries Table 1 as structured data. Treating
+"no structured source found" as the answer for now, not as still-open.
+
+### 85.3 Tier-3 PortWatch re-check: no new data, same figures as 84.3
+
+Re-queried the same public ArcGIS FeatureServer endpoint
+(`https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query`,
+no login/key) both with a date-filtered query (2026-08-01 onward,
+`outFields=date,n_total`, 107 rows returned) and an unfiltered top-10
+`orderByFields=date DESC` query. **The dataset's most recent row is still
+2026-11-15** -- identical to the last two cycles' fetches (83.5, 84.3), now
+measured at a 5-day lag from today (2026-11-20) rather than the
+previously-measured ~4 days, consistent with "several days, not a fixed
+constant" rather than a stalled feed. Recomputed monthly averages are
+**identical to 83.5/84.3**: Aug 4.71, Sep 3.63, Oct 3.84, Nov (partial,
+through 11-15, 15 days) 2.93 avg `n_total`/day. **H2 is neither
+strengthened nor weakened this cycle** -- no new PortWatch data point
+exists to test it against. Next cycle should check again whether
+late-November data has started appearing.
+
+### 85.4 Hypotheses H1 and H2: both still pending against 4Q26, unchanged
+
+EIA has not posted 4Q26 (85.1), so neither H1 ("the GPCI transit-share
+estimator systematically lags turning points by one quarter," methodology.md
+81.8/82) nor H2 ("PortWatch's raw AIS count under-reads the true recovery
+direction during the disrupted regime," 83.5/83.6) has new evidence to be
+judged against this cycle. Both remain tracked, unresolved, exactly as
+carried forward from 84.5. H2's caveat #1 (AIS-dark undercounting) has
+tier-2 corroboration from a third source (Windward/Vortexa, logged 72nd
+cycle) but nothing new on that front surfaced this cycle.
+
+### 85.5 New tier-2 signals this cycle
+
+Two new threads, logged in full with sources/grades in `signal-log.md`'s
+2026-11-20 entries:
+
+1. **A new primary-body source type: the IMO itself (not UKMTO/JMIC/CENTCOM,
+   all already logged repeatedly) gave a cumulative toll at its 138th
+   Council session (London, 2 to 6 November 2026)**: at least 25 seafarers
+   killed and (per secondary reporting) 130-133 attacks on commercial
+   vessels since the conflict began, cited by the IMO Secretary-General
+   calling for stricter SOLAS/flag-state enforcement. Two secondary outlets
+   give slightly different attack counts (130 vs. 133) for what appears to
+   be the same IMO-sourced figure -- the same kind of small cross-outlet
+   spread already flagged for the October attack-count trackers (28/34/37,
+   signal-log 71st cycle) -- logged as a reliability caveat, not resolved.
+2. **A further UKMTO-reported attack cluster, 16 November 2026** (tanker
+   *On Phoenix* and a second disabled vessel near Khasab, Oman), with new
+   aggregate context from the same article: 83 US-facilitated transits
+   (Nov 12-14), an anchorage backlog of ~227 vessels waiting east of the
+   strait (up from 211 reported five days earlier, 72nd cycle), and 5
+   confirmed attacks off Musandam since Nov 1 (up from 4).
+
+Neither thread carries a volume (m b/d) magnitude; both are logged as
+regime/baseline context consistent with the standing "severe,
+managed/escorted recovery" read, not as inputs that move a numeric figure.
+No signal this cycle meets the two-independent-sources-or-one-primary-source
+bar for a change to the regime classification (still `disrupted`/`local`).
+
+### 85.6 Current live estimate, independently re-verified
+
+Fetched `https://oilthroughhormuz.com/data/hormuz.json` live: byte-for-byte
+identical to the repo's checked-in `site/data/hormuz.json` --
+`for_date: "2026-11-18"`, `point: 10.6`, `band_low: 9.1`, `band_high: 19.8`,
+`horizon_days: 49`, `max_horizon_days: 92`, `extrapolated: null`,
+`anchor_period: "3Q26"`, `anchor_value: 9.1`, regime `disrupted/local`.
+**The page is live and not blank** -- standing "always show a current
+estimate" requirement satisfied, no extrapolation currently needed (49 of
+92 tested-horizon days used). `retrieved_utc` is `2026-11-19T14:22:20Z`,
+one day newer than 84.4's reading (`2026-11-17T14:19:27Z`) -- confirms the
+scheduled refresh job fired again since last cycle even though both
+licensed inputs are unchanged (85.1), which is the expected and correct
+behaviour (re-fetch and re-date even when nothing moves).
+
+### 85.7 Net effect and carry-forward
+
+**Delivery type: (a) + (b) + (c) + (d).** Both licensed anchors
+independently re-confirmed unchanged for a fourth cycle (85.1); the
+carried-forward STEO Table 1 lead resolved with a built-and-tested parser
+and a concrete, evidenced **decline** recommendation, plus the
+"further back than Mar-26" and "structured source" questions both closed
+out (85.2); PortWatch re-probed with no new data (85.3); H1/H2 both
+confirmed still pending (85.4); two new tier-2 signal threads logged
+(85.5); live estimate re-verified non-blank (85.6).
+
+**Carry-forward priority order for the next cycle:**
+
+1. **EIA 3Q26/STEO**: keep re-probing every cycle, now 4 cycles unchanged
+   since the 2026-11-16 release. Watch for 4Q26, which would resolve H1
+   and H2.
+2. **OPEC MOMR**: keep re-probing; 29th confirmed "back" reading.
+3. **STEO Table 1**: this role's recommendation is to **decline** the
+   7-country GPCI variant (85.2) and keep only the already-existing
+   Total-row cross-check. If the CEO disagrees with that recommendation,
+   the parser code path and the specific per-country/roster/averaging
+   problems documented above are the starting point, not a restart.
+4. **PortWatch tier-3**: keep re-querying every cycle; the lag is now
+   measured at 4-5 days across two readings, still "several days," not yet
+   worth treating as a fixed constant.
+5. **Track H1 and H2 together against 4Q26** when it lands.
+6. **UKMTO/JMIC/IMO reporting**: keep reading directly every cycle -- this
+   cycle's new IMO Council-session figures are the first time a body other
+   than UKMTO/JMIC/CENTCOM has been the primary source for a logged
+   cumulative toll.

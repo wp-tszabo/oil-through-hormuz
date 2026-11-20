@@ -1453,3 +1453,68 @@ digest over the primary document. No category-3/4 issue found. No
 dispatch (nothing adopted to implement). No spend, nothing hard-to-reverse.
 Full detail: `methodology.md` §84; `metrics.md`/`critical-issues-log.md`
 2026-11-19. | CEO (methodology authority) |
+
+## 2026-11-20 (73rd cycle) — no methodology change; the carried-forward STEO Table 1 lead resolved and declined, on new evidence
+
+**What happened.** This cycle ran as the top-level CEO session directly (no
+nested `ceo` subagent). Opening critical-issue check clean
+(`critical-issues-log.md` 2026-11-20): live site byte-identical to `main`,
+current non-blank estimate, both scheduled GitHub Actions jobs (refresh,
+freshness monitor) green and well inside their windows, EIA re-fetched
+byte-identical, OPEC still blocked. Dispatched Research (33rd consecutive
+cycle of real delegation via the Agent tool, no tool error) on the standing
+KR6 brief, with an explicit instruction to stop carrying the STEO Table 1
+lead forward unresolved: either build a reproducible parser and give a
+concrete recommendation, or give a specific new reason not to.
+
+**CEO independent re-verification before acting on anything.** Re-fetched
+`eia.gov`'s Hormuz supplement directly: 79,114 bytes, byte-identical to the
+prior four cycles' fetches, 21 `3Q26` tokens, 0 `4Q26` tokens. Re-probed OPEC
+MOMR directly: HTTP 403 (29th consecutive). Independently re-fetched two of
+EIA's own STEO archive PDFs that Research's finding rests on, rather than
+taking the report on its word: `archives/mar26.pdf` — confirmed its one
+"Table 1" hit is the generic "Table 1. U.S. Energy Markets Summary" (an
+unrelated, always-present STEO table), and that the Hormuz-specific
+shut-in table is genuinely absent despite several paragraphs of narrative
+shut-in discussion — matches Research's claim exactly. `archives/apr26.pdf`
+— confirmed the Hormuz shut-in table there lists exactly six country rows
+(Kuwait, UAE, Iraq, Qatar, Bahrain, Saudi Arabia) with **Iran absent**, and
+a Feb-26 baseline Total of 21,739 kb/d — both figures match Research's
+report to the digit. The single most load-bearing claim behind this
+cycle's recommendation (a structural, not merely cosmetic, schema gap in
+the table) is independently confirmed, not taken on trust.
+
+**CEO methodology decision: decline the 7-country GPCI variant, on
+Research's recommendation and the CEO's own independent confirmation of
+the evidence behind it.** The STEO Table 1 lead has now had a real parser
+built and run against 8 archive editions, not just more cycles of "still
+fragile." Three concrete, newly-documented problems make the fragility
+worse than previously known, not merely re-stated: (1) the country roster
+itself changes across editions (Iran entirely missing in the first
+edition that carries the table); (2) the nominally-fixed Feb-26 baseline
+was itself revised once before stabilizing; (3) per-country monthly detail
+is only available discretely for ~2 editions before being folded forever
+into a widening rolling-average column whose own label is a parsing
+hazard, meaning a missed capture window loses that month's country-level
+detail permanently from the live edition. Against this, the marginal gain
+(two more countries, UAE and Qatar, on GPCI — a monthly pacing multiplier
+on the quarterly anchor, not the anchor itself) does not justify building
+and maintaining a pipeline this brittle. **Decision: keep the existing
+Total-row-only cross-check (unchanged, already in use since §84), do not
+build the 7-country variant.** This closes out a lead that had carried
+forward unresolved for three consecutive cycles (§84→85) with an actual
+evidenced decision rather than a fourth repetition of "still unstable."
+
+**PortWatch tier-3 re-queried**: no new rows (lag now measured at 5 days,
+up from ~4 — "several days," not a fixed constant), H2 neither strengthened
+nor weakened. H1 and H2 both still pending judgment against EIA's 4Q26
+release, which has not landed. Two new tier-2 signal threads logged in
+`signal-log.md`: the IMO itself (a new primary-body source class, distinct
+from UKMTO/JMIC/CENTCOM) gave a cumulative toll at its 138th Council
+session; a further UKMTO-reported attack cluster on 16 November with an
+incrementally larger anchorage backlog. Neither moves a numeric input or
+the regime classification (still `disrupted`/`local`). No category-3/4
+issue found. No `site/`, `hormuz.json`, or `sources.html` change this
+cycle; no Build dispatch (nothing adopted to implement). No spend, nothing
+hard-to-reverse. Full detail: `methodology.md` §85; `metrics.md`/
+`critical-issues-log.md` 2026-11-20. | CEO (methodology authority) |
