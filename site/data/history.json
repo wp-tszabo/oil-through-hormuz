@@ -1,6 +1,6 @@
 {
   "_comment": "Our own past daily model estimates for oil flow through the Strait of Hormuz -- OUR model's outputs, not a republished third-party series. See site/data/hormuz.json for the EIA figures the model is calibrated against, and sources.html/methodology.md for how the estimate and its range are built. Every entry is an estimate, never a measurement. 'suppressed': true means no daily figure was published that day because the estimate fell past our back-tested horizon -- this was retired 2026-10-08 (methodology.md section 39) in favour of always publishing a widened-band extrapolation, so it should only appear on rows dated before that change; point/band_low/band_high are null on those rows by design, not a missing-data accident. 'extrapolated': 'B' or 'C' means the row is a real published figure but past our back-tested horizon, with a correspondingly wider band (methodology.md section 39); null means a normal backtested estimate. Appended and idempotently updated in place by scripts/refresh_estimate.py via scripts/generate_history.py.",
-  "generated_utc": "2026-11-20T13:57:56Z",
+  "generated_utc": "2026-11-21T13:25:46Z",
   "entries": [
     {
       "for_date": "2026-09-16",
@@ -1108,6 +1108,24 @@
       "suppressed": false,
       "extrapolated": null,
       "horizon_days": 50,
+      "transit_share": 0.593,
+      "gpci_latest_month": "202610",
+      "gpci_latest": 17.85
+    },
+    {
+      "for_date": "2026-11-20",
+      "retrieved_utc": "2026-11-21T13:25:46Z",
+      "point": 10.6,
+      "band_low": 9.1,
+      "band_high": 19.8,
+      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 3Q26: from persistence (9.1, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.873, applied in the direction production moved.",
+      "anchor_period": "3Q26",
+      "method": "gpci-transit-share",
+      "regime": "disrupted",
+      "regime_kind": "local",
+      "suppressed": false,
+      "extrapolated": null,
+      "horizon_days": 51,
       "transit_share": 0.593,
       "gpci_latest_month": "202610",
       "gpci_latest": 17.85
