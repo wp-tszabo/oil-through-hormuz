@@ -1,0 +1,56 @@
+{
+  "_comment": "Tier-2/tier-3 supporting data for hypotheses H1/H2/H3 (methodology.md sections 81.8/82 [H1], 83.5/83.6 [H2], 86.6/86.7 [H3], revised 87.5/87.6). NONE of this is a licensed anchor: it never feeds the published estimate, band, or site/data/hormuz.json (owner's 2026-11-16 tier-3 directive; GOVERNANCE.md 'read, don't scrape' for tier-2). It exists only so scripts/score_hypotheses.py has something concrete to score H2/H3 against. Research/CEO should append a new dated entry to the relevant list each cycle a new PortWatch/UKMTO/Kpler reading is logged in signal-log.md, rather than this script trying to fetch it itself (PortWatch's ArcGIS endpoint *could* be queried mechanically, but UKMTO/Kpler readings are read from news coverage by a person, per the standing 'read, don't scrape' rule, so this file is a manually-curated mirror of what is already in signal-log.md/methodology.md, not a new independent source).",
+  "last_updated_cycle": "75th cycle (2026-11-22)",
+
+  "h2_portwatch_quarterly": {
+    "_comment": "IMF PortWatch ArcGIS FeatureServer, Hormuz chokepoint, full-quarter averages (methodology.md 83.5). Source: https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query (public, no login/key). EIA total_oil repeated here only for convenience; the authoritative copy lives in site/data/hormuz.json's series -- score_hypotheses.py reads EIA figures from there, not from this file.",
+    "feed_status": "STALLED as of 2026-11-22 (methodology.md 87.3): max date stuck at 2026-11-15 for 5 consecutive cycles (fetches on 11-18, 11-19, 11-20, 11-21, 11-22). H2 cannot be tested against fresh PortWatch data until the feed resumes. Re-check every cycle; update this field and last_checked when the picture changes.",
+    "last_checked": "2026-11-22",
+    "quarters": [
+      {"period": "1Q25", "avg_n_total_per_day": 76.1, "avg_n_tanker_per_day": 43.1, "avg_tanker_capacity_dwt_per_day": 1967412, "eia_total_oil": 20.9},
+      {"period": "2Q25", "avg_n_total_per_day": 102.5, "avg_n_tanker_per_day": 57.7, "avg_tanker_capacity_dwt_per_day": 2688359, "eia_total_oil": 21.1},
+      {"period": "3Q25", "avg_n_total_per_day": 92.6, "avg_n_tanker_per_day": 52.4, "avg_tanker_capacity_dwt_per_day": 2444900, "eia_total_oil": 21.4},
+      {"period": "4Q25", "avg_n_total_per_day": 70.8, "avg_n_tanker_per_day": 39.4, "avg_tanker_capacity_dwt_per_day": 1908783, "eia_total_oil": 21.6},
+      {"period": "1Q26", "avg_n_total_per_day": 45.6, "avg_n_tanker_per_day": 24.6, "avg_tanker_capacity_dwt_per_day": 1143984, "eia_total_oil": 15.0},
+      {"period": "2Q26", "avg_n_total_per_day": 8.0, "avg_n_tanker_per_day": 3.3, "avg_tanker_capacity_dwt_per_day": 144382, "eia_total_oil": 5.1},
+      {"period": "3Q26", "avg_n_total_per_day": 6.2, "avg_n_tanker_per_day": 2.6, "avg_tanker_capacity_dwt_per_day": 104249, "eia_total_oil": 9.1}
+    ],
+    "partial_quarters": [
+      {"period": "4Q26", "note": "PARTIAL, through 2026-11-15 only (46 days); feed stalled since (87.3). Not a scorable full-quarter figure -- context only.", "avg_n_total_per_day": 3.5, "avg_n_tanker_per_day": 0.7, "avg_tanker_capacity_dwt_per_day": 11848}
+    ]
+  },
+
+  "h3_ukmto_weekly_transits": {
+    "_comment": "UKMTO's own successive weekly transit-count readings, read directly from news coverage of UKMTO's own figures (not UKMTO's site itself, which stays network-blocked -- methodology.md 81.10 item 5). outbound+inbound=total.",
+    "readings": [
+      {"as_of": "2026-11-10", "outbound": 170, "inbound": 155, "total": 325, "source": "Gulf News, 'Hormuz shipping below normal, but not stalled: UKMTO', logged 70th cycle (signal-log.md 2026-11-17)"},
+      {"as_of": "2026-11-13", "outbound": 139, "inbound": 169, "total": 308, "source": "gCaptain, 'Gulf Oil Exports Recover as Hormuz Shipping Struggles' (13 Nov 2026), citing UKMTO's weekly assessment for its publication week; as_of date approximate (week of publication, exact week-ending date not separately stated) -- logged 74th cycle synthesis, primary citation confirmed 75th cycle (methodology.md 87.5)"},
+      {"as_of": "2026-11-18", "outbound": 115, "inbound": 148, "total": 263, "source": "gCaptain, 'Another Tanker Hit in Strait of Hormuz...' (20 Nov 2026), relaying UKMTO's own weekly transit overview through 18 Nov -- logged 74th cycle (signal-log.md 2026-11-21)"}
+    ],
+    "next_reading_status": "Not yet out as of 2026-11-22 (75th cycle searched specifically and found none dated past 2026-11-20; methodology.md 87.5). This is flagged by Research as the cheapest, cleanest near-term test of whether H3's decline continues -- no metric-scope ambiguity, same primary body, directly comparable to the three readings above."
+  },
+
+  "h3_kpler_hormuz_flow_7day_ma": {
+    "_comment": "Kpler's 7-day moving average of Hormuz oil transits PLUS Gulf-of-Oman ship-to-ship transfers, in million b/d. Kpler's own figure, self-labelled 'provisional'. This is the metric the 74th-cycle H3 finding (methodology.md 86.6) was built on.",
+    "readings": [
+      {"as_of": "2026-11-01", "mbd": 13.4, "provisional": true, "source": "Bloomberg report republished by gCaptain, 'Iran Intensifies Hormuz Tanker Attacks Just as Oil Prices Slide' (19 Nov 2026), logged 74th cycle"},
+      {"as_of": "2026-11-10", "mbd": 10.0, "provisional": true, "source": "same article as above"}
+    ]
+  },
+
+  "h3_kpler_total_regional_exports": {
+    "_comment": "A DIFFERENT Kpler metric -- total regional (Gulf) oil exports via ALL routes, not Hormuz-specific. Found 75th cycle (methodology.md 87.5) and explicitly flagged there as likely NOT comparable to h3_kpler_hormuz_flow_7day_ma above, even though both are 'Kpler' figures -- a concrete instance of the standing caution to check each Kpler figure's stated scope before treating two of its numbers as comparable. score_hypotheses.py keeps this as context only, never averaged or combined with the flow_7day_ma series above.",
+    "readings": [
+      {"as_of": "2026-09-29", "mbd_total_regional_exports": 16.5, "mbd_hormuz_specific_crossings": 9.9, "hormuz_share_pct": 60, "source": "Kpler's own blog explainer, kpler.com/blog/explainer-how-mideast-gulf-crude-exports-returned-to-pre-war-levels, read directly 75th cycle"},
+      {"as_of": "2026-11-16 (quoted; figure described as 'in November')", "mbd_total_regional_exports": 15.3, "pct_of_pre_war": 90, "source": "Rudaw, quoting Kpler's Homayoun Falakshahi directly, logged 75th cycle (methodology.md 87.5); scope ('total exports') inferred by Research from Kpler's own Sept terminology, not stated explicitly in this source"}
+    ],
+    "research_reconciliation_note": "If the Sept bypass share (40%) held into November, 15.3 total implies roughly 9.2 Hormuz-specific -- close to both the 9.1 EIA 3Q26 anchor and the flow_7day_ma series' low end (~10.0), i.e. plausibly NOT in conflict with either, but this is Research's own unverified arithmetic (methodology.md 87.5), not a confirmed figure. Net effect: downgrades H3 from 'two independent sources agreeing' to 'one primary raw count (UKMTO) in real decline, ambiguously corroborated by a commercial provider whose other same-month figure reads as recovery.'"
+  },
+
+  "h3_iea_context": {
+    "_comment": "IEA (International Energy Agency) November 2026 Oil Market Report figures, found 75th cycle (methodology.md 87.5) -- context for H3, not a Hormuz-specific transit figure, logged because it points toward continued recovery through October, in tension with a clean 'declining in November' reading.",
+    "readings": [
+      {"as_of": "October 2026 (reported 13 Nov 2026)", "gulf_exports_excl_oman_mbd": 18.4, "pct_below_pre_war": 26, "crude_shipments_mbd": 15.0, "pct_of_pre_war": 82, "source": "gCaptain, 'Gulf Oil Exports Recover as Hormuz Shipping Struggles' (13 Nov 2026), citing the IEA's own November 2026 Oil Market Report, logged 75th cycle"}
+    ]
+  }
+}

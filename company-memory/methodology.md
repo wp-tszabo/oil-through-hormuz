@@ -6632,3 +6632,322 @@ given in full (86.10).
    Windward) reporting directly every cycle** -- this is now the most
    consistently productive line of this standing mandate, evidenced across
    the 71st, 72nd and this cycle's findings.
+
+## 87. 75th-cycle KR6 brief (2026-11-22): EIA/OPEC unchanged, PortWatch stall confirmed on a 5th identical reading, and a Kpler-vs-Kpler metric mismatch that complicates H3
+
+### 87.1 EIA Global Energy Security Data supplement: re-fetched directly, unchanged
+
+`curl` (full browser user-agent) against
+`https://www.eia.gov/outlooks/steo/report/energysecurity/article.php`:
+**HTTP 200, 79,133 bytes.** `grep -c "3Q26"` -> **21**. `grep -c "4Q26"` -> **0**.
+`grep -c "2Q26"` -> **10** (lower than some prior cycles' 21 -- a different grep
+pattern/case sensitivity artifact against the same unchanged page, not a
+content change; the release-date span and Table 4 contents below are the
+load-bearing check, not this raw count). Table 4's caption still reads
+"...Strait of Hormuz, **2Q25-3Q26**." The supplement's own release line:
+`<span class="releasedate">Release Date: November 16, 2026</span>` --
+unchanged since the 3Q26 release landed. Pulled the Table 4 HTML directly and
+confirmed the **Total oil flows** row digit-for-digit against the live
+`hormuz.json`: 21.1 / 21.4 / 21.6 / 15.0 / 5.1 / **9.1** across 2Q25-3Q26,
+crude+condensate 7.3 and products 1.8 for 3Q26. **No new quarter. 4Q26 has
+not posted.** This is the same anchor the CEO's own opening check reported
+for this cycle; independently re-derived from the live page, not taken on
+the CEO's word.
+
+### 87.2 OPEC MOMR: re-probed directly, still blocked
+
+`curl` (full browser user-agent) against
+`https://www.opec.org/opec_web/en/publications/202.htm`: **HTTP 403, 5,954
+bytes**, `server: cloudflare`, `<title>Attention Required! | Cloudflare</title>`
+-- identical signature to every "back" reading since section 21. Matches the
+CEO's own pre-cycle report of "31st consecutive block" exactly (same
+calendar-day reading, not a second independent increment). **Verdict:
+UNRESOLVED/could-not-reach, unchanged.** No licence text read, no MOMR data
+of any kind read, cited, or used.
+
+### 87.3 IMF PortWatch tier-3: 5th consecutive identical reading -- stall confirmed per this week's plan
+
+Re-queried the same public, unauthenticated ArcGIS FeatureServer endpoint
+(`https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query`,
+no login/key/CAPTCHA) for "Strait of Hormuz," both a top-10
+`orderByFields=date DESC` query and a date-filtered query from 2026-08-01
+(107 rows). **The dataset's most recent row is still 2026-11-15** --
+byte-identical to sections 83.5, 84.3, 85.3 and 86.4, now the **fifth
+consecutive cycle** with that exact same max date, spanning fetches on
+11-18, 11-19, 11-20, 11-21 and 11-22 (today) -- **zero new rows added in 7
+real-world days**. Recomputed monthly averages are byte-identical to every
+prior cycle's reading: Aug 4.71, Sep 3.63, Oct 3.84, Nov (partial, 15 days)
+2.93 avg `n_total`/day, 107 total rows throughout.
+
+**Per the current weekly plan's own stated threshold** (`weekly-plans/2026-11-21.md`:
+"a 5th identical reading next cycle should be treated as confirming a
+stall"), **this is now treated as a confirmed likely feed stall, not a lag
+characterization.** Consistent with the plan's own framing: this is **not a
+critical issue** -- PortWatch is tier-3 internal-validation-only data, never
+published, and nothing public depends on it. The practical consequence is
+that **H2 (PortWatch tanker-count divergence) cannot be tracked with fresh
+tier-3 data until the feed resumes**; H2 remains open and untested by
+PortWatch specifically (as opposed to untested in general -- EIA's 4Q26
+will still test it once published), with no new evidence this cycle in
+either direction. No way to distinguish "PortWatch has stopped updating its
+public feed" from "its lag has grown past a week" from outside the service;
+recommend continuing the every-cycle re-check (cheap) so a resumption is
+caught the day it happens, but not spending further effort trying to
+diagnose the cause from outside.
+
+### 87.4 Live estimate: independently re-verified, non-blank
+
+Fetched `https://oilthroughhormuz.com/data/hormuz.json` live: HTTP 200,
+`for_date: "2026-11-20"`, `point: 10.6`, `band_low: 9.1`, `band_high: 19.8`,
+`horizon_days: 51`, `max_horizon_days: 92`, `extrapolated: null`,
+`anchor_period: "3Q26"`, `anchor_value: 9.1`, regime `disrupted/local` --
+matches the CEO's own pre-cycle report exactly. **The page is live and not
+blank**; the standing "always show a current estimate" requirement is
+satisfied, no extrapolation currently needed (51 of 92 tested-horizon days
+used). `scored_errors.last_published_estimate` remains a populated object
+(not the `null` the section-81.5 bug produced), consistent with section
+86.5's confirmation that the fix stayed deployed.
+
+### 87.5 New tier-2 signals this cycle
+
+Full entries with sources, dates and reliability grades are in
+`signal-log.md`'s "2026-11-22 (75th cycle)" section; summarized here. Per
+this cycle's brief, UKMTO/MARAD's own sites were **not** re-probed for
+network reachability (lighter cadence, last checked 2026-11-21 per the
+redirected priority order; 86.8/weekly plan) -- the items below come from
+reading secondary reporting of UKMTO/IEA/Kpler/Vortexa, a different
+activity from the network-reachability test itself, and one that the
+standing priority order keeps on every-cycle cadence.
+
+**Incident drumbeat, incremental, no regime change.** gCaptain/Reuters, 21
+November 2026: two more UKMTO-reported incidents near Oman's Khasab (a
+tanker struck on its stern by an unidentified projectile ~11nm north of
+Khasab, outbound transit; a second vessel hit in its engine room ~17nm east
+of Khasab; UKMTO Warning 216-26, labelled "ATTACK"; no casualties reported
+in either). Iran's navy separately claimed a tanker caught fire after
+hitting a naval mine in a "restricted area" east of the strait -- Reuters
+states explicitly it could not verify this or confirm whether it refers to
+either UKMTO-reported incident. Consistent with -- not changing -- the
+standing "severe, managed-transit" baseline carried since the 70th cycle.
+No new UKMTO weekly transit-count figure was found beyond the 263
+(through 18 Nov) already logged in the 74th cycle's signal-log entry;
+searched specifically for a newer weekly UKMTO summary report (direct PDF
+search via `mscio.eu`'s document mirror) and found none dated past
+2026-11-20 -- the next weekly reading is not yet out.
+
+**A stale document caught and discarded, logged as a caution.** A search
+for "UKMTO VRA overview November 2026" surfaced an MSCIO/EU NAVFOR Atalanta
+"Weekly Report, 14th Nov - 20th Nov" PDF that looked current. **Opened and
+read directly: its own footer reads "WEEK 14TH NOV TO 20TH NOV **2025**"
+-- a year-old document, not this cycle's week**, despite surfacing in a
+search for 2026 terms. No Hormuz-specific transit data was in it regardless
+(it covers Gulf of Aden/Somalia piracy, a different geography). Discarded;
+logged only so a future cycle doesn't mistake this exact URL for current
+data without checking the year in its own footer first -- the same shape of
+caution as the 74th cycle's Maritime Executive August-byline catch.
+
+**The IMO's Nov 2026 statement given fuller numeric context (same event
+already logged 2026-11-20, new specific figures found this cycle).** gCaptain,
+13 November 2026, citing the IEA's own November 2026 Oil Market Report (a
+primary international body, distinct from EIA/OPEC/UKMTO/Kpler, its first
+appearance in this log with concrete figures): Gulf oil exports excluding
+Oman rose to **18.4 million b/d in October 2026, about 26% below pre-war
+levels**; crude shipments specifically reached **15 million b/d, roughly
+82% of pre-war volumes**; refined products and LPG remained at roughly half
+pre-war levels. The same article separately cites UKMTO's weekly assessment
+for the week of publication: **139 outbound + 169 inbound = 308 transits**
+(the same 308 figure already in this log's H3 synthesis row, here with its
+original source confirmed) and notes explicitly that the IEA's monthly
+export figures and UKMTO's weekly vessel counts "cover different periods
+and activity" and should not be compared directly -- a caution this entry
+preserves rather than drops.
+
+**A second, differently-scoped Kpler figure this cycle -- and it complicates
+H3 rather than simply strengthening or weakening it.** Rudaw, 16 November
+2026, quoting Kpler's Head of Crude Oil Analysis, Homayoun Falakshahi,
+directly: *"In November, we are at 90 percent of pre-war levels; we have
+seen 15.3 million barrels per day of exports."* Read against Kpler's own
+29-September explainer (`kpler.com/blog/explainer-how-mideast-gulf-crude-exports-returned-to-pre-war-levels`,
+read directly this cycle, data as of 29 Sept 2026), which explicitly
+distinguishes **total regional exports** (16.5m b/d in September, all
+routes) from **confirmed Hormuz-specific crossings** (9.9m b/d, 60% of the
+total, the other 40% bypassing via Gulf-of-Oman STS loading and the Red
+Sea) -- **this is very likely the "total exports" metric, not the
+Hormuz-specific one**, based on the word "exports" matching the September
+piece's own total-exports terminology exactly, though Rudaw's own article
+does not state the scope as explicitly as Kpler's own explainer did. That
+makes it a **different metric from the 86.6/74th-cycle H3 Kpler figure**
+(the Bloomberg/gCaptain-relayed "7-day moving average of Hormuz oil
+transits plus net ship-to-ship transfers in the Gulf of Oman," which fell
+from ~13.4m to ~10m b/d, 1-10 November) -- that figure already blends
+confirmed crossings with Gulf-of-Oman STS, a narrower (if differently-drawn)
+construction than "total exports."
+
+**This role's own arithmetic, not a claim made by either source**: if
+September's own bypass share (40%) held into November, 15.3m b/d of total
+exports implies roughly 9.2m b/d Hormuz-specific -- close to both the 9.1
+EIA anchor and the declining Kpler figure's end-of-range reading (~10m
+b/d), not clearly inconsistent with either. Flagged as a plausible
+reconciliation, explicitly **not** a confirmed one: it assumes a stable
+bypass share this role cannot verify without Kpler's own underlying data,
+which is not accessible here. **What this changes about H3**: it is reason
+for more caution on H3, not less. A single provisional commercial estimate
+(the declining 13.4->10m b/d reading) sitting alongside a second,
+differently-scoped figure from the *same* provider that reads as "strong
+recovery" in the same month is a weaker basis for a declining-trend
+hypothesis than 86.6 characterized it, even though UKMTO's own raw transit
+count (325->308->263) is a separate, directly-comparable series that still
+shows a real decline on its own terms. **H3 is downgraded from "two
+independent sources agreeing" (86.6's framing) to "one primary-body raw
+count (UKMTO) showing a clear decline, corroborated only ambiguously by a
+commercial provider whose other same-month figure points the other way."**
+Recommend the next UKMTO weekly reading (due on the normal Friday cadence,
+not yet out as of this cycle) as the cleanest next test, since it is the
+one instrument in this set that is both primary and reproducible
+cycle-to-cycle without a metric-definition ambiguity.
+
+### 87.6 H1, H2 and H3 status: all three still pending against 4Q26; H3's evidentiary basis revised down this cycle
+
+EIA has not posted 4Q26 (87.1). **H1** (the GPCI transit-share estimator's
+one-quarter lag at turning points) and **H2** (PortWatch's raw AIS count
+under-reading the true recovery direction) are unchanged and untestable
+this cycle -- H2 specifically cannot be tested against fresh PortWatch data
+at all while the tier-3 feed stall (87.3) persists. **H3** (within-November
+decline per UKMTO transit counts and Kpler) is **not strengthened this
+cycle and is now more cautiously framed** per 87.5's Kpler-metric finding --
+still tracked, still not adopted, but the "two independent sources
+agreeing" characterization from 86.6 should not be repeated without the
+caveat added this cycle.
+
+### 87.7 Standing structural question: not reopened this cycle
+
+The 74th cycle's "reasonably exhausted for now" finding and redirected
+priority order (ratified by the CEO, `decisions-log.md` 2026-11-21) was not
+revisited this cycle -- this brief's instructions named the priority order
+as already in force (tier-2 reading as primary search line, UKMTO/MARAD on
+lighter cadence, EIA/OPEC/PortWatch every cycle), and nothing found this
+cycle surfaces a new publisher class that would call the "exhausted for
+now" verdict into question. The two explicitly-open items from 86.8 (JODI-Oil
+pending an owner ask; the UKMTO/MARAD network block itself) are unchanged
+and not re-probed this cycle per the lighter cadence.
+
+### 87.8 Model action recommendation this cycle: (c), no change, evidence stated
+
+**No change to the published estimator, anchor, or band this cycle.**
+Evidence:
+
+- **No new licensed anchor.** EIA has not posted 4Q26 (87.1); GPCI/STEO
+  Table 3d was not re-checked this cycle (not named in this cycle's brief
+  items, and the live JSON's `gpci_latest_month` is unchanged at "202610")
+  -- nothing to re-anchor or recalibrate on.
+- **No tier-3 movement, and the stall is now confirmed, not just suspected.**
+  PortWatch returned zero new rows for a fifth consecutive cycle (87.3),
+  crossing the weekly plan's own stated threshold for treating this as a
+  confirmed stall rather than a lag. There is no new data point to score H2
+  against.
+- **H3's evidentiary basis moved down, not up, this cycle** (87.5/87.6).
+  Acting on a hypothesis whose supporting evidence just got weaker would be
+  backwards; the standing caution against narrowing/adjusting the model on
+  thin, single-reading tier-2/tier-3 evidence (sections 81.8, 82, 86.9)
+  applies at least as strongly now as last cycle.
+- **The live estimate is current and non-blank** (87.4), within its
+  back-tested horizon (51/92 days), with no extrapolation currently in
+  effect -- the "always show a current estimate" requirement needs no
+  action this cycle either.
+
+**What would change this.** EIA's 4Q26 release remains the first genuine
+out-of-sample test for H1, H2 and H3 together, and is the single highest-
+value event this standing mandate is tracking toward. A resumed PortWatch
+feed would also independently let H2 be tested again without waiting for
+4Q26. Short of either, the next UKMTO weekly transit reading is the
+cheapest, cleanest near-term test of whether H3's within-November decline
+is real and continuing, or was a one- to two-week blip inside continued
+recovery (consistent with the IEA's October 82%-of-pre-war crude-shipment
+reading and Kpler's own November "90% of pre-war" export figure, both
+logged this cycle).
+
+### 87.9 Required summary for this cycle's KR6 brief
+
+- **Current prediction and band**: point **10.6** m b/d, band **9.1-19.8**,
+  `for_date` 2026-11-20, anchored on EIA 3Q26 (9.1), horizon 51/92 days, not
+  extrapolated (87.4).
+- **New signals logged this cycle**: four tier-2 entries in `signal-log.md`'s
+  2026-11-22 section (87.5) -- two more UKMTO-attributed incidents near
+  Khasab (incremental, no regime change), a discarded stale 2025 document
+  caught before being mistaken for current data, new specific IEA
+  November-2026-OMR figures (Gulf exports 18.4m b/d/-26% and crude shipments
+  15m b/d/82% of pre-war, October 2026) giving this log's first concrete
+  IEA numbers, and a second, differently-scoped Kpler figure (90% of
+  pre-war, 15.3m b/d total exports, mid-November) that complicates rather
+  than confirms hypothesis H3.
+- **Latest validation error against official figures**: unchanged from
+  section 81.3/81.4 -- the model's last pre-3Q26 snapshot missed 3Q26's
+  actual (9.1) by -19.8% (single-snapshot) to -38.5%/-46.2% depending on
+  which published estimate is scored, both still beating the -46.2%
+  persistence counterfactual. No new official figure to score against this
+  cycle (EIA has not posted 4Q26).
+- **Latest tier-3 validation result**: PortWatch, re-queried 2026-11-22,
+  identical data to the prior four cycles (max date still 2026-11-15,
+  monthly averages unchanged) -- **now the 5th consecutive identical
+  reading, treated per this week's plan as confirming a likely feed stall**
+  rather than a lag (87.3). Not a critical issue (internal-only, never
+  published); H2 cannot be tested against fresh PortWatch data until the
+  feed resumes.
+
+### 87.10 Net effect and carry-forward
+
+**Delivery type: (a) + (b) + (c) + (d) + (e).** Both licensed anchors
+independently re-confirmed unchanged for a 6th cycle (87.1), zero `4Q26`
+tokens; OPEC's 31st consecutive block confirmed, matching the CEO's own
+same-day reading exactly (87.2); PortWatch tier-3 re-checked with no new
+data for a fifth consecutive cycle, now treated as a confirmed likely feed
+stall per the weekly plan's own stated threshold rather than a lag (87.3);
+the live estimate independently re-verified non-blank and within its
+tested horizon (87.4); four new tier-2 entries logged, most substantively a
+second Kpler figure that complicates rather than strengthens hypothesis
+H3, and new concrete IEA OMR figures giving this log its first numbers from
+that body (87.5); H1/H2/H3 all confirmed still pending against 4Q26, with
+H3 specifically downgraded in evidentiary strength this cycle (87.6); the
+standing structural question not reopened, nothing found to call the 74th
+cycle's "exhausted for now" verdict into question (87.7); no model/anchor/
+band change this cycle, with the evidence for "no change" stated explicitly
+(87.8); the required current-prediction/signals/validation-error summary
+given in full (87.9).
+
+**Explicitly not checked this cycle, and why:** UKMTO's and MARAD's own
+sites were not probed for network reachability (lighter ~every-5th-cycle
+cadence per the 74th cycle's ratified redirection; last checked
+2026-11-21, next due around the 79th cycle). GPCI/STEO Table 3d was not
+independently re-pulled (not named in this cycle's brief items; the live
+JSON shows no change in `gpci_latest_month`). JODI-Oil and the LMA/IUA
+licence questions remain exactly as carried forward in `backlog.md`,
+pending owner action, not re-investigated this cycle.
+
+**Carry-forward priority order for the next cycle:**
+
+1. **EIA 3Q26/STEO**: keep re-probing every cycle, now 6 cycles unchanged
+   since the 2026-11-16 release. Watch for 4Q26, which resolves H1, H2 and
+   H3 together.
+2. **OPEC MOMR**: keep re-probing every cycle; 31st confirmed "back"
+   reading.
+3. **PortWatch tier-3**: keep re-querying every cycle regardless of cadence
+   changes elsewhere, now that the feed-stall finding is confirmed rather
+   than provisional -- the value of the every-cycle check shifts from
+   "watching for a 5th identical reading" to "catching the day the feed
+   resumes."
+4. **The next UKMTO weekly transit reading** is this cycle's single most
+   useful near-term watch item: it is the cheapest test of whether H3's
+   decline continues, reverses, or was a short-lived blip, and (unlike the
+   Kpler figures) carries no metric-scope ambiguity cycle to cycle.
+5. **Track H1, H2 and H3 together against 4Q26** when it lands; the
+   scoring tooling named in 86.8 item 1 is a Build-side task, not
+   Research's to build.
+6. **Keep reading UKMTO/JMIC/IEA/commercial-provider (Kpler, Lloyd's List,
+   Vortexa, BRS Shipbrokers) reporting directly every cycle**, and
+   **explicitly check each new Kpler-attributed figure's stated scope**
+   (total regional exports vs. Hormuz-specific transits vs. transits+STS)
+   before treating two Kpler numbers as comparable -- this cycle's 87.5
+   finding is a concrete instance of two same-provider figures that looked
+   comparable but likely were not.
+7. **UKMTO/MARAD network-reachability retry**: due again on the lighter
+   cadence around the 79th cycle, not before.
