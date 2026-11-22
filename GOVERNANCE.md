@@ -24,7 +24,9 @@ unsure whether an action is in-bounds, it must treat that as a critical issue
   - Research ([.claude/agents/research.md](.claude/agents/research.md)) — data sourcing.
   - Build ([.claude/agents/build.md](.claude/agents/build.md)) — the website/code.
   - Monetization ([.claude/agents/monetization.md](.claude/agents/monetization.md)) —
-    ad/affiliate/subscription strategy. Dormant until Phase 2 is approved.
+    **visitor growth now (owner, 2026-11-22)**: owns goal G3 and the growth
+    plan, working with the CEO. Ad/affiliate/subscription strategy stays
+    dormant until Phase 2 is approved.
 
 ## Company memory
 
@@ -188,6 +190,16 @@ issue, however much traffic it would bring.
   moves. Timeliness when news breaks, stated as facts with their sources.
 - Organic sharing that follows from the above. Anything that needs outward
   contact or an account in the owner's name goes to the owner as a proposal.
+
+**Who owns growth (owner, 2026-11-22).** The Monetization agent owns visitor
+growth (G3) day to day: it reads traffic, analyses where visitors come from,
+and keeps a growth plan in `company-memory/growth-plan.md`. The CEO works out
+the plan with it, briefs it every cycle, decides what ships, and merges site
+changes. Build implements. Everything in this section binds the Monetization
+agent exactly as it binds the CEO, including the "will not do" list below.
+**Posting persona:** no posts, accounts or outward contact happen until the
+owner and CEO agree on who posts and as whom. The growth plan comes first;
+the persona is agreed after it.
 
 **What the CEO will not do, and would treat as category 4 if it happened:**
 
@@ -486,8 +498,10 @@ GitHub" as silent approval to proceed.
 
 - **Data**: free/public sources only (e.g. EIA reports). No paid data
   subscriptions.
-- **Site**: build and publish it. No monetization work yet — the
-  Monetization agent stays dormant.
+- **Site**: build and publish it. No monetization work yet. Since
+  2026-11-22 the Monetization agent is active on **visitor growth only**;
+  ads, affiliate links, sponsorships, paid tiers and revenue experiments
+  stay off until Phase 2 is approved.
 - **Copy**: the CEO decides and publishes it under "Publishing authority"
   above (since 2026-09-23; before that, the owner reviewed all copy before
   publishing).
@@ -509,3 +523,11 @@ sources and/or monetization work — and the first real budget proposal must
 be justified specifically against what the free tier couldn't do, not
 proposed by default. The owner approves or declines graduation explicitly;
 it is not automatic.
+
+**Traffic threshold (owner, 2026-11-22).** The CEO sets a visitor-traffic
+threshold that triggers the Phase 2 evaluation. It proposes the number in
+the growth plan, with reasoning (what traffic a monetization plan would
+need to be worth doing), and records it in `okrs.md`. Once traffic holds at
+or above it, the CEO and the Monetization agent prepare the Phase 2
+evaluation and a monetization plan for the owner. Reaching the threshold
+triggers the evaluation; it does not approve Phase 2.

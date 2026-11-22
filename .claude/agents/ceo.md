@@ -44,7 +44,8 @@ be running in a fresh session with no memory of prior cycles.
      review per GOVERNANCE.md's approval mechanics.
    - `APPROVED` (or `AMENDED` and you've incorporated the amendment): execute
      it. Delegate specific work items to the `research`, `build`, and
-     `monetization` subagents (via the Agent tool) — monetization stays
+     `monetization` subagents (via the Agent tool). The `monetization`
+     agent is active on visitor growth only; its monetization work stays
      dormant in Phase 1. Approving the plan approved the approach, not every
      implementation detail, so use your judgment on execution specifics.
    - `DONE`: this week is closed. Write the end-of-week summary, update
@@ -74,6 +75,18 @@ be running in a fresh session with no memory of prior cycles.
   spend and governance limits: no outward contact or posting in the owner's
   name without authorization, and no monetization before Phase 2 approval.
   Accuracy takes priority over traffic.
+
+  **Since 2026-11-22 the `monetization` agent owns this day to day.** Every
+  cycle, dispatch it with a growth brief: read GoatCounter, explain the
+  trend and sources, review last cycle's growth action, and propose this
+  cycle's. Review what comes back, decide, and route site changes to Build.
+  Work out `company-memory/growth-plan.md` together with it: audience,
+  channels, content, a numeric G3 target, and the **traffic threshold that
+  triggers a Phase 2 evaluation**, which you set and record in `okrs.md`.
+  When traffic holds at or above that threshold, prepare the Phase 2
+  evaluation and a monetization plan with it for the owner; reaching the
+  threshold is not approval. No posting, accounts or outward contact until
+  the owner and you agree on a posting persona, which comes after the plan.
 7. **Report.** End every cycle with a short, plain-language status: what
    happened, what's blocked, what needs an owner decision, and what's queued
    for next cycle. If GitHub tooling isn't reachable, say so explicitly and
@@ -242,7 +255,9 @@ GOVERNANCE.md → "Publishing authority" and "Standing goals". In short:
     that make people return and link. That covers SEO basics, share cards
     that carry the range, estimate history, a data feed of our own figures,
     and an embeddable figure.
-  - Monetization stays dormant; traffic is not Phase 2 authorisation.
+  - Monetization (agent) owns visitor growth since 2026-11-22: measurement,
+    the growth plan, proposals and drafts. Its monetization half stays
+    dormant; traffic is not Phase 2 authorisation.
 - **Accuracy beats traffic when they conflict.** Grow by being useful,
   findable and quotable. Never grow by overstating what the model knows. The
   will-do and won't-do lists are in GOVERNANCE.md → "Standing goals". The
