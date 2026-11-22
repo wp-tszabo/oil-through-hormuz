@@ -486,6 +486,39 @@ def build_change_note(est, model, prev_entry):
 
 
 # --------------------------------------------------------------------------
+# Share-card description (G3 growth action, 2026-11-22): Open Graph/Twitter
+# cards should show the estimate WITH its range and the word "estimate" --
+# GOVERNANCE.md standing goals / rubric section 3.2. Previously these tags
+# were static hand-written copy (see the comment this replaced in
+# site/index.html) specifically because a hardcoded number would go stale
+# exactly the way earlier hand-maintained copy did (critical-issues-log.md,
+# 2026-09-18/19). Generating the text here, from the same `est` dict the
+# on-page headline is built from, and rewriting it every run the same way
+# GENERATED:estimate is rewritten, closes that gap without reintroducing the
+# staleness risk: it can never show a number the page itself isn't also
+# showing.
+# --------------------------------------------------------------------------
+
+def build_share_text(est, target):
+    """Open Graph / Twitter description text: the live point estimate with
+    its range, the word "estimate" (never "measurement"), and the date,
+    built only from `est` (already in hormuz.json) and `target` (the date
+    the estimate is for). Mirrors the honesty bar already enforced on the
+    on-page headline (rubric section 1.6/3.2): always a range, always
+    labelled an estimate, flagged when extrapolated past the tested
+    horizon.
+    """
+    when = target.strftime("%-d %B %Y")
+    text = ("Our model&rsquo;s estimate for %s: %s million barrels per day through "
+            "the Strait of Hormuz, range %s to %s. A modelled estimate, not a live "
+            "measurement, published with its range and method."
+            % (when, est["point"], est["band_low"], est["band_high"]))
+    if est.get("extrapolated"):
+        text += " Currently extrapolated past our tested horizon &mdash; see why on the site."
+    return text
+
+
+# --------------------------------------------------------------------------
 # Sitemap lastmod (backlog.md G3, 2026-11-18)
 # --------------------------------------------------------------------------
 
@@ -870,6 +903,11 @@ def main(today=None, page=None, xlsx=None):
         if not tail:
             block = block.replace("as the answer. \n", "as the answer.\n")
 
+    # G3 growth action, 2026-11-22: the share-card text, built the same way
+    # for every state above (normal, State B, State C) since all three set
+    # est["point"]/band_low/band_high/extrapolated before this point.
+    share_desc = build_share_text(est, target)
+
     # G5 (backlog.md, 2026-09-23) -- append today's published estimate (or
     # its suppression) to the persistent history: site/data/history.json,
     # site/data/history.csv, site/feed.xml and the site/history.html table
@@ -988,6 +1026,26 @@ def main(today=None, page=None, xlsx=None):
         new, flags=re.S)
     if n != 1:
         raise Fail("could not find exactly one GENERATED:chart block in index.html")
+
+    # G3 growth action, 2026-11-22: regenerate the Open Graph/Twitter card
+    # description so shared links show the live estimate with its range and
+    # the word "estimate" (GOVERNANCE.md standing goals; rubric section
+    # 3.2), instead of the static placeholder copy this replaced. Matched by
+    # the fixed `content="` prefix and closing `">` so this never touches
+    # any other attribute; each must match exactly once, same discipline as
+    # every other GENERATED substitution above.
+    new, n = re.subn(
+        r'(<meta property="og:description" content=")[^"]*(">)',
+        lambda m: m.group(1) + share_desc + m.group(2),
+        new)
+    if n != 1:
+        raise Fail("could not find exactly one og:description meta tag in index.html")
+    new, n = re.subn(
+        r'(<meta name="twitter:description" content=")[^"]*(">)',
+        lambda m: m.group(1) + share_desc + m.group(2),
+        new)
+    if n != 1:
+        raise Fail("could not find exactly one twitter:description meta tag in index.html")
 
     with open(PAGE, "w") as f:
         f.write(new)
