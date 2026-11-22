@@ -5,8 +5,15 @@
   <link href="https://oilthroughhormuz.com/feed.xml" rel="self" />
   <link href="https://oilthroughhormuz.com/history.html" />
   <id>https://oilthroughhormuz.com/feed.xml</id>
-  <updated>2026-11-21T13:25:46Z</updated>
+  <updated>2026-11-22T13:16:44Z</updated>
   <author><name>Hormuz Oil Tracker</name></author>
+  <entry>
+    <title>Hormuz oil flow estimate for 2026-11-21: 10.6 million b/d (range 9.1–19.8)</title>
+    <id>https://oilthroughhormuz.com/history.html#2026-11-21</id>
+    <link href="https://oilthroughhormuz.com/history.html#2026-11-21" />
+    <updated>2026-11-22T13:16:44Z</updated>
+    <summary>This is our own model's estimate for 2026-11-21, not a measurement. Working range 9.1 to 19.8 million barrels per day; treat the range as the answer. Method: GPCI transit-share, anchored on 3Q26. Full methodology and today's figure at https://oilthroughhormuz.com/.</summary>
+  </entry>
   <entry>
     <title>Hormuz oil flow estimate for 2026-11-20: 10.6 million b/d (range 9.1–19.8)</title>
     <id>https://oilthroughhormuz.com/history.html#2026-11-20</id>
