@@ -34,12 +34,28 @@ the day 4Q26 lands, scoring is mechanical rather than scrambled together
 under time pressure. The 75th cycle's brief (87.10 item 5) restates this as
 a Build-side task. This script is that tooling.
 
+A fourth item was added by the 76th cycle's band-gate v2 PR (methodology.md
+section 88.9's "what 4Q26 scoring should do" paragraph):
+
+  v1-vs-v2 band-gate scoring -- once a shadow-logged prediction's `for_date`
+  falls inside a quarter EIA has since published (site/data/hormuz.json's
+  own `series`), this script scores v1's (pre-gate, one-sided) band and
+  v2's (what was actually published, gate included) band SEPARATELY against
+  that quarter's actual figure, reading company-memory/shadow-predictions.jsonl
+  (scripts/refresh_estimate.py's append_shadow_prediction(), written daily
+  since the band-gate PR). v1.point and v2.point are always equal by design
+  (v2 never moves the point -- see refresh_estimate.py's module docstring),
+  so this only ever reports band-capture differences, which is the number
+  that actually shows whether the gate helped, hurt, or made no difference.
+
 What this is NOT
 -----------------
 * It is NOT part of the daily refresh pipeline (scripts/refresh_estimate.py)
-  and never writes to site/, site/data/hormuz.json, or sources.html. It is
-  read-only against site/data/hormuz.json and scripts/hypothesis_data.json,
-  and only ever prints a report (or returns one, when imported).
+  and never writes to site/, site/data/hormuz.json, sources.html, or
+  company-memory/shadow-predictions.jsonl. It is read-only against
+  site/data/hormuz.json, scripts/hypothesis_data.json and
+  company-memory/shadow-predictions.jsonl, and only ever prints a report
+  (or returns one, when imported).
 * It does NOT fetch anything over the network. H1 is scored purely from
   model.estimator.backtest, which scripts/refresh_estimate.py already
   recomputes in full on every run (so once 4Q26 lands and a real refresh
@@ -88,6 +104,10 @@ from collections import OrderedDict
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HORMUZ_JSON = os.path.join(REPO, "site", "data", "hormuz.json")
 HYPOTHESIS_JSON = os.path.join(REPO, "scripts", "hypothesis_data.json")
+# Band-gate v2 shadow log (methodology.md section 88.9; written daily by
+# scripts/refresh_estimate.py's append_shadow_prediction()). Internal only,
+# same as its source file -- never under site/.
+SHADOW_LOG = os.path.join(REPO, "company-memory", "shadow-predictions.jsonl")
 
 
 def load_hormuz(path=HORMUZ_JSON):
@@ -98,6 +118,23 @@ def load_hormuz(path=HORMUZ_JSON):
 def load_hypothesis_data(path=HYPOTHESIS_JSON):
     with open(path) as f:
         return json.load(f)
+
+
+def load_shadow_predictions(path=SHADOW_LOG):
+    """Load company-memory/shadow-predictions.jsonl (one JSON object per
+    line, oldest first). Returns [] if the file doesn't exist yet -- e.g.
+    before the band-gate v2 PR's first daily refresh has run -- rather than
+    failing, since this script must keep working for H1/H2/H3 even when
+    the shadow log is absent."""
+    if not os.path.exists(path):
+        return []
+    out = []
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                out.append(json.loads(line))
+    return out
 
 
 # --------------------------------------------------------------------------
@@ -281,6 +318,72 @@ def score_quarter_transition(doc, anchor_period, target_period):
 
 
 # --------------------------------------------------------------------------
+# v1-vs-v2 band-gate scoring (methodology.md section 88.9, 76th-cycle PR)
+# --------------------------------------------------------------------------
+
+def band_gate_report(doc, shadow, target_quarter=None):
+    """Score v1's (pre-gate, one-sided) and v2's (what was actually
+    published, gate included) bands SEPARATELY, for every shadow-logged
+    daily prediction whose `for_date` falls inside a quarter EIA has since
+    published -- per methodology.md section 88.9's "what 4Q26 scoring
+    should do" paragraph. v1.point and v2.point are always equal by design
+    (v2 never moves the point -- refresh_estimate.py's module docstring),
+    so only band_captured can differ between the two; that difference is
+    exactly the number that shows whether the gate helped, hurt, or made
+    no difference once a disrupted transition happens while it is live.
+
+    Matches each shadow record to the landed quarter whose OWN [start, end]
+    window actually contains `for_date` (reusing site/data/hormuz.json's own
+    series start/end, the same convention
+    refresh_estimate.score_published_in_quarter() already uses for the
+    published record) -- never assumes which quarter that is. Records
+    outside any landed quarter's window (the normal case, since most shadow
+    predictions are for days inside the CURRENT, not-yet-landed quarter)
+    are skipped, not reported as a failure.
+    """
+    rows = []
+    for rec in shadow:
+        for_date = rec.get("for_date")
+        if not for_date:
+            continue
+        period, actual = None, None
+        for r in doc["series"]:
+            if r["start"] <= for_date <= r["end"]:
+                period, actual = r["period"], r["total_oil"]
+                break
+        if period is None:
+            continue  # for_date doesn't fall inside any landed quarter (yet)
+        if target_quarter and period != target_quarter:
+            continue
+        v1, v2 = rec.get("v1") or {}, rec.get("v2") or {}
+        v1_lo, v1_hi = v1.get("band_low"), v1.get("band_high")
+        v2_lo, v2_hi = v2.get("band_low"), v2.get("band_high")
+        rows.append({
+            "for_date": for_date,
+            "quarter": period,
+            "actual": actual,
+            "point": v1.get("point"),  # == v2.get("point"), by design
+            "point_error_pct": round((v1.get("point") / actual - 1) * 100, 1)
+                               if v1.get("point") and actual else None,
+            "v1_band": [v1_lo, v1_hi],
+            "v2_band": [v2_lo, v2_hi],
+            "v1_captured": (v1_lo <= actual <= v1_hi) if v1_lo is not None and v1_hi is not None else None,
+            "v2_captured": (v2_lo <= actual <= v2_hi) if v2_lo is not None and v2_hi is not None else None,
+            "gate_active": v2.get("gate_active"),
+        })
+    rows.sort(key=lambda r: r["for_date"])
+
+    return {
+        "rows": rows,
+        "n_scored": len(rows),
+        "n_gate_active": sum(1 for r in rows if r["gate_active"]),
+        "v1_captured_count": sum(1 for r in rows if r["v1_captured"]),
+        "v2_captured_count": sum(1 for r in rows if r["v2_captured"]),
+        "capture_differs_count": sum(1 for r in rows if r["v1_captured"] != r["v2_captured"]),
+    }
+
+
+# --------------------------------------------------------------------------
 # Report rendering
 # --------------------------------------------------------------------------
 
@@ -292,6 +395,8 @@ def render_report(doc, hyp, target_quarter=None):
     h1 = h1_report(doc, target_quarter)
     h2 = h2_report(doc, hyp)
     h3 = h3_report(doc, hyp)
+    shadow = load_shadow_predictions()
+    bg = band_gate_report(doc, shadow, target_quarter)
 
     lines = []
     lines.append("=" * 72)
@@ -367,8 +472,35 @@ def render_report(doc, hyp, target_quarter=None):
     lines.append("and Kpler's within-quarter reading above: same direction (decline) corroborates H3,")
     lines.append("continued rise falsifies the within-quarter-decline reading (methodology.md 86.9).")
 
+    lines.append("\n--- v1 vs v2 band-gate scoring (methodology.md 88.9, from company-memory/shadow-predictions.jsonl) ---")
+    if not shadow:
+        lines.append("No shadow-predictions.jsonl found yet (band-gate v2 PR not yet live, or no daily")
+        lines.append("refresh has run since it shipped). Nothing to score.")
+    elif bg["n_scored"] == 0:
+        lines.append("%d shadow-logged day(s) on file, but none fall inside a quarter EIA has published" % len(shadow))
+        lines.append("yet (the normal case -- most shadow predictions are for the CURRENT, not-yet-landed")
+        lines.append("quarter). Nothing to score until the next EIA release lands.")
+    else:
+        lines.append("v1 (pre-gate, one-sided) vs v2 (published, gate included) band capture, scored against")
+        lines.append("each landed quarter's own actual figure. v1.point == v2.point always (the gate never")
+        lines.append("moves the point) -- only band_captured can differ.\n")
+        for r in bg["rows"]:
+            lines.append("  %s (%s)  actual=%s  point=%s (%+.1f%%)  v1 band %s-%s (%s)  v2 band %s-%s (%s)%s"
+                         % (r["for_date"], r["quarter"], r["actual"], r["point"],
+                            r["point_error_pct"] if r["point_error_pct"] is not None else float("nan"),
+                            r["v1_band"][0], r["v1_band"][1], "captured" if r["v1_captured"] else "MISSED",
+                            r["v2_band"][0], r["v2_band"][1], "captured" if r["v2_captured"] else "MISSED",
+                            "  [gate was active]" if r["gate_active"] else ""))
+        lines.append("\n  Scored %d day(s): v1 captured %d, v2 captured %d, capture differed on %d day(s)."
+                     % (bg["n_scored"], bg["v1_captured_count"], bg["v2_captured_count"], bg["capture_differs_count"]))
+        lines.append("  Gate was active on %d of the %d scored day(s)." % (bg["n_gate_active"], bg["n_scored"]))
+        if bg["capture_differs_count"] == 0:
+            lines.append("  No difference yet between v1 and v2 outcomes in this sample -- consistent with")
+            lines.append("  methodology.md 88.6's own finding that the gate has so far only ever matched v1's")
+            lines.append("  capture result, never beaten or lost against it, on every transition tested so far.")
+
     lines.append("\n" + "=" * 72)
-    return "\n".join(lines), {"h1": h1, "h2": h2, "h3": h3}
+    return "\n".join(lines), {"h1": h1, "h2": h2, "h3": h3, "band_gate": bg}
 
 
 def main():

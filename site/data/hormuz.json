@@ -14,7 +14,7 @@
     "provenance_caveat": "EIA analysis based on Vortexa tanker tracking data. We republish EIA's published analysis; we do not hold or license Vortexa data.",
     "publisher_caveat": "Since the end of February 2026, AIS signal data for ships transiting the Strait of Hormuz have become especially unreliable. For 2026 Hormuz volumes, tanker tracking data are being revised frequently based on the best available information."
   },
-  "retrieved_utc": "2026-11-22T13:16:44Z",
+  "retrieved_utc": "2026-11-23T02:31:35Z",
   "units": "million barrels per day",
   "series": [
     {
@@ -81,16 +81,16 @@
     "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
     "shape_function": "GPCI transit-share: the strait is assumed to carry the same share of Gulf producer crude output (GPCI) as in the latest published quarter; the estimate moves monthly with GPCI. Replaced persistence on 2026-09-23 (methodology.md section 19).",
     "estimate": {
-      "for_date": "2026-11-21",
+      "for_date": "2026-11-22",
       "point": 10.6,
-      "band_low": 9.1,
+      "band_low": 5.7,
       "band_high": 19.8,
-      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 3Q26: from persistence (9.1, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.873, applied in the direction production moved.",
+      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 3Q26: from persistence (9.1, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.873, applied in the direction production moved. Band-gate active (methodology.md section 88): a confirmed primary signal -- UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase -- points the opposite way, so the range widens to the two-sided [point/k, point*k] = [5.7, 19.8] (same k) rather than the usual one-sided construction; this never narrows the range, only ever widens it.",
       "anchor_period": "3Q26",
       "anchor_value": 9.1,
       "is_measurement": false,
       "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6.",
-      "horizon_days": 52,
+      "horizon_days": 53,
       "max_horizon_days": 92,
       "suppressed": false,
       "extrapolated": null
@@ -165,7 +165,7 @@
       "gpci_latest_month": "202610",
       "gpci_latest": 17.85,
       "production_since_anchor": "rising",
-      "band_rule": "calm: point +/- max(3%, 1.5 x worst calm back-test miss). disrupted: between persistence (anchor volume unchanged) and the estimator's worst measured disrupted miss (factor k) in the direction production has moved since the anchor quarter.",
+      "band_rule": "calm: point +/- max(3%, 1.5 x worst calm back-test miss). disrupted: between persistence (anchor volume unchanged) and the estimator's worst measured disrupted miss (factor k) in the direction production has moved since the anchor quarter. v2 band-gate (methodology.md section 88): if a confirmed primary tier-2 signal (never PortWatch/tier-3) points opposite that direction, the disrupted/extrapolated band widens to the two-sided [point/k, point*k] -- same k, never narrower.",
       "k_disrupted": 1.873,
       "calm_halfwidth": 0.03,
       "backtest": [
@@ -289,12 +289,20 @@
           "persistence_error_pct": -44.0,
           "regime": "disrupted"
         }
-      ]
+      ],
+      "band_gate": {
+        "active": true,
+        "direction": "declining",
+        "reason": "UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase",
+        "source_entries": [
+          "signal-log.md#2026-11-21-ukmto-transit-synthesis"
+        ]
+      }
     },
     "last_published": {
-      "for_date": "2026-11-21",
+      "for_date": "2026-11-22",
       "point": 10.6,
-      "band_low": 9.1,
+      "band_low": 5.7,
       "band_high": 19.8,
       "anchor_period": "3Q26",
       "method": "gpci-transit-share"
