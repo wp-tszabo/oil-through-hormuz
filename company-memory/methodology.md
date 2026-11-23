@@ -6951,3 +6951,636 @@ pending owner action, not re-investigated this cycle.
    comparable but likely were not.
 7. **UKMTO/MARAD network-reachability retry**: due again on the lighter
    cadence around the 79th cycle, not before.
+
+## 88. 76th-cycle KR6 brief (2026-11-23): challenger model v2 designed, hindsight back-tested, and H3 resolved through it with arithmetic, not "context only" -- owner amendment per `weekly-plans/2026-11-21.md`
+
+**Delivery type this cycle: (a) + (b) + (c) + (d) + (e) + (f).** EIA/OPEC
+re-probed (light touch, per the brief); PortWatch tier-3 re-queried and its
+stall reconfirmed, AND for the first time its full daily history
+(2026-01-01 to -11-15, 319 rows, no gaps) pulled and used for a genuine
+hindsight back-test, not just a max-date check; two previously-unread
+historical JMIC Advisory Note PDFs (tier-2, primary, from `mscio.eu`'s open
+mirror, a path distinct from the blocked `ukmto.org`/`www.maritime.dot.gov`
+domains) read directly, giving this log its first genuine Apr/May/Jun 2026
+Hormuz transit-count data; **a challenger model v2 designed, with every
+parameter explained and every rejected alternative stated**; v1 vs v2
+back-tested in hindsight on every transition available, including an
+explicit, evidenced sizing of how thin the disrupted-regime evidence is;
+**H3 tested through v2 with real arithmetic**, not a qualitative read; a
+daily shadow-logging field spec written for Build; and a clear adopt/keep
+recommendation with the back-test numbers behind it. No change made to
+`site/`, `site/data/hormuz.json`, `scripts/`, or `sources.html` by this
+role this cycle -- this role has no write access to those paths this cycle
+by the brief's own instruction; the recommendation below is for the CEO to
+act on under methodology authority.
+
+### 88.1 EIA Global Energy Security Data supplement: independently re-fetched, unchanged
+
+`curl` (desktop user-agent) against
+`https://www.eia.gov/outlooks/steo/report/energysecurity/article.php`:
+**HTTP 200, 79,133 bytes** -- byte-identical to section 87.1's figure.
+`grep -c "3Q26"` -> **21**. `grep -c "4Q26"` -> **0**. Release line still
+`Release Date: November 16, 2026`. **No new quarter.** Consistent with the
+CEO's own same-day opening check reported in this cycle's brief (Table 4
+still ends at 3Q26, zero 4Q26 tokens, release 2026-11-16). Not re-parsed
+cell-by-cell this cycle (no change in byte count or grep counts to warrant
+it, and the brief's priority is the v2 work below).
+
+### 88.2 OPEC MOMR: not independently re-probed this cycle
+
+Per the brief's own instruction ("you don't need to spend much time
+re-deriving that"), this role did not independently fetch
+`opec.org/opec_web/en/publications/202.htm` this cycle. The CEO's own
+same-day reading (HTTP 402) is noted; section 86.2 already established that
+the exact HTTP status OPEC's edge returns varies by vantage point
+(403 vs. 402 seen before), so a different code from a different fetch path
+is consistent with the standing "still fully blocked, no licence ever read"
+verdict rather than a new finding either way.
+
+### 88.3 IMF PortWatch tier-3: stall reconfirmed (6th consecutive identical reading), AND its full daily history pulled for the first time -- this is the cycle's second most load-bearing finding
+
+Re-queried the same public, unauthenticated ArcGIS FeatureServer endpoint
+(`https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query`,
+no login/key/CAPTCHA) for "Strait of Hormuz" (field name confirmed lowercase
+`portname`, value `"Strait of Hormuz"` -- not the `"Hormuz, Strait of"` guess
+that returned zero rows on a first attempt this cycle, logged so a future
+cycle doesn't repeat the miss). **Max date is still 2026-11-15** -- the
+**sixth** consecutive cycle with that exact reading, now spanning 8
+real-world days (11-18 through 11-23). Confirmed feed stall, unchanged
+verdict from section 87.3.
+
+**New this cycle: the full daily series was pulled, not just the max-date
+check.** A date-filtered query from 2026-01-01 through the stalled max date
+returns **319 rows, one per calendar day, zero gaps** -- the first time
+this standing mandate has had genuine daily-resolution tanker-count history
+spanning both of the only two disrupted EIA quarter-transitions in the
+record. This is used for the hindsight back-test in 88.6 below, strictly as
+**tier-3 internal validation data per the 2026-11-16 owner decision**:
+never republished, never the anchor, never a rescaling target for the
+published figure -- used here only to test *whether a vessel-count signal
+would have helped or hurt* as a class, which is explicitly permitted
+("may score the model, reveal biases and justify changes to the model's
+structure or parameters").
+
+Monthly averages (`n_total`/day, recomputed from the raw daily rows, not
+reused from a prior cycle's smaller window):
+
+| Month | Avg n_total/day | Month | Avg n_total/day |
+|---|---|---|---|
+| 2026-01 | 58.45 | 2026-07 | 10.19 |
+| 2026-02 | 78.25 | 2026-08 | 4.71 |
+| 2026-03 | 3.19 | 2026-09 | 3.63 |
+| 2026-04 | 7.13 | 2026-10 | 3.84 |
+| 2026-05 | 3.94 | 2026-11 (partial, 15 days) | 2.93 |
+| 2026-06 | 12.93 | | |
+
+Quarterly averages (weighted by calendar day, matching EIA's own quarter
+boundaries): **1Q26 = 45.578** (n=90), **2Q26 = 7.956** (n=91), **3Q26 =
+6.207** (n=92). The Jan-Feb-to-March collapse (58-78/day down to 3.19/day)
+independently reproduces, from a completely different data source and
+methodology, the same March-2026 onset date this company's own GPCI/EIA
+analysis already dated (section 81.6, section 13.3) -- a genuinely useful
+cross-check, logged for its own sake even though it does not change
+anything by itself.
+
+### 88.4 Two historical JMIC Advisory Note PDFs read directly for the first time -- the first primary-sourced Hormuz transit-count data this log has ever had from April/May/June 2026
+
+The standing block on `ukmto.org`/`www.maritime.dot.gov` (Cloudflare/Akamai,
+unchanged since section 80, re-confirmed blocked again this cycle on both
+the site root and a `/-/media/` document path tried directly as a new test:
+`https://www.ukmto.org/-/media/ukmto/products/20260828-ukmto_vra_overview_u.pdf`
+-> HTTP 403, Cloudflare challenge, 4,545 bytes, same signature) has, since
+section 86.3, been understood to not foreclose UKMTO/JMIC content reached
+via *other* routes (news coverage). This cycle extends that: JMIC's own
+Advisory Note PDFs are also mirrored on `mscio.eu` (EU NAVFOR
+Aspides/MSCIO's own open document store, a different host, different
+block posture), and two were fetched **directly and successfully** this
+cycle:
+
+- `https://mscio.eu/media/documents/Update_038_JMIC_Advisory_Note_28_April.pdf`
+  (HTTP 200, 9 pages) -- covers 01 March-28 April 2026. Section 3C ("Traffic
+  Trends"): **"Strait of Hormuz: Historical average ~138 vessels/day; 26
+  April: 3 transits; 27 April: 3 transits."** A daily table for 21-27 April
+  gives SoH cargo+tanker totals ranging 1-9/day. Footnote: *"Metrics are a
+  compilation of data from S&P Maritime and SeaVision sources"* and,
+  per the companion document below, **exclusive of ships calling Iranian
+  ports adjacent to the Strait** -- a materially different, narrower
+  construction than UKMTO's own later (November) weekly counts, which do
+  include the Iranian-side route (per the 70th-cycle signal-log entry:
+  "most transponder-on traffic uses the Iranian-side route").
+- `https://mscio.eu/media/documents/Update_053_JMIC_Advisory_Note_02_June.pdf`
+  (HTTP 200, covers 01 March-02 June 2026). Section 4C: **"Strait of
+  Hormuz: Historical average ~138 vessels/day; 31 May: 3 transits; 01 June:
+  3 transits."** Same metric, same ~3/day reading six weeks later -- flat,
+  not declining further, across the whole of late April through early
+  June.
+
+**Reliability: High.** Both are JMIC's (a multinational naval-intelligence
+body, already an established primary source in this log) own numbered
+advisory documents, read directly in full, not relayed through a news
+paraphrase. **Dated as of their own stated reporting windows** (26-27 April;
+31 May-1 June), both squarely inside **2Q26**, the quarter that contains the
+1Q26->2Q26 collapse this company's own back-test already scores.
+
+**Why this matters, and why it is reported in methodology.md rather than
+signal-log.md for its headline use:** this is the first time this standing
+mandate has had a *dated, primary-sourced, non-EIA transit metric* from
+inside either of the two known disrupted transitions, rather than only from
+November 2026 (when the signal log started). It is logged in full in
+`signal-log.md`'s new dated section (88.9 below gives the summary; the file
+itself has the entries) because it is tier-2 reported-fact material, but its
+load-bearing use -- informing the v2 back-test design in 88.6 -- is reported
+here because that is a methodology question, not a signal-log bookkeeping
+one.
+
+**A further, important construction caveat this reading surfaces, generalising
+something section 87.5 already flagged for Kpler:** JMIC's own SoH metric
+(~3/day, April-June), UKMTO's own later weekly count (~170+155=325/week,
+i.e. ~46/day, as of 10 November), PortWatch's AIS-derived `n_total` (6-13/day
+across Jul-Oct), and a MarineTraffic weekly snapshot found this cycle for
+August (121 crossings/week, ~17/day -- see 88.9) are **four different
+vessel-count metrics, from four different methodologies, that disagree with
+each other by more than an order of magnitude at overlapping points in
+time, before any of them is compared to EIA's barrel-volume figure.** None
+of this is a contradiction in any one source -- JMIC's footnote explicitly
+scopes itself to non-Iranian-routed S&P/SeaVision-tracked traffic; UKMTO
+counts broader AIS-plus-facilitated activity; PortWatch's own construction
+is undocumented at this level of detail; MarineTraffic's own criteria were
+not read this cycle. But it is a direct, first-hand-verified instance of
+exactly the caution section 87.5 already named for comparing two Kpler
+figures with different scope, now shown to be a problem across the whole
+class of "vessel transit count" sources, not just one provider's two
+products. **This is load-bearing for the v2 design in 88.5**: it is a
+second, independent reason (beyond the sign-flip in 88.6) not to build a
+point-moving mechanism that blends raw transit counts across providers, or
+even trusts one provider's count as a stable proxy for volume, without an
+explicit, validated conversion -- which no source here supplies.
+
+### 88.5 Challenger model v2: design, every parameter explained, every rejected alternative stated
+
+**The brief's ask:** keep the same anchor (`r_A x G_m`, option C) but let the
+transit share adjust between EIA releases using faster evidence (UKMTO
+weekly counts, PortWatch tier-3, confirmed tier-2 signals), while staying
+inside the governance rules (tier-3 informs/validates, never anchors or is
+republished; tier-2 facts must be two-source-confirmed or one-primary before
+moving anything; EIA stays the only anchor level).
+
+**What the evidence says before any design choice is made (this drives the
+design, not the other way round):** 88.3's PortWatch pull gives, for the
+first time, a real measurement of *whether a vessel-count signal moves the
+same direction as EIA's measured volume* across the two known disrupted
+transitions:
+
+| Transition | PortWatch count ratio (target qtr avg / anchor qtr avg) | EIA volume ratio (same) | Implied elasticity (ln(volume ratio)/ln(count ratio)) |
+|---|---|---|---|
+| 1Q26 -> 2Q26 | 7.956/45.578 = **0.1746** (-82.5%) | 5.1/15.0 = **0.34** (-66.0%) | **+0.618** |
+| 2Q26 -> 3Q26 | 6.207/7.956 = **0.7803** (-22.0%) | 9.1/5.1 = **1.7843** (+78.4%) | **-2.331** |
+
+**The sign flips.** In the collapse, the count fell by more than the volume
+did, but in the same direction (a positive, if imprecise, elasticity). In
+the recovery, the count kept falling *while volume surged* -- the two series
+moved in **opposite directions** in the one transition that is most
+analogous to right now (a recovery phase, which is what the GPCI-driven
+model currently assumes it is in). With n=2 and an elasticity that is not
+even consistently signed, there is no stable multiplier to fit here: fitting
+one on these two points would fit noise, not a mechanism, and publishing an
+estimate shaped by it would be exactly the "narrowing/extending inference
+without evidence at the new sample size" risk methodology.md section 81.8
+already named for the GPCI-ratio-only momentum hypothesis (H1) -- now shown
+to apply with at least as much force to a count-based correction, on
+independent evidence. 88.4's finding (four incompatible vessel-count
+metrics at overlapping times) is a second, independent reason not to trust
+any single count series as a volume proxy without a validated conversion,
+which does not exist.
+
+**Alternatives considered and rejected, in order:**
+
+- **(A) Continuous point-rescaling: `point = r_A * G_m * (1 + lambda * count_change)`,** fit on PortWatch and/or UKMTO count changes. **Rejected.** The elasticity needed to fit `lambda` sign-flips across the only two known transitions (88.5's table) -- there is no stable value to fit, and doing so on n=2 opposite-signed points is fitting noise. It would also make the published point a function of a count series at a continuous, graded weight, which risks reading as "a copy or simple rescaling of" tier-3 data if PortWatch is any part of the blend -- a likely breach of the owner's own tier-3 rule (flagged formally in 88.8).
+- **(B) Adopt H1 (the GPCI-ratio-only momentum term) as originally proposed in section 81.8, extrapolating the realised swing in the transit-share ratio itself** (0.824 at the 1Q26 anchor -> 0.411-0.428 at the 2Q26 anchor -> 0.593 at the 3Q26 anchor). **Rejected**, for the same reason 81.8 already gave: n=2, and the ratio's own realised path is not even monotonic (down then up), so there is no stable trend to extrapolate, only a swing. Nothing in this cycle's new evidence changes that verdict; if anything, 88.5's own table shows the same instability problem recurring in an independently-measured proxy, which strengthens rather than weakens 81.8's caution.
+- **(C) Feed PortWatch's (or UKMTO's) count series into the published point directly, as the 2026-11-22 weekly-plan amendment's own wording ("adjusts from the faster evidence we have... PortWatch daily tanker counts") could be read as directing.** **Rejected, and flagged as a possible governance conflict, not decided unilaterally** -- see 88.8. GOVERNANCE.md's tier-3 rule is explicit that PortWatch "may not be the anchor, and the published estimate may not be a copy or simple rescaling of it"; a continuous count-driven point adjustment built with PortWatch in the loop would be exactly that, regardless of how many other inputs are blended in alongside it.
+- **(D, adopted) Leave the point formula untouched (same `r_A * G_m` as v1, same anchor, same GPCI pacing) and make only the BAND signal-responsive**, gated on confirmed tier-2 primary evidence, bounded by the already-validated back-tested miss factor `k` (no new free parameter). Detailed below.
+
+**v2's actual construction:**
+
+```
+point_v2 = point_v1 = r_A * G_m          (UNCHANGED -- same anchor, same GPCI pacing)
+
+v1 band (disrupted/extrapolated regime, unchanged):
+  rising:  [persistence (r_A's own anchor volume), point * k]      (one-sided)
+  falling: [point / k, persistence]                                 (one-sided)
+
+v2 band:
+  IF regime is disrupted or extrapolated (States B/C)
+     AND there are >= 2 dated, CONFIRMED (two-independent-sources-or-
+         one-primary, per the existing signal-log.md rule) readings of a
+         primary vessel-activity metric (e.g. UKMTO's own successive
+         weekly transit counts) whose most recent reading-over-reading
+         direction is OPPOSITE the sign of (G_latest - G_anchor)
+         (i.e. opposite the GPCI-implied phase the one-sided band assumes):
+       band = [point / k, point * k]      (TWO-SIDED, using the SAME k)
+  ELSE:
+       band = v1's band, unchanged
+```
+
+**Every parameter, explained:**
+
+- `point`, `r_A`, `G_m`, `k`: identical to v1, already defined and
+  back-tested in `scripts/refresh_estimate.py` / methodology.md sections
+  3/19/39. v2 introduces **zero new numeric parameters** -- the two-sided
+  band uses the exact same `k` the back-test already produces, just applied
+  on both sides instead of one.
+- The **gate condition** is the only new piece, and it is a boolean, not a
+  magnitude: it asks "do we have a specific, dated, primary reason to doubt
+  the directional assumption baked into the one-sided band," not "by how
+  much should we move the number." This is deliberate: 88.5's own table
+  shows there is no evidenced magnitude to use, but there *is* a real,
+  confirmed, primary-sourced reason (UKMTO's own count) to doubt the
+  direction right now, and category 4 ("a band narrower than the back-test
+  supports") cuts the same way whether the unsupported narrowness comes from
+  the original back-test window or from an assumption (today's "rising"
+  tilt) that current evidence is actively contradicting.
+- **The gate only ever widens, never narrows.** This is a deliberate,
+  stated design choice, not an oversight: a two-sided band is a superset of
+  either one-sided band (`[point/k, point*k]` always contains both
+  `[persistence, point*k]` and `[point/k, persistence]`, since `persistence`
+  always sits between `point/k` and `point*k` by the band's own
+  construction). So the gate can only ever *add* capture margin, never
+  remove it -- it cannot, by construction, cause the published band to miss
+  a value the v1 band would have captured. This directly addresses the
+  brief's "no band narrower than the evidence supports" constraint from the
+  opposite failure direction: this mechanism cannot narrow anything.
+- **Why gate on a *primary* tier-2 series specifically (UKMTO's own
+  successive counts), not any available count series:** 88.4's finding (four
+  incompatible count methodologies) means mixing providers would require an
+  unvalidated normalisation step; restricting the gate to one primary body's
+  own successive readings, compared only to itself over time, avoids that
+  entirely -- the comparison is always "UKMTO vs. its own prior reading," not
+  "UKMTO vs. PortWatch vs. Kpler."
+
+### 88.6 Hindsight back-test: v1 vs v2 on every transition available
+
+**Convention stated up front, to be honest about what is and is not being
+recomputed:** this back-test reuses the production `backtest()` function's
+own output (the table already in `site/data/hormuz.json` ->
+`model.estimator.backtest`, reproduced in full in section 81's write-up and
+re-verified live again this cycle -- see 88.1) for the **point** and for
+**what v1 actually published**, exactly as sections 81.3/81.4/81.8 already
+established. This is the existing company convention for "the back-test,"
+not a new point-in-time reconstruction of what `k` would have been using
+only data known strictly before each anchor date -- that reconstruction
+would need monthly GPCI history back to January 2025 that is not fully
+retained in this file, and the brief did not ask for it. What **is** new
+this cycle is evaluating v2's **gate** against each transition, using
+88.3's PortWatch pull as an explicit, stated **proxy** for what a
+transit-count signal would have shown at the time -- flagged clearly as a
+proxy, because real tier-2 (UKMTO/JMIC) signal-log history does not exist
+for spring/summer 2026 (the log started 2026-11-17); 88.4's two JMIC PDFs
+partially fill that gap but only with two single-day-pair readings
+(flat at ~3/day in late April and again in late May/June), not a
+continuous weekly series comparable to what exists for November.
+
+| Transition | Regime | v1 point error | v1 band (one-sided) | Actual | v1 band captured? | PortWatch-proxy gate state | v2 band if gate state differs from v1 | Actual captured by v2? |
+|---|---|---|---|---|---|---|---|---|
+| 1Q25->2Q25 ... 3Q25->4Q25 (4 calm transitions) | Calm | -2.0% to +1.4% | symmetric +/-3% | all captured | Yes (all 4) | n/a -- gate is scoped to disrupted/extrapolated only | **identical to v1 by construction** | Yes (all 4), same as v1 |
+| 4Q25->1Q26 | Disrupted (first) | +44% to +50% | one-sided, rising-phase shape (same construction, pre-dates the 92-day horizon's first real test) | captured per the live record | Yes | PortWatch: anchor(4Q25) not in PortWatch's own coverage window (series starts 2026-01-01) -- **gate cannot be evaluated, no proxy data** | n/a | n/a (honestly unresolvable with available data, stated rather than guessed) |
+| 1Q26->2Q26 | Disrupted | **+78.1% to +87.3%** (model too high) | one-sided falling-phase: `[point/k, persistence=15.0]` | 5.1 | Yes (at the floor) | PortWatch anchor-quarter avg (45.58) -> target's first month avg (Apr, 7.13): **both falling, SAME direction as the GPCI-implied phase** -> **gate OFF** | **band unchanged, = v1's band** | Yes, same as v1 (no difference) |
+| 2Q26->3Q26 | Disrupted | **-28.5% to -33.0%** (model too low) | one-sided rising-phase: `[persistence=5.1, point*k]` | 9.1 | Yes (near the top, per 81.4's more conservative within-quarter read) | PortWatch anchor-quarter avg (7.96) -> target's first month (Jul, 10.19): rising, SAME direction -> gate OFF initially; -> target's second month (Aug, 4.71): **falling, OPPOSITE direction -> gate ON** from that point in the quarter | **two-sided `[point/k=3.25, point*k=11.41]` for the Aug-dated estimate** (vs. v1's one-sided `[5.1, 11.41]`) | Yes, same as v1 -- actual (9.1) was already inside v1's narrower band, so the wider v2 band changes nothing about capture, only honesty about the (in this instance, unrealised) downside risk |
+
+**Reading this honestly, point by point:**
+
+- **On every transition where the gate can be evaluated at all, v2 ties v1
+  exactly on capture outcome.** It is never worse (by construction, per
+  88.5's "only ever widens" property) and in this specific sample it is
+  also never *measurably* better, because the actual value in both known
+  disrupted transitions landed inside v1's narrower one-sided band anyway.
+  **This is the honest, unflattering part of the result: on the only two
+  real disrupted transitions available, v2 would have produced an identical
+  practical outcome to v1, differing only in how wide the band looked for
+  part of one of the two quarters.** The brief's bar ("beats v1 on
+  back-test, no worse in calm") is met on the "no worse" half cleanly, and
+  on the "beats" half only in the narrow, honest sense of "would have shown
+  more honest uncertainty at one point, with no cost."
+- **v2's real value is not demonstrated by this historical back-test at
+  all -- it is demonstrated by what it does differently TODAY**, where a
+  real (not proxy) confirmed primary signal exists. See 88.7.
+- **This is a thin evidence base, stated plainly per the brief's own
+  instruction.** n=2 disrupted transitions, one of which (4Q25->1Q26) has
+  no PortWatch coverage to even test the gate against, and the two JMIC PDFs
+  found this cycle (88.4) show a flat reading at both points sampled, not a
+  trend -- they corroborate "nothing unusual happening in count terms across
+  April-June" but cannot themselves test the gate's firing logic the way
+  PortWatch's continuous daily series can. **No claim here should be read
+  as "v2 is validated" -- it is "v2's mechanism is evidenced not to make
+  things worse, and is evidenced to be the only one of the four considered
+  constructions that doesn't risk fitting an unstable or sign-flipping
+  parameter on n=2."**
+
+### 88.7 H3 tested through v2, with the arithmetic
+
+**The question, per the brief:** UKMTO's own successive weekly counts
+(325 -> 308 -> 263, through 18 November, already confirmed primary-sourced
+per signal-log.md) are a confirmed signal. Put it through v2. What does it
+imply for today's figure, and does the rest of the evidence support or
+contradict acting on it?
+
+**Running it through v2's gate:** current regime is disrupted, phase
+"rising" (`G_latest` 17.85 > `G_anchor` 15.35, section 87.4/88.1's
+unchanged live figures). UKMTO's last two successive week-on-week deltas
+are both negative (325->308, -5.2%; 308->263, -14.6%), confirmed (primary
+source, three dated successive readings, signal-log.md 2026-11-21) and
+opposite the "rising" phase the one-sided band assumes. **The gate fires.**
+
+- **Point: unchanged, 10.6.** Per 88.5/88.6, there is no evidenced,
+  stable way to convert a vessel-count change into a volume-magnitude
+  change (the only two measured elasticities sign-flip), so v2's point
+  formula does not use the count signal at all.
+- **Band: widens from the published one-sided `[9.1, 19.8]` to a two-sided
+  `[point/k, point*k] = [10.6/1.873, 10.6*1.873] = [5.66, 19.8]`.** This is
+  the concrete, numeric thing the brief asked for: the confirmed signal
+  **does** move a published number (the band low, from 9.1 to 5.7), not
+  "context only."
+
+**Does the rest of the evidence support moving the figure further, e.g. the
+point itself, downward? No -- and this cycle found concrete, dateable
+evidence that argues the other way, strengthening (not just repeating)
+section 87.6's "downgraded H3" verdict:**
+
+1. **UKMTO's own count, read over a longer window than the three November
+   readings alone, is still well above where it was in September.** A
+   gCaptain article dated **11 September 2026** (found and read directly
+   this cycle, logged in `signal-log.md`) reports UKMTO's own weekly count
+   for that period as **108 outbound + 102 inbound = 210 transits/week**.
+   By 10 November it had risen to **325/week** (already logged, 70th
+   cycle), then fallen over the next 8 days to **263/week**. **263 is still
+   25% above September's 210**, not a return to the September trough. A
+   three-week dip off a two-month high is a materially weaker basis for
+   "the recovery is reversing" than "UKMTO's count is declining," stated
+   without that context, would suggest.
+2. **Lloyd's List Intelligence's own Transit Monitor (a different, named
+   commercial primary-ish source, already used at this reliability tier
+   since the 72nd cycle) reports October 2026 as "the busiest month for
+   Hormuz traffic since start of conflict"**: 550 non-Iranian-linked
+   transits, up from 504 in September, found and read directly this cycle
+   in Lloyd's List's own 19 November 2026 brief (logged in `signal-log.md`).
+   This is a primary-ish commercial source directly contradicting a simple
+   "declining since October" story for the month immediately preceding the
+   UKMTO dip.
+3. **The IEA's own October 2026 figures (already logged 87.5, re-cited
+   here because they bear directly on this arithmetic): crude shipments at
+   82% of pre-war levels, Gulf exports ex-Oman at 18.4m b/d.** Both describe
+   October as still recovering, not reversing.
+4. **Kpler's own second figure (already logged 87.5): "90% of pre-war" as
+   of mid-November**, read against its own September explainer as most
+   likely a *total-exports* metric, implying (by this role's own stated,
+   unconfirmed arithmetic in 87.5) a Hormuz-specific level around 9.2m b/d
+   -- in line with the EIA anchor (9.1), not below it.
+
+**Conclusion, stated as arithmetic, not a qualitative shrug:** every
+numeric reading available this cycle other than the single three-point
+UKMTO weekly-count sequence (October's "busiest month since the war began"
+transit tally, October's 82%-of-pre-war crude-shipment figure, and a
+plausible reconciliation of Kpler's own November figure to ~9.2m b/d) points
+toward **continued recovery, not reversal**, through at least late October
+and into the early-to-mid November period the UKMTO dip covers. The UKMTO
+dip is real, confirmed, and primary-sourced -- which is exactly why v2's
+gate fires and the band's floor drops to 5.7 -- but it is a 3-week,
+single-metric read sitting inside a two-month run that is still elevated
+versus September, against three other readings (Lloyd's List, IEA, Kpler)
+that all point the other way for the same or an overlapping period. **This
+is why the point does not move: not because the signal was dismissed as
+"context," but because running the actual numbers (point 1 above
+particularly) shows the "decline" reading is thinner than the raw
+325->308->263 sequence looks in isolation, while the band does move, because
+the directional doubt the UKMTO sequence raises is real even though its
+magnitude is not known.**
+
+### 88.8 Category-3/4-adjacent risk flagged for the CEO: the weekly-plan amendment's wording and the tier-3 rule
+
+**This needs the CEO's explicit attention before any adoption, not a
+unilateral call by this role.** The 2026-11-22 weekly-plan amendment
+("Owner amendment: challenger model") describes v2 as adjusting the transit
+share using evidence that explicitly includes "**PortWatch daily tanker
+counts (tier 3, up to the stall)**" alongside UKMTO and confirmed tier-2
+signals, without a stated carve-out for the tier-3 rule. Read literally,
+building a live, point-moving adjustment that uses PortWatch's own counts
+as an input would risk breaching GOVERNANCE.md's own, unambiguous tier-3
+language: *"It may not be the anchor, and the published estimate may not be
+a copy or simple rescaling of it"* and *"Never republished... Never the
+published figure."* **This role's v2 design (88.5) deliberately does not do
+this** -- PortWatch is used only to evidence the design decision (88.6's
+back-test) and is never read live by the gate or the point -- but the
+brief's own wording is broad enough that a less careful v2 construction
+could have crossed that line while still matching the literal instruction.
+**Flagging this explicitly as the kind of ambiguity GOVERNANCE.md says to
+raise rather than resolve unilaterally**, not because this role believes a
+violation occurred (it did not, in the design actually produced), but
+because the next cycle's reader of the weekly-plan text, absent this note,
+could reasonably build the version that does.
+
+### 88.9 Daily shadow-logging field spec, for Build
+
+Per the brief's instruction, this is a specification, not an implementation
+(no `site/`/`scripts/` write access this role this cycle).
+
+**Where:** a new file, `company-memory/shadow-predictions.jsonl` (JSON
+Lines, one object per day, **append-only, never rewritten** -- this is the
+mechanism that keeps predictions "dated and frozen" per the brief's own
+requirement, the same discipline `site/data/history.json` already uses for
+the published record). Not under `site/`, so there is no ambiguity that
+this is internal-only and never served to readers. Written by the same
+daily refresh job that already runs `scripts/refresh_estimate.py` (no new
+schedule needed), as an additional step after the existing publish logic,
+so it can read the same `point`, `k`, `anchor`, `phase`, and `regime`
+values already computed that run without recomputing anything.
+
+**Fields per daily record (one JSON object per line):**
+
+```
+{
+  "for_date": "YYYY-MM-DD",            // same convention as history.json
+  "retrieved_utc": "...",              // same convention as history.json
+  "anchor_period": "3Q26",
+  "anchor_value": 9.1,
+  "regime": "disrupted", "regime_kind": "local",
+  "phase": "rising" | "falling",
+  "k_disrupted": 1.873,
+  "v1": {
+    "point": 10.6, "band_low": 9.1, "band_high": 19.8,
+    "extrapolated": null | "B" | "C"
+  },
+  "v2": {
+    "point": 10.6,                      // always equal to v1.point (88.5: v2 never moves the point)
+    "band_low": 5.7, "band_high": 19.8,
+    "gate_active": true,
+    "gate_reason": "UKMTO weekly transit count declined on 2 successive readings (325->308->263, confirmed, signal-log.md 2026-11-21), opposite the GPCI-implied rising phase",
+    "gate_source_entries": ["signal-log.md#2026-11-21-ukmto-transit-synthesis"]
+  }
+}
+```
+
+**Cadence:** once per day, same run as the existing live refresh (daily,
+via the same GitHub Actions job).
+
+**How `gate_active`/`gate_reason` gets set -- a human (Research) judgment
+call, not something to automate against live news feeds:** the brief's own
+tier-2 rule ("confirmed by two independent sources, or one primary") is a
+judgment this company has always had Research make by reading sources
+directly, not a thing to encode against a scraped feed (which would also
+risk breaching the "read, don't bulk-scrape" rule for sites like UKMTO's
+news coverage). Recommend a small, Research-maintained file,
+`company-memory/signal-state.json`, holding the **current** gate
+determination (`{"as_of": "...", "gate_active": bool, "direction":
+"declining"|"rising"|"none", "reason": "...", "source_entries": [...]}`)
+updated by Research each cycle as part of the standing KR6 brief (a natural
+extension of what signal-log.md already records); the daily refresh job
+reads that file's current value every day between Research cycles (it does
+not change daily, only when Research updates it), which keeps the
+tier-2-confirmation judgment where it already sits institutionally and
+keeps the automated daily job simple (a file read, not a live news check).
+This also means `v2.gate_active` in `shadow-predictions.jsonl` can go stale
+by at most one weekly research cycle, which is an acceptable, stated
+limitation, not a silent one.
+
+**What 4Q26 scoring should do with this file:** when EIA posts 4Q26, score
+both `v1.point` and `v2.point` (identical, per design, unless the CEO later
+adopts a point-moving variant) against the actual, exactly as
+`score_published_in_quarter()` already does for v1; additionally score
+`v1.band_low/band_high` vs. `v2.band_low/band_high` band-capture separately,
+which is the number that will actually show whether the gate helped,
+hurt, or made no difference once a disrupted transition happens while the
+gate is live (none of the three transitions scored in 88.6 had the gate
+live with *real* tier-2 data at the time, only the proxy).
+
+### 88.10 Recommendation
+
+**Adopt v2's band mechanism (88.5, construction D) under methodology
+authority; do not adopt a point-moving construction (A, B or C, all
+rejected with evidence in 88.5).** Specifically:
+
+- **The band-gate mechanism beats v1 in the only sense the current evidence
+  can support: it is provably never worse (by construction, 88.5's
+  "only ever widens" property, confirmed empirically in 88.6's table where
+  it ties v1's capture outcome on every evaluable transition) and it is the
+  only one of the four considered constructions that does not require
+  fitting a parameter on an n=2, sign-flipping sample (88.5's elasticity
+  table) or risk breaching the tier-3 rule (88.8).** This is a real,
+  if modest, "beats v1" case: identical downside, strictly non-negative
+  upside, zero new overfitting risk.
+- **It directly satisfies the owner's "a confirmed signal must be able to
+  move the published estimate" rule** (weekly-plan amendment, "Rule going
+  forward") without requiring an unevidenced magnitude: the band (part of
+  `hormuz.json`'s published `est` object, exactly as load-bearing to
+  readers as the point) visibly moves today, from `[9.1, 19.8]` to
+  `[5.7, 19.8]`, in direct, traceable response to UKMTO's confirmed decline.
+- **It resolves H3 with arithmetic** (88.7): the point does not move
+  because the balance of October/November evidence argues against a clean
+  "declining now" read, but the uncertainty genuinely is wider than v1's
+  one-sided construction admits, and now the published band says so.
+- **What would change this recommendation:** a point-moving construction
+  becomes defensible only once there is a stable, non-sign-flipping,
+  validated elasticity between some live, tier-1/tier-2-clean signal and
+  EIA's measured volume -- which requires either a third disrupted
+  transition (4Q26, to break the current n=2 tie) or a genuinely different
+  kind of signal than a raw vessel-transit count (which 88.4's finding
+  suggests may be structurally the wrong variable family, not just
+  under-sampled). Track this explicitly alongside H1 against 4Q26.
+- **Explicit statement of what was rejected and why**, per this role's
+  standing instruction to recommend one construction, not a menu: (A)
+  continuous count-rescaling of the point -- rejected, unstable/sign-flipping
+  elasticity on n=2 (88.5); (B) pure GPCI-ratio momentum (H1 as originally
+  stated) -- rejected, same n=2 problem already named in section 81.8, now
+  independently corroborated; (C) a live PortWatch-in-the-loop point
+  adjustment, as the weekly-plan wording could be read to direct -- rejected
+  on tier-3 governance grounds, flagged explicitly to the CEO in 88.8 rather
+  than decided unilaterally.
+
+### 88.11 Required summary for this cycle's KR6 brief
+
+- **Current prediction and band:** **v1 (currently published): point 10.6,
+  band 9.1-19.8**, `for_date` 2026-11-21 (live site, re-verified this
+  cycle), anchored on EIA 3Q26 (9.1), horizon 52/92 days, not extrapolated.
+  **v2 (recommended, not yet live): point 10.6 (unchanged), band 5.7-19.8**
+  -- the gate is active today per 88.7's arithmetic.
+- **New signals logged this cycle:** `signal-log.md`'s 2026-11-23 section
+  (below) -- two historical JMIC Advisory Note PDFs (28 April and 2 June
+  2026, the first primary Hormuz transit-count data this log has had from
+  inside the 1Q26->2Q26 disrupted transition); a September 2026 gCaptain/
+  UKMTO transit figure (210/week) giving the longer-run context for 88.7's
+  H3 arithmetic; Lloyd's List's 19 November brief (October's "busiest month
+  since the war began," 550 non-Iranian-linked transits) which materially
+  weakens a clean "declining now" reading of H3; and an August 2026
+  MarineTraffic weekly snapshot (121 crossings/week) logged for the record
+  of how many incompatible count metrics exist (88.4). None of these move
+  the published figure directly (that is 88.7/88.10's job, reported in
+  methodology.md as a methodology recommendation, not a signal-log entry);
+  all are cited, dated and reliability-graded in the file itself.
+- **Latest validation error against official figures:** unchanged from
+  section 81.3/81.4 -- the model's last pre-3Q26 snapshot missed 3Q26's
+  actual (9.1) by -19.8% (single-snapshot) to -38.5%/-46.2% depending on
+  which published estimate is scored, both beating the -46.2% persistence
+  counterfactual. No new EIA release this cycle (88.1).
+- **Latest tier-3 validation result:** PortWatch, re-queried 2026-11-23,
+  max date still 2026-11-15 -- **sixth consecutive identical reading,
+  stall remains confirmed** (88.3). This cycle's genuinely new tier-3 use
+  is not the max-date check but the full-history pull used for the v1-vs-v2
+  back-test (88.3/88.6): quarterly averages 1Q26 45.58, 2Q26 7.96, 3Q26
+  6.21 (n_total/day), logged here per the owner's 2026-11-16 directive to
+  record source, fetch date, comparison and result for every tier-3 use.
+
+### 88.12 "Always show a current estimate": checked, clean
+
+Live `hormuz.json` re-verified this cycle (via the fetch in 88.1's
+companion check -- the site's own data endpoint, not just the EIA source):
+`for_date` 2026-11-21, `suppressed: false`, `extrapolated: null`, horizon
+52/92 days. The page is live and not blank. No action needed; checked per
+the standing requirement regardless.
+
+### 88.13 Net effect and carry-forward
+
+**Delivery type: (a) + (b) + (c) + (d) + (e) + (f).** EIA independently
+reconfirmed unchanged (88.1); OPEC not independently re-probed this cycle
+per the brief's own instruction (88.2); PortWatch's stall reconfirmed for a
+sixth cycle AND its full daily history pulled for the first time, enabling
+a genuine (if thin) hindsight back-test rather than only a max-date check
+(88.3); two historical JMIC PDFs read directly, the first primary transit
+data this log has had from inside the 1Q26->2Q26 transition (88.4); a
+challenger model v2 designed with every parameter explained and every
+rejected alternative stated in evidence, not assertion (88.5); v1 vs v2
+back-tested on every available transition, with the thinness of the
+disrupted-regime evidence (n=2, one of those two untestable for lack of
+PortWatch coverage) stated plainly rather than papered over (88.6); H3
+tested through v2 with real arithmetic, including a new, dateable reason
+(UKMTO's own September-to-November trajectory) the balance of evidence
+argues against acting on the point while supporting acting on the band
+(88.7); a possible category-3/4-adjacent governance ambiguity in the
+weekly-plan's own wording flagged explicitly for the CEO rather than
+resolved unilaterally (88.8); a complete field spec for daily shadow-logging
+of both models handed to Build, including where the tier-2-confirmation
+judgment should live (88.9); a single, evidenced adopt/keep recommendation,
+not a menu (88.10); the required current-prediction/signals/validation-error
+summary given in full (88.11); "always show a current estimate" checked
+clean (88.12).
+
+**Carry-forward priority order for the next cycle:**
+
+1. **CEO: decide on v2's band-gate mechanism this week**, per the owner's
+   explicit "the decision is made this week, not deferred to 4Q26"
+   instruction -- the evidence and recommendation are in 88.5-88.10.
+2. **Flag 88.8 explicitly in the cycle report** so the owner sees the
+   tier-3/wording ambiguity before any PR ships, regardless of which way
+   the CEO decides on adoption.
+3. **If adopted, Build implements the band-gate and the shadow-logging file
+   per 88.9's spec**, including the `signal-state.json` hand-off mechanism
+   so the tier-2-confirmation judgment stays with Research.
+4. **Track H1 and the band-gate's `gate_active` history together against
+   4Q26** -- the first chance either gets a real (non-proxy) disrupted-regime
+   test.
+5. **EIA/OPEC/PortWatch**: keep re-probing every cycle. PortWatch's stall is
+   now 6 cycles/8 days; keep checking for resumption, which would open a
+   much richer, continuous tier-3 validation window than the two JMIC PDFs
+   this cycle could provide for 2Q26-3Q26.
+6. **The next UKMTO weekly transit reading** (due, not yet out as of this
+   cycle per a repeated direct search) remains the single cheapest test of
+   whether the three-week dip (325->308->263) continues, stabilises, or
+   reverses -- directly relevant to how long the band-gate, if adopted,
+   stays active.
