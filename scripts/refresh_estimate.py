@@ -107,6 +107,38 @@ tracking GPCI monthly regardless of horizon) with only the band widened:
 Both states say plainly that they are extrapolated and carry a visibly wider
 band than the backtested one, per GOVERNANCE.md's standing rule that "always
 show an estimate" never means dropping the confidence label.
+
+The band-gate (v2, methodology.md section 88, CEO methodology decision
+2026-11-23)
+-----------------------------------------------------------------------
+The point formula above is UNCHANGED. What changed is that the one-sided
+disrupted/extrapolated band (shown above) can now gain a GATE: when the
+regime is disrupted (or the horizon guard above is forcing a
+disrupted-shaped band in States B/C) AND a confirmed, dated, PRIMARY tier-2
+signal (today: UKMTO's own successive weekly transit counts, never
+PortWatch or any other tier-3 series) is moving opposite the direction the
+one-sided band currently assumes, the band widens to the two-sided
+`[point/k, point*k]` instead of the usual one-sided
+`[persistence, point*k]` / `[point/k, persistence]`. This uses the SAME
+already-validated `k` -- no new fitted parameter -- and is implemented as a
+min/max against the existing one-sided band (apply_band_gate() below), so it
+is a superset of the one-sided band by construction and can only ever widen
+it, never narrow it, regardless of where `persistence` happens to sit.
+
+The gate's current state is read from `company-memory/signal-state.json`,
+a small file Research maintains (at most once per weekly research cycle,
+not live) holding its current confirmed-signal determination. That file is
+internal only (never under site/, never served) -- see load_signal_state().
+If it is missing or malformed, the gate defaults OFF (v1's existing
+one-sided band, unchanged): this is a fail-safe default, never a reason to
+fail the refresh job.
+
+Every run also appends one record to `company-memory/shadow-predictions.jsonl`
+(idempotent by for_date, append-only, internal only -- see
+append_shadow_prediction()) recording what BOTH v1 (the old one-sided band)
+and v2 (what was actually published, gate included) would show for today,
+so that whichever quarter lands next can score both variants' band-capture
+honestly, per methodology.md section 88.9.
 """
 
 import datetime
@@ -126,6 +158,14 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(REPO, "site", "data", "hormuz.json")
 PAGE = os.path.join(REPO, "site", "index.html")
 SITEMAP = os.path.join(REPO, "site", "sitemap.xml")
+# v2 band-gate inputs/outputs (methodology.md section 88, CEO methodology
+# decision 2026-11-23; decisions-log.md same date). Both live under
+# company-memory/, NEVER under site/ -- signal-state.json is an internal,
+# never-served hand-off file from Research to this job, and
+# shadow-predictions.jsonl is an internal, never-served daily log, not a
+# public artifact.
+SIGNAL_STATE_PATH = os.path.join(REPO, "company-memory", "signal-state.json")
+SHADOW_LOG_PATH = os.path.join(REPO, "company-memory", "shadow-predictions.jsonl")
 
 # site/sitemap.xml <lastmod> for these two pages only -- both are rewritten
 # every run (the estimate/history blocks above), so their lastmod is kept
@@ -376,6 +416,113 @@ def band_parameters(bt):
     k = max(max(r["predicted"] / r["actual"], r["actual"] / r["predicted"]) for r in dis)
     calm_worst = max((abs(r["error_pct"]) / 100 for r in calm), default=0.0)
     return round(k, 3), round(max(CALM_FLOOR, 1.5 * calm_worst), 3)
+
+
+# --------------------------------------------------------------------------
+# v2 band-gate (methodology.md section 88, CEO methodology decision
+# 2026-11-23) -- see the module docstring's "The band-gate (v2...)" section.
+# --------------------------------------------------------------------------
+
+def load_signal_state(path=SIGNAL_STATE_PATH):
+    """Read company-memory/signal-state.json, Research's current confirmed-
+    signal determination (updated at most once per weekly research cycle,
+    never computed live against a news feed by this job -- methodology.md
+    section 88.9). Returns a dict with at least "gate_active" (bool) and
+    "direction" ("rising" | "declining" | "none").
+
+    FAILS SAFE, NEVER LOUD: a missing file (nothing recorded yet), a
+    malformed file, or a non-bool "gate_active" all default to the gate
+    being OFF (v1's existing one-sided band, unchanged) rather than
+    crashing the daily refresh job over an internal hand-off file that is
+    not part of the published data pipeline's own required inputs (EIA/
+    GPCI). This mirrors the same "never publish on a failure" discipline
+    the rest of this module uses for EIA/GPCI, inverted: here, a failure
+    means fall back to the pre-v2 behaviour, not stop publishing.
+    """
+    default = {"gate_active": False, "direction": "none", "reason": None, "source_entries": []}
+    try:
+        with open(path) as f:
+            state = json.load(f)
+        if not isinstance(state, dict) or not isinstance(state.get("gate_active"), bool):
+            raise ValueError("signal-state.json missing a boolean 'gate_active'")
+        state.setdefault("direction", "none")
+        state.setdefault("reason", None)
+        state.setdefault("source_entries", [])
+        return state
+    except FileNotFoundError:
+        print("signal-state.json not found at %s -- v2 band-gate defaults OFF (v1 behaviour)" % path)
+        return default
+    except Exception as exc:
+        print("signal-state.json malformed (%s: %s) -- v2 band-gate defaults OFF (v1 behaviour)"
+              % (type(exc).__name__, exc))
+        return default
+
+
+def gate_fires(signal_state, phase, regime, horizon):
+    """Whether v2's band-gate is active THIS run: Research's recorded signal
+    is active AND points opposite the CURRENT phase AND we are in a
+    disrupted or extrapolated (States B/C, forced disrupted-shape) regime --
+    methodology.md section 88.5 ("scoped to disrupted/extrapolated only").
+    Recomputing the "opposite the current phase" check here (rather than
+    trusting signal-state.json's own "direction" field blindly) means a
+    phase flip between Research's weekly updates to that file cannot
+    silently misfire the gate in the wrong direction.
+    """
+    if not signal_state.get("gate_active"):
+        return False
+    opposite = {"rising": "declining", "falling": "rising"}.get(phase)
+    if signal_state.get("direction") != opposite:
+        return False
+    return regime == "disrupted" or horizon > MAX_HORIZON_DAYS
+
+
+def apply_band_gate(lo, hi, point_raw, k, active):
+    """v2's band-gate (methodology.md section 88.5/88.10): when `active`,
+    widen the one-sided band (lo, hi) to be a superset of the two-sided
+    [point_raw/k, point_raw*k], using min()/max() rather than overwriting
+    outright -- this GUARANTEES the "only ever widens, never narrows"
+    property by construction, rather than relying on an algebraic claim
+    about where `persistence` happens to sit relative to point/k and
+    point*k. For every case measured so far (methodology.md 88.6/88.7) this
+    produces exactly [point_raw/k, point_raw*k], since persistence does sit
+    inside that range -- but the min/max form stays safe even if a future
+    case breaks that pattern.
+
+    Returns (new_lo, new_hi, widened) where `widened` is True iff the gate
+    actually changed either bound (so callers can tell "gate was active"
+    from "gate changed the published numbers" -- they are usually, but not
+    provably always, the same thing with this construction).
+    """
+    if not active:
+        return lo, hi, False
+    new_lo, new_hi = min(lo, point_raw / k), max(hi, point_raw * k)
+    return new_lo, new_hi, (new_lo, new_hi) != (lo, hi)
+
+
+def append_shadow_prediction(record, path=SHADOW_LOG_PATH):
+    """Append one JSON Lines record to company-memory/shadow-predictions.jsonl
+    (methodology.md section 88.9). Append-only, idempotent by `for_date`:
+    if a line for this for_date already exists, this does nothing -- past
+    lines are NEVER rewritten, the same discipline site/data/history.json
+    already uses (scripts/generate_history.upsert), so a same-day re-run of
+    this job does not duplicate or mutate a frozen shadow record.
+    """
+    for_date = record["for_date"]
+    if os.path.exists(path):
+        with open(path) as f:
+            for line in f:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    existing = json.loads(line)
+                except ValueError:
+                    continue
+                if existing.get("for_date") == for_date:
+                    return False
+    with open(path, "a") as f:
+        f.write(json.dumps(record) + "\n")
+    return True
 
 
 def classify(series, companions):
@@ -719,6 +866,17 @@ def main(today=None, page=None, xlsx=None):
     point_raw = ratio * g_latest
     phase = "rising" if g_latest >= g_anchor else "falling"
 
+    # v2 band-gate (methodology.md section 88, CEO methodology decision
+    # 2026-11-23): read Research's current confirmed-signal determination
+    # and decide, for THIS run, whether the gate fires. See gate_fires()'s
+    # docstring for exactly what "fires" requires. `horizon` is already
+    # known at this point (computed above); `regime` was set by classify()
+    # earlier in main().
+    signal_state = load_signal_state()
+    gate_active = gate_fires(signal_state, phase, regime, horizon)
+    if gate_active:
+        print("BAND-GATE ACTIVE: %s" % signal_state.get("reason"))
+
     doc["production_source"] = {
         "publisher": "U.S. Energy Information Administration",
         "dataset": "Short-Term Energy Outlook",
@@ -745,10 +903,24 @@ def main(today=None, page=None, xlsx=None):
         "production_since_anchor": phase,
         "band_rule": "calm: point +/- max(3%, 1.5 x worst calm back-test miss). disrupted: between persistence (anchor "
                      "volume unchanged) and the estimator's worst measured disrupted miss (factor k) in the direction "
-                     "production has moved since the anchor quarter.",
+                     "production has moved since the anchor quarter. v2 band-gate (methodology.md section 88): if a "
+                     "confirmed primary tier-2 signal (never PortWatch/tier-3) points opposite that direction, the "
+                     "disrupted/extrapolated band widens to the two-sided [point/k, point*k] -- same k, never narrower.",
         "k_disrupted": k,
         "calm_halfwidth": calm_half,
         "backtest": bt,
+        # v2 band-gate (methodology.md section 88.5/88.9/88.10): whether a
+        # confirmed primary tier-2 signal (never PortWatch/tier-3) is
+        # pointing opposite the current phase, widening the disrupted/
+        # extrapolated band to two-sided this run. Recorded here, in the
+        # same transparent spot as the rest of the estimator's working, so
+        # the live data feed always shows why the band is the shape it is.
+        "band_gate": {
+            "active": gate_active,
+            "direction": signal_state.get("direction"),
+            "reason": signal_state.get("reason") if gate_active else None,
+            "source_entries": signal_state.get("source_entries", []) if gate_active else [],
+        },
     }
     model["shape_function"] = ("GPCI transit-share: the strait is assumed to carry the same share of Gulf producer crude "
                                "output (GPCI) as in the latest published quarter; the estimate moves monthly with GPCI. "
@@ -792,6 +964,17 @@ def main(today=None, page=None, xlsx=None):
             lo, hi = anchor["total_oil"], point_raw * k_ext
         else:
             lo, hi = point_raw / k_ext, anchor["total_oil"]
+        v1_lo, v1_hi = lo, hi
+        # v2 band-gate (methodology.md section 88): States B/C already force
+        # a disrupted-shaped band regardless of classify()'s own live
+        # regime read (section 39.3), so the gate applies here on exactly
+        # the same "disrupted-or-extrapolated" terms as the normal branch
+        # below. Uses the SAME base k (not k_ext) per the gate's own design
+        # (no new fitted parameter); apply_band_gate()'s min/max form means
+        # this can only widen what's already here, never narrow it, even
+        # though k_ext >= k makes the extrapolated one-sided band already
+        # wider than the plain-k two-sided target on one side.
+        lo, hi, gated = apply_band_gate(lo, hi, point_raw, k, gate_active)
         est["suppressed"] = False
         est["extrapolated"] = state
         est["point"] = point
@@ -802,13 +985,23 @@ def main(today=None, page=None, xlsx=None):
         # if wide, figure): matches the normal state's empty markers.
         production_html = '<!-- GENERATED:production_context -->\n  <!-- /GENERATED:production_context -->\n'
         next_anchor = next_quarter_label(anchor["period"])
+        gate_clause = (
+            " Band-gate active (methodology.md section 88): a confirmed primary signal -- %s -- "
+            "points the opposite way, so the range is also widened on the other side, to "
+            "[point/k, point*k] = [%.1f, %.1f], using the same k; this never narrows the range, "
+            "only ever widens it." % (signal_state.get("reason"), point_raw / k, point_raw * k)
+        ) if gated else ""
+        gate_sentence = (
+            " A confirmed primary signal also points the other way, which widens the range further, "
+            "on both sides, rather than only in the extrapolation's own direction."
+        ) if gated else ""
         if state == "B":
             est["band_basis"] = (
                 "Extrapolated past the 92-day tested horizon (methodology.md section 39): forced "
                 "disrupted-style band, widened geometrically from the back-tested miss factor "
                 "k=%.3f via k_ext=k^(1+extra) with extra=%.3f (horizon %d days past the %s anchor), "
                 "giving k_ext=%.3f, applied in the direction production has moved (%s) since the "
-                "anchor quarter." % (k, extra, horizon, anchor["period"], k_ext, phase))
+                "anchor quarter.%s" % (k, extra, horizon, anchor["period"], k_ext, phase, gate_clause))
             note = "This estimate is extrapolated past our tested horizon &mdash; see"
             block = (
                 '    <p class="est-label">Our model&rsquo;s estimate for %s (UTC) &mdash; '
@@ -818,19 +1011,20 @@ def main(today=None, page=None, xlsx=None):
                 '    <p class="band">\n'
                 '      Range <strong>%s</strong> to <strong>%s</strong>, wider than usual: we are\n'
                 '      %d days past the last published quarter (%s), beyond the 92 days our\n'
-                '      back-test covers. <a href="sources.html#range">Why?</a>\n'
+                '      back-test covers.%s <a href="sources.html#range">Why?</a>\n'
                 '    </p>\n' % (target.strftime("%A %-d %B %Y"), point, est["band_low"], est["band_high"],
-                                horizon, period_words(anchor["period"]))
+                                horizon, period_words(anchor["period"]), gate_sentence)
             )
-            print("EXTRAPOLATED STATE B (%d days past %d-day horizon, cap %d) -- point %s band %s-%s, k_ext=%.3f"
-                  % (horizon, MAX_HORIZON_DAYS, EXTRAPOLATION_CAP_DAYS, point, est["band_low"], est["band_high"], k_ext))
+            print("EXTRAPOLATED STATE B (%d days past %d-day horizon, cap %d) -- point %s band %s-%s, k_ext=%.3f%s"
+                  % (horizon, MAX_HORIZON_DAYS, EXTRAPOLATION_CAP_DAYS, point, est["band_low"], est["band_high"],
+                     k_ext, ", GATED" if gated else ""))
         else:
             est["band_basis"] = (
                 "Extrapolated past the 184-day cap (methodology.md section 39.5): forced disrupted-style "
                 "band frozen at k_ext=k^2=%.3f (k=%.3f, extra held at 1.0); the band no longer widens, but "
                 "the point keeps tracking the latest GPCI month (%s). Horizon is %d days past the %s "
-                "anchor, more than double the 92-day tested window -- EIA's release is overdue."
-                % (k_ext, k, last_hist, horizon, anchor["period"]))
+                "anchor, more than double the 92-day tested window -- EIA's release is overdue.%s"
+                % (k_ext, k, last_hist, horizon, anchor["period"], gate_clause))
             note = ("This estimate is extrapolated well past our tested horizon, with EIA&rsquo;s "
                     "release overdue &mdash; see")
             block = (
@@ -841,29 +1035,50 @@ def main(today=None, page=None, xlsx=None):
                 '    <p class="band">\n'
                 '      Range <strong>%s</strong> to <strong>%s</strong>. We are more than double our\n'
                 '      tested horizon past the last published quarter, so treat this as a best\n'
-                '      available guess, not a validated estimate. <a href="sources.html#range">Why?</a>\n'
-                '    </p>\n' % (target.strftime("%A %-d %B %Y"), point, est["band_low"], est["band_high"])
+                '      available guess, not a validated estimate.%s <a href="sources.html#range">Why?</a>\n'
+                '    </p>\n' % (target.strftime("%A %-d %B %Y"), point, est["band_low"], est["band_high"], gate_sentence)
             )
             print("EXTRAPOLATED STATE C (%d days past %d-day horizon, cap %d) -- point %s band %s-%s, k_ext=%.3f; "
-                  "EIA release overdue" % (horizon, MAX_HORIZON_DAYS, EXTRAPOLATION_CAP_DAYS,
-                                           point, est["band_low"], est["band_high"], k_ext))
+                  "EIA release overdue%s" % (horizon, MAX_HORIZON_DAYS, EXTRAPOLATION_CAP_DAYS,
+                                           point, est["band_low"], est["band_high"], k_ext, ", GATED" if gated else ""))
         model["last_published"] = {"for_date": target.isoformat(), "point": point,
                                    "band_low": est["band_low"], "band_high": est["band_high"],
                                    "anchor_period": anchor["period"], "method": "gpci-transit-share",
                                    "extrapolated": state}
     else:
         point = round(point_raw, 1)
+        gated = False
         if regime == "calm":
+            # v2's band-gate is explicitly scoped to disrupted/extrapolated
+            # regimes only (methodology.md section 88.5/88.6's back-test
+            # table): a calm regime's band is already the tightest,
+            # symmetric, back-tested shape, so the gate never applies here
+            # regardless of what signal-state.json/gate_active says.
             lo, hi = point_raw * (1 - calm_half), point_raw * (1 + calm_half)
+            v1_lo, v1_hi = lo, hi
             tail = ""
         elif phase == "rising":
             lo, hi = anchor["total_oil"], point_raw * k
-            tail = ("The headline is more likely too low than too high.\n"
-                    "      <a href=\"sources.html#range\">Why?</a>\n")
+            v1_lo, v1_hi = lo, hi
+            lo, hi, gated = apply_band_gate(lo, hi, point_raw, k, gate_active)
+            tail = (
+                ("A confirmed signal points the other way, so the range is widened on both "
+                 "sides rather than just the one side.\n      <a href=\"sources.html#range\">Why?</a>\n")
+                if gated else
+                ("The headline is more likely too low than too high.\n"
+                 "      <a href=\"sources.html#range\">Why?</a>\n")
+            )
         else:
             lo, hi = point_raw / k, anchor["total_oil"]
-            tail = ("The headline is more likely too high than too low.\n"
-                    "      <a href=\"sources.html#range\">Why?</a>\n")
+            v1_lo, v1_hi = lo, hi
+            lo, hi, gated = apply_band_gate(lo, hi, point_raw, k, gate_active)
+            tail = (
+                ("A confirmed signal points the other way, so the range is widened on both "
+                 "sides rather than just the one side.\n      <a href=\"sources.html#range\">Why?</a>\n")
+                if gated else
+                ("The headline is more likely too high than too low.\n"
+                 "      <a href=\"sources.html#range\">Why?</a>\n")
+            )
         est["suppressed"] = False
         # CEO pre-merge fix (30th cycle): the States B/C branch above is the
         # only place that sets this key. Without an explicit reset here, a
@@ -887,6 +1102,12 @@ def main(today=None, page=None, xlsx=None):
                "Disrupted regime, Gulf production %s since %s: from persistence (%.1f, the anchor volume unchanged) "
                "to the estimator's worst measured miss, factor k=%.3f, applied in the direction production moved."
                % (phase, anchor["period"], anchor["total_oil"], k)))
+        if gated:
+            est["band_basis"] += (
+                " Band-gate active (methodology.md section 88): a confirmed primary signal -- %s -- points "
+                "the opposite way, so the range widens to the two-sided [point/k, point*k] = [%.1f, %.1f] "
+                "(same k) rather than the usual one-sided construction; this never narrows the range, only "
+                "ever widens it." % (signal_state.get("reason"), point_raw / k, point_raw * k))
         model["last_published"] = {"for_date": target.isoformat(), "point": point,
                                    "band_low": est["band_low"], "band_high": est["band_high"],
                                    "anchor_period": anchor["period"], "method": "gpci-transit-share"}
@@ -907,6 +1128,46 @@ def main(today=None, page=None, xlsx=None):
     # for every state above (normal, State B, State C) since all three set
     # est["point"]/band_low/band_high/extrapolated before this point.
     share_desc = build_share_text(est, target)
+
+    # v2 daily shadow-logging (methodology.md section 88.9, CEO methodology
+    # decision 2026-11-23): one record per day, appended (never rewritten)
+    # to company-memory/shadow-predictions.jsonl, so that whichever quarter
+    # lands next can score v1's (pre-gate, one-sided) and v2's (what was
+    # actually published, gate included) bands separately. v1.point and
+    # v2.point are always equal, by design -- v2 never moves the point, only
+    # the band (see the module docstring). Every state above (calm,
+    # disrupted, State B, State C) sets v1_lo/v1_hi/gated before this point.
+    append_shadow_prediction({
+        "for_date": est["for_date"],
+        "retrieved_utc": doc["retrieved_utc"],
+        "anchor_period": est["anchor_period"],
+        "anchor_value": est["anchor_value"],
+        "regime": model.get("regime"),
+        "regime_kind": model.get("regime_kind"),
+        "phase": phase,
+        "k_disrupted": k,
+        "v1": {
+            "point": est["point"],
+            "band_low": round(v1_lo, 1),
+            "band_high": round(v1_hi, 1),
+            "extrapolated": est.get("extrapolated"),
+        },
+        "v2": {
+            "point": est["point"],
+            "band_low": est["band_low"],
+            "band_high": est["band_high"],
+            # "gate_active" here is whether Research's confirmed signal
+            # condition held and was in scope this run (gate_fires()),
+            # independent of whether it actually changed band_low/band_high
+            # (that is visible by comparing this v2 block to v1 above --
+            # apply_band_gate()'s min/max form means it is sometimes active
+            # with no numeric effect, if the one-sided band already covered
+            # the two-sided target on every side).
+            "gate_active": gate_active,
+            "gate_reason": signal_state.get("reason") if gate_active else None,
+            "gate_source_entries": signal_state.get("source_entries", []) if gate_active else [],
+        },
+    })
 
     # G5 (backlog.md, 2026-09-23) -- append today's published estimate (or
     # its suppression) to the persistent history: site/data/history.json,
@@ -1059,9 +1320,9 @@ def main(today=None, page=None, xlsx=None):
     update_sitemap_lastmod(SITEMAP, today.isoformat())
 
     print("OK: estimate dated %s, horizon %d d, regime %s/%s, GPCI %s=%.2f (anchor %s %.2f, %s), "
-          "point %s band %s-%s, k=%.3f"
+          "point %s band %s-%s, k=%.3f, band-gate %s"
           % (target, horizon, regime, kind, last_hist, g_latest, anchor["period"], g_anchor, phase,
-             est["point"], est["band_low"], est["band_high"], k))
+             est["point"], est["band_low"], est["band_high"], k, "ACTIVE" if gated else "off"))
 
 
 if __name__ == "__main__":
