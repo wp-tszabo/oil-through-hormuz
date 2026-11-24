@@ -543,46 +543,36 @@ def classify(series, companions):
 
 
 # --------------------------------------------------------------------------
-# "What changed and why" (backlog.md G5 follow-up, okrs.md G5)
+# "What changed and why" (backlog.md G5 follow-up, okrs.md G5), and its
+# weekly-grain extension (growth-plan.md section 10, 77th-cycle G3 action).
+#
+# Both build_change_note() (day-over-day) and build_weekly_change_note()
+# (week-over-week, against the history.json entry from exactly 7 days
+# earlier) compare a pair of published entries and decide what, if
+# anything, can be honestly said about why the figure moved. That decision
+# -- what counts as an honest attributable cause -- lives in exactly one
+# place, _attribute_point_change(), plus one shared band-only-change
+# helper, _describe_band_change() (backlog.md "band-gate v2" gap (1): even
+# on a day/week the point estimate itself did not move, the band-gate
+# (methodology.md section 88) can still change the published RANGE by
+# activating or deactivating, and the two callers below must say so rather
+# than silently reporting "no change"). Neither helper is reused by
+# anything that invents a cause outside model['estimator'] or the
+# compared entry's own recorded fields -- no news, no geopolitics.
 # --------------------------------------------------------------------------
 
-def build_change_note(est, model, prev_entry):
-    """A short, honest, plain-language sentence about how today's published
-    figure compares to the previous one, and -- only when we can actually
-    show it from data already in hormuz.json (model['estimator']) plus the
-    previously published row in history.json -- why.
-
-    Never invents a cause outside the model's own cleared inputs: no news,
-    no geopolitics, nothing not already in model['estimator']. When we
-    cannot honestly attribute the move to a specific recorded input (first
-    day, suppressed either side, or the recorded fields don't explain it),
-    this falls back to a neutral sentence rather than guessing.
+def _attribute_point_change(headline, estr, anchor_period, prev_entry):
+    """Shared cause-attribution logic for a point-estimate change between
+    `estr` (today's model['estimator']) and `prev_entry` (the earlier
+    history.json row being compared against -- yesterday's for the daily
+    note, 7-days-ago's for the weekly note). Only ever cites a cause
+    already recorded in one of those two places (an anchor-quarter
+    re-anchor, a revised transit-share ratio, or a revised/new GPCI
+    production figure); falls back to an honest "we don't have enough
+    detail recorded" sentence otherwise. `headline` is the already-built
+    lead sentence describing the move (the one piece that legitimately
+    differs between the daily and weekly callers' wording).
     """
-    estr = model.get("estimator", {})
-    anchor_period = est.get("anchor_period")
-    point = est.get("point")
-
-    if prev_entry is None:
-        return ("This is the first estimate in our published history, so there "
-                "is nothing yet to compare it to.")
-
-    if est.get("suppressed") or point is None:
-        return ("We are not publishing a point estimate today, so there is no "
-                "day-over-day change to describe &mdash; see above for why.")
-
-    prev_point = prev_entry.get("point")
-    if prev_entry.get("suppressed") or prev_point is None:
-        return ("The previous day has no published estimate to compare against "
-                "(it fell past our tested horizon on %s), so we are not "
-                "describing a change here." % prev_entry.get("for_date", "the prior day"))
-
-    if round(prev_point, 1) == round(point, 1):
-        return ("No change since our %s estimate: still %.1f million barrels "
-                "per day." % (prev_entry["for_date"], point))
-
-    direction = "rose" if point > prev_point else "fell"
-    headline = "The estimate %s from %.1f to %.1f million barrels per day" % (direction, prev_point, point)
-
     prev_anchor = prev_entry.get("anchor_period")
     prev_transit_share = prev_entry.get("transit_share")
     cur_transit_share = estr.get("transit_share")
@@ -624,12 +614,162 @@ def build_change_note(est, model, prev_entry):
     if (prev_transit_share is not None and cur_transit_share is not None
             and prev_gpci_month and cur_gpci_month and prev_gpci is not None and cur_gpci is not None):
         return ("%s. Our recorded anchor, transit-share ratio and latest GPCI "
-                "figure are all unchanged from the previous day to the precision "
-                "we store them, so this is a small move at a rounding boundary." % headline)
+                "figure driving the point are all unchanged from the figure we are "
+                "comparing against, to the precision we store them, so this is a "
+                "small move at a rounding boundary." % headline)
 
-    return ("%s. Our anchor quarter (%s) is unchanged since %s; we do not have "
-            "enough detail recorded from that previous run to say more "
-            "precisely what moved it." % (headline, period_words(anchor_period), prev_entry["for_date"]))
+    return ("%s. Our anchor quarter (%s) is unchanged since the figure we are "
+            "comparing against (%s); we do not have enough detail recorded from "
+            "that comparison to say more precisely what moved it." % (
+                headline, period_words(anchor_period), prev_entry.get("for_date", "that run")))
+
+
+def _describe_band_change(cur_low, cur_high, prev_low, prev_high, gate_now, gate_then):
+    """Band-gate v2 gap (1), backlog.md: when the POINT estimate is
+    unchanged but the published RANGE moved, say so rather than reporting
+    "no change" -- the band-gate (methodology.md section 88) can widen or
+    narrow the range back with the point held fixed. Returns None if the
+    band is unchanged to the precision we publish it (one decimal place,
+    the same rounding build_change_note()/the page itself use), so callers
+    can fall through to their own ordinary "no change" sentence.
+
+    Only ever cites the band-gate specifically as a cause when its own
+    recorded active/inactive state (model['estimator']['band_gate']['active']
+    today, the persisted 'band_gate_active' field on the comparison entry)
+    actually flipped between the two entries being compared -- the same
+    guilty-until-checked discipline as build_change_note()'s point-cause
+    attribution. If the gate's recorded state did NOT flip but the band
+    still moved (e.g. a revised back-tested miss factor k), this falls back
+    to an honest neutral sentence rather than guessing at the band-gate as
+    a cause it cannot support.
+    """
+    if cur_low is None or cur_high is None or prev_low is None or prev_high is None:
+        return None
+    cur_low, cur_high = round(cur_low, 1), round(cur_high, 1)
+    prev_low, prev_high = round(prev_low, 1), round(prev_high, 1)
+    if cur_low == prev_low and cur_high == prev_high:
+        return None
+
+    band_desc = ("The point estimate itself did not change, but the published "
+                 "range moved: from %.1f&ndash;%.1f to %.1f&ndash;%.1f million barrels "
+                 "per day." % (prev_low, prev_high, cur_low, cur_high))
+    if gate_now and not gate_then:
+        return ("%s This is the band-gate (methodology.md section 88) activating: a "
+                "confirmed primary signal is now recorded as pointing opposite the "
+                "model's current phase, which widens the range to the two-sided form "
+                "regardless of the point." % band_desc)
+    if gate_then and not gate_now:
+        return ("%s This is the band-gate (methodology.md section 88) deactivating: "
+                "the confirmed primary signal that had widened the range is no longer "
+                "recorded as active, so the range reverts to its usual one-sided form." % band_desc)
+    return ("%s We do not have a specific recorded cause for this change in our own "
+            "data (the band-gate's own recorded state is unchanged between the two), "
+            "so we are not attributing it further." % band_desc)
+
+
+def build_change_note(est, model, prev_entry):
+    """A short, honest, plain-language sentence about how today's published
+    figure compares to the previous one, and -- only when we can actually
+    show it from data already in hormuz.json (model['estimator']) plus the
+    previously published row in history.json -- why.
+
+    Never invents a cause outside the model's own cleared inputs: no news,
+    no geopolitics, nothing not already in model['estimator']. When we
+    cannot honestly attribute the move to a specific recorded input (first
+    day, suppressed either side, or the recorded fields don't explain it),
+    this falls back to a neutral sentence rather than guessing. Also
+    detects a band-only change (see _describe_band_change()) on a day the
+    point is unchanged but the band-gate moved the published range.
+    """
+    estr = model.get("estimator", {})
+    anchor_period = est.get("anchor_period")
+    point = est.get("point")
+    gate_now = bool((estr.get("band_gate") or {}).get("active"))
+
+    if prev_entry is None:
+        return ("This is the first estimate in our published history, so there "
+                "is nothing yet to compare it to.")
+
+    if est.get("suppressed") or point is None:
+        return ("We are not publishing a point estimate today, so there is no "
+                "day-over-day change to describe &mdash; see above for why.")
+
+    prev_point = prev_entry.get("point")
+    if prev_entry.get("suppressed") or prev_point is None:
+        return ("The previous day has no published estimate to compare against "
+                "(it fell past our tested horizon on %s), so we are not "
+                "describing a change here." % prev_entry.get("for_date", "the prior day"))
+
+    if round(prev_point, 1) == round(point, 1):
+        band_note = _describe_band_change(
+            est.get("band_low"), est.get("band_high"),
+            prev_entry.get("band_low"), prev_entry.get("band_high"),
+            gate_now, bool(prev_entry.get("band_gate_active")))
+        if band_note:
+            return band_note
+        return ("No change since our %s estimate: still %.1f million barrels "
+                "per day." % (prev_entry["for_date"], point))
+
+    direction = "rose" if point > prev_point else "fell"
+    headline = "The estimate %s from %.1f to %.1f million barrels per day" % (direction, prev_point, point)
+    return _attribute_point_change(headline, estr, anchor_period, prev_entry)
+
+
+def build_weekly_change_note(est, model, history, for_date):
+    """The same "what changed and why" comparison as build_change_note(),
+    but against the history.json entry from exactly 7 days before
+    `for_date` instead of the previous day -- growth-plan.md section 10
+    (77th-cycle G3 growth action). Reuses the exact same honest
+    attribution logic (_attribute_point_change(), _describe_band_change())
+    build_change_note() uses, so there is exactly one place deciding what
+    counts as an honest attributable cause for either cadence.
+
+    `history` is the full history.json doc (as returned by
+    generate_history.load_history()); `for_date` is today's published
+    estimate's date (a datetime.date). Falls back to an honest "not enough
+    history yet" sentence when no entry exists for exactly 7 days back
+    (early in the series), the same shape as build_change_note()'s
+    first-estimate-ever fallback.
+    """
+    week_ago = for_date - datetime.timedelta(days=7)
+    week_ago_str = week_ago.isoformat()
+    week_entry = next((e for e in history.get("entries", []) if e.get("for_date") == week_ago_str), None)
+
+    estr = model.get("estimator", {})
+    anchor_period = est.get("anchor_period")
+    point = est.get("point")
+    gate_now = bool((estr.get("band_gate") or {}).get("active"))
+
+    if week_entry is None:
+        return ("We do not yet have a published estimate from exactly 7 days ago "
+                "(%s) to compare against, so there is no weekly change to describe "
+                "yet &mdash; this starts showing once our history is at least a "
+                "week deep." % week_ago_str)
+
+    if est.get("suppressed") or point is None:
+        return ("We are not publishing a point estimate today, so there is no "
+                "week-over-week change to describe &mdash; see above for why.")
+
+    week_point = week_entry.get("point")
+    if week_entry.get("suppressed") or week_point is None:
+        return ("The estimate from 7 days ago (%s) was not published (it fell past "
+                "our tested horizon then), so we are not describing a weekly change "
+                "here." % week_ago_str)
+
+    if round(week_point, 1) == round(point, 1):
+        band_note = _describe_band_change(
+            est.get("band_low"), est.get("band_high"),
+            week_entry.get("band_low"), week_entry.get("band_high"),
+            gate_now, bool(week_entry.get("band_gate_active")))
+        if band_note:
+            return "Over the past week (since %s): %s" % (week_ago_str, band_note)
+        return ("No change over the past week: our estimate for %s was %.1f million "
+                "barrels per day and it is still %.1f today." % (week_ago_str, week_point, point))
+
+    direction = "rose" if point > week_point else "fell"
+    headline = ("Over the past week, the estimate %s from %.1f (our %s estimate) to "
+                "%.1f million barrels per day today" % (direction, week_point, week_ago_str, point))
+    return _attribute_point_change(headline, estr, anchor_period, week_entry)
 
 
 # --------------------------------------------------------------------------
@@ -1186,6 +1326,13 @@ def main(today=None, page=None, xlsx=None):
     # in hormuz.json) plus prev_entry (history.json); never from anything
     # outside those two. See build_change_note()'s docstring.
     change_note = build_change_note(est, model, prev_entry)
+    # growth-plan.md section 10 (77th-cycle G3 action) -- the weekly-grain
+    # extension, computed from the SAME est/model plus the history.json
+    # entry from exactly 7 days back (looked up inside the helper itself,
+    # from `history` as it stands before this run's own upsert() below, so
+    # "7 days ago" never resolves to today's own row). See
+    # build_weekly_change_note()'s docstring.
+    weekly_change_note = build_weekly_change_note(est, model, history, target)
     historymod.upsert(history, {
         "for_date": est["for_date"],
         "retrieved_utc": doc["retrieved_utc"],
@@ -1211,6 +1358,15 @@ def main(today=None, page=None, xlsx=None):
         "transit_share": model["estimator"].get("transit_share"),
         "gpci_latest_month": model["estimator"].get("gpci_latest_month"),
         "gpci_latest": model["estimator"].get("gpci_latest"),
+        # Band-gate v2 gap (1), backlog.md: today's recorded gate state
+        # (methodology.md section 88 -- whether a confirmed primary signal
+        # condition fired and was in scope this run; see gate_fires()).
+        # Persisted so a FUTURE run's change note (daily or weekly) can
+        # tell "the gate activated/deactivated" apart from "the band moved
+        # for some other, unrecorded reason" -- see _describe_band_change().
+        # Entries from before this field existed simply lack it (read back
+        # as None/False), which is correct: the gate did not exist yet.
+        "band_gate_active": gate_active,
     })
     historymod.save_history(history)
     historymod.save_csv(history["entries"])
@@ -1267,6 +1423,17 @@ def main(today=None, page=None, xlsx=None):
         histtext, flags=re.S)
     if n > 1:
         raise Fail("found more than one GENERATED:change_note block in history.html")
+    # growth-plan.md section 10 (77th-cycle G3 action) -- the weekly rollup,
+    # its own marker right next to the daily one, same substitution
+    # discipline (0 or 1 allowed, never more; computed every run, not a
+    # separate cron).
+    weekly_change_note_html = '  <p class="change-note">\n    %s\n  </p>\n' % weekly_change_note
+    histnew, n = re.subn(
+        r"<!-- GENERATED:weekly_change_note -->.*?<!-- /GENERATED:weekly_change_note -->",
+        lambda m: "<!-- GENERATED:weekly_change_note -->\n" + weekly_change_note_html + "  <!-- /GENERATED:weekly_change_note -->",
+        histnew, flags=re.S)
+    if n > 1:
+        raise Fail("found more than one GENERATED:weekly_change_note block in history.html")
     if histnew != histtext:
         with open(historymod.HISTORY_PAGE, "w") as f:
             f.write(histnew)
