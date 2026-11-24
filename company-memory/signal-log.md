@@ -225,3 +225,32 @@ each other or to EIA's barrel-volume figure. No tier-2 signal this cycle
 moves the regime classification (still `disrupted`/`local`). See
 `methodology.md` section 88 for how this evidence feeds the challenger
 model v2 design, its hindsight back-test, and the H3 arithmetic.
+
+## 2026-11-24 (77th cycle) entries
+
+| Date of fact | Fact | Source (read directly) | Reliability | Status | Entered model? |
+|---|---|---|---|---|---|
+| n/a (search attempted, nothing newer than the 18 Nov reading already logged) | **Searched directly for a UKMTO weekly transit reading newer than 263/week (through 18 November, logged 2026-11-21); none found this cycle.** Two candidates were checked and specifically rejected rather than assumed negative: (1) a Gulf News piece ("Hormuz shipping 'below normal, but not stalled'") quoting "170 outbound and 155 inbound transits... as of Nov. 10" — read directly, confirmed this is the *same* 325 figure already counted as the first point in the logged 325→308→263 sequence, not a new reading; (2) Lloyd's List Intelligence's Strait of Hormuz Brief — its most recent edition is still 19 November (already logged); a direct search confirms the series moved to an every-other-Thursday cadence, so the next edition is due ~3 December, not this cycle. | [Gulf News, "Hormuz shipping 'below normal, but not stalled': UKMTO"](https://gulfnews.com/world/mena/hormuz-shipping-below-normal-but-not-stalled-1.500741839) (fetched and read directly, dated 10 November 2026); [Lloyd's List Intelligence, Strait of Hormuz Brief index](https://www.lloydslistintelligence.com/resources/blog/strait-of-hormuz-brief-19-november-2026) (searched directly) | n/a | **Not used — no newer reading exists to log; both candidates confirmed as already-logged or not-yet-published rather than left ambiguous.** | No. |
+| n/a (document dated 2025, not 2026) | **A second stale document caught and discarded, same caution class as 2026-11-22's MSCIO catch.** A search for current Hormuz tanker-seizure news surfaced a CBS News/Reuters wire story, "Iran confirms seizure of oil tanker in the Strait of Hormuz" (the *Talara*, Marshall Islands-flagged), which read as current at first glance. Opened and checked directly: the page's own "Updated on" timestamp and cross-referenced wire reporting (CENTCOM, Lloyd's List, UPI) date the seizure to **14-15 November 2025** — a year before this cycle, and before the conflict that began 28 February 2026 — not a current event. | [CBS News, "Iran confirms seizure of oil tanker in the Strait of Hormuz"](https://www.cbsnews.com/amp/news/iran-confirms-tanker-seizure-strait-of-hormuz-talara) (fetched and read directly); cross-checked against [USNI News, 17 Nov 2025](https://news.usni.org/2025/11/17/iran-strait-of-hormuz-tanker-seizure-violates-international-law-centcom-says) | n/a | **Not used.** Logged only so a future cycle doesn't mistake this exact story (or others naming the *Talara*) for a current-week incident without checking the stated date first — same shape of caution as the 75th cycle's MSCIO 2025-dated catch. | No. |
+| 23 November 2026 (checked live, 24 November 2026) | **IMF PortWatch tier-3 re-queried directly by Research this cycle** (not relayed from a prior methodology-section cache): the same public, unauthenticated ArcGIS FeatureServer endpoint, `portname='Strait of Hormuz'`, ordered by date descending. Latest row returned: **2026-11-15, n_total=2**. This is the identical max date logged every cycle since 2026-11-18 — **seventh consecutive cycle, now 9 real-world days with zero new rows.** Feed stall remains confirmed, unchanged verdict from `methodology.md` section 87.3/88.3. | Direct query, `https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query` (tier-3, internal-validation-only; never published) | High (primary endpoint, queried directly, not via a search snippet) | Confirmed (one primary source, read directly). | No — tier-3 validation use only, per the 2026-11-16 owner decision; never the anchor, never republished. Logged here and in `methodology.md` section 89 per the standing recording requirement. |
+
+## Net reading from this cycle's signals (2026-11-24)
+
+No new primary tier-2 signal this cycle changes the picture carried forward
+from the 76th cycle. The single most load-bearing check this cycle is a
+**negative result, confirmed rather than assumed**: a direct search for a
+UKMTO weekly transit reading newer than 263/week (through 18 November)
+found none, and the two closest-looking candidates were each checked and
+shown to be either the already-logged 325 figure or not yet published
+(Lloyd's List's cadence change to every-other-Thursday). `signal-state.json`
+(the band-gate's current determination, Research-maintained per
+`methodology.md` section 88.9) was re-confirmed against this evidence and
+updated with today's `as_of` date and an explicit note that the trend is
+unchanged, rather than left silently stale. A second stale (2025-dated)
+tanker-seizure story was caught and discarded before being mistaken for a
+current event — the same caution class as the 75th cycle's MSCIO catch.
+PortWatch's tier-3 feed stall is now confirmed for a seventh consecutive
+cycle (9 real days, zero new rows), queried directly by Research this cycle
+rather than relayed. No tier-2 signal this cycle moves a numeric input or
+the regime classification (still `disrupted`/`local`). See `methodology.md`
+section 89 for the full KR6 brief, including the recommended model action.

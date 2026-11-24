@@ -18,7 +18,51 @@ until Phase 2 is approved.
 
 ## 1. Measured traffic (GoatCounter, hits not unique visitors)
 
-Read directly 2026-11-23 (76th cycle), `GET /api/v0/stats/total` etc.,
+**Updated 2026-11-24 (77th cycle).** Read directly, `GET /api/v0/stats/total`
+etc., token present and working (confirmed via `/api/v0/me`).
+
+- **Cumulative total: 167 hits over 2026-09-28 through 2026-11-24 (partial
+  day).** Up from 151 (through 2026-11-23 partial)/155 `total_utc` at the
+  last reading (76th cycle, 2026-11-23) — +16 hits since then, almost all
+  of it (16) landing on a single day, 2026-11-23, the day the FAQ page
+  (`faq.html`, PR #48) went live.
+- **Full-week series unchanged from last cycle for the last closed week**:
+  the week of 2026-11-16 is still **29** (re-confirmed by re-summing the
+  daily series: 15+2+3+2+0+3+4 = 29). The last four *complete* weeks are
+  still 28, 23, 33, 29 — trailing-4-week total **113**, unchanged, since no
+  new complete week has closed yet (the next one closes 2026-11-29).
+- **The week of 2026-11-23 is in progress (1.3 of 7 days read): 16 hits so
+  far** — all 16 on 2026-11-23 itself (11-24 shows 0 so far, very early in
+  the day). This is the single busiest day since launch except 2026-11-16's
+  15. **Checked for an FAQ-launch cause, found none isolable**: of the 16
+  hits that day, 12 went to `/`, 3 to `/history.html`, 1 to `/sources.html`,
+  and **0 to `/faq.html` itself**. Referrers for the surrounding 2026-11-22
+  through 2026-11-24 window: 11 no-referrer, 5 `www.bing.com`, 1
+  `duckduckgo.com` — no `chatgpt.com`, no new or unusual referrer. Countries
+  that day: South Korea 4, United States 4, Hungary 3, Vietnam 3, China 1,
+  Romania 1 — three countries (South Korea, China, Romania) not seen in any
+  prior reading. **Read plainly: this looks like ordinary ongoing
+  organic/crawler variance spread across new geographies, the same
+  unexplained-spike pattern as 2026-11-16's 15-hit day, not a measurable
+  FAQ effect** — the FAQ page itself has had zero visits in the ~1 day it
+  has been live, which is the honest, expected reading at this stage, not a
+  defect (see §5 below for the full FAQ review).
+- **Top pages, 2026-11-09 through 2026-11-24 (16 days, the last full window
+  read): `/` 67, `/sources.html` 5, `/history.html` 5, `/strait.html` 1,
+  `/faq.html` 0.** Homepage remains ~86% of traffic.
+- **Top referrers, same window:** no/empty referrer 27, `duckduckgo.com`
+  24, `www.bing.com` 14, "Yahoo" 3, `chatgpt.com` 3. Search and
+  AI-assistant-attributable share is similar to last cycle's reading;
+  absolute referrer counts rose roughly with the rise in total hits, not
+  disproportionately toward any one source.
+- **Top countries, same window:** United States 36, Hungary 9, United
+  Kingdom 8, Canada 6, South Korea 4 (new in the top list), Vietnam 3,
+  Australia 2, Switzerland 2, then single hits from China, France, India,
+  Iran, Japan, New Zealand, Romania, Thailand — 16 countries in 16 days,
+  up from 13 in the prior 15-day window. Continued real external reach.
+
+*(Prior reading, 2026-11-23/76th cycle, kept for the trail:)* Read directly
+2026-11-23 (76th cycle), `GET /api/v0/stats/total` etc.,
 token present and working (confirmed via `/api/v0/me`).
 
 - **Cumulative total: 151 hits over 2026-09-28 through 2026-11-23
@@ -173,7 +217,32 @@ None of these touch the homepage. All are additive pages/sections linked
 from the shared footer nav, matching the pattern `sources.html`/
 `history.html`/`strait.html`/`terms.html` already use.
 
-## 5. This cycle's growth-action proposal: an FAQ page
+## 5. 76th cycle's growth-action: an FAQ page — SHIPPED, reviewed 77th cycle
+
+**77th-cycle review (2026-11-24), one day after merge.** `faq.html` is live
+(HTTP 200, independently re-checked), footer-linked on all five pages
+(confirmed in the live `index.html` HTML, `<a href="faq.html">FAQ</a>`),
+and listed in `sitemap.xml` (confirmed by direct fetch). Implementation
+looks correct and complete — no defect found.
+
+**Traffic verdict: no measurable effect yet, and explicitly too early to
+expect one.** `/faq.html` shows **0 hits** in `stats/hits` for the
+2026-11-09 through 2026-11-24 window, i.e. zero visits in the roughly one
+day it has been live. The one notable traffic event since merge — a
+16-hit day on 2026-11-23 — does not trace to the FAQ: none of those 16
+hits went to `/faq.html`, the referrer mix shows nothing new or FAQ-shaped
+(mostly no-referrer and Bing, no `chatgpt.com` uptick), and the day reads
+as the same kind of unexplained organic/crawler variance this plan has
+already seen (e.g. 2026-11-16's 15-hit day), not a FAQ-driven effect. This
+is the expected, honest result at one day old — search engines and AI
+assistants typically take days to weeks to crawl and surface a new page
+even with a sitemap entry — and should not be read as the page
+underperforming. **Re-check again next cycle(s)** once it has had a more
+realistic window (1-2 full weeks) to be crawled.
+
+---
+
+### Original proposal (76th cycle, for the record)
 
 **What:** a new `faq.html`, linked from the footer nav on all five existing
 pages (same list pattern: Sources & methodology / Estimate history / The
@@ -456,4 +525,76 @@ something to pre-decide here.
 | 71st (2026-11-20, pre-Monetization-ownership) | Sitemap `<lastmod>` dates (PR #43) | Possible crawl-frequency signal improvement | Inconclusive — no attributable effect isolable from a flat traffic day (per 74th-cycle review) |
 | 74th (2026-11-21, pre-Monetization-ownership) | Feed-autodiscovery parity across all 5 pages (PR #44) | Marginal feed-reader/aggregator discoverability | Not yet reviewed for effect in a dedicated readout; folded into the general flat-to-29/week reading this cycle |
 | 75th (2026-11-22, pre-Monetization-ownership) | Live-generated OG/Twitter share description (PR #46) | Any future share of a link shows the live estimate+range, not placeholder text | No shares have happened yet (no outward contact); no effect measurable until one does |
-| 76th (2026-11-23, this cycle, first Monetization-owned action) | FAQ page proposal (`faq.html`, drafted above, not yet built) | Small new-page hits; possibly more AI-assistant citation over weeks | To be reviewed next cycle once Build implements and it has been live at least a few days |
+| 76th (2026-11-23, first Monetization-owned action) | FAQ page (`faq.html`, PR #48, shipped and deploy-verified live) | Small new-page hits; possibly more AI-assistant citation over weeks | **Reviewed 77th cycle (2026-11-24), ~1 day live: 0 hits to `/faq.html` so far.** Implementation verified correct (live, footer-linked, in sitemap) — too early for a traffic verdict, not a defect. The one nearby traffic spike (16 hits, 2026-11-23) does not trace to the FAQ (0 of those hits went to `/faq.html`; no new/FAQ-shaped referrer). Re-check again once the page has had 1-2 full weeks to be crawled. |
+| 77th (2026-11-24, this cycle) | Weekly "what changed this week" rollup on `history.html`, extending the existing daily change-note logic (G5) to a 7-day comparison (drafted below) | A second, differently-cadenced fresh dated paragraph for crawlers/assistants; plausible small effect on AI-assistant citation and return visits, not a measured prediction | To be reviewed next cycle once Build implements and it has been live at least a few days |
+
+## 10. This cycle's (77th) growth-action proposal: a weekly change-note rollup on `history.html`
+
+**What:** extend the existing daily "what changed and why" mechanism
+(`build_change_note()` in `scripts/refresh_estimate.py`, G5, shipped PR
+#22) with a second, weekly-grain comparison. Today's run already compares
+the published point estimate to the previous day's; this adds a comparison
+to the entry from 7 days prior (looked up from `history.json` by date),
+using the exact same honesty rules already coded and tested in
+`build_change_note()`:
+
+- Only ever cite a cause already in `model['estimator']` (re-anchor, a
+  revised transit-share ratio, or a new/revised GPCI production figure) or
+  a structural state (extrapolated past the tested horizon, suppressed) —
+  never news, geopolitics, or anything not already a cleared model input.
+- Fall back to an honest neutral sentence when: there's no entry 7 days
+  back yet (early in the series), either end is suppressed, the point is
+  unchanged, or the recorded fields don't explain the move.
+- Written into a new `<!-- GENERATED:weekly_change_note -->` marker on
+  `history.html`, next to the existing daily `change-note` paragraph,
+  computed and written on every daily refresh run (not a separate weekly
+  cron) so it is always current the moment someone reads the page, exactly
+  like the daily note.
+
+**Suggested function shape** (for Build, reusing not duplicating logic):
+a `build_weekly_change_note(est, model, history, for_date)` that finds the
+`history.json` entry whose `for_date` is exactly 7 days before the current
+`for_date` (falling back to "no comparison available" if absent, same as
+`build_change_note()`'s `prev_entry is None` case), then calls the same
+attribution logic `build_change_note()` already uses on that pair rather
+than reimplementing it — ideally by factoring the shared
+compare-two-entries logic out of `build_change_note()` into a helper both
+functions call, so there is exactly one place that decides what counts as
+an honest attributable cause.
+
+**Why this, now:** it is the next idea already named in §4 above, not a
+new one invented this cycle. It reuses tested, already-shipped logic
+(lower implementation risk than a new content type), adds no new claim or
+number (every sentence is a comparison of our own two already-published
+figures), and gives search engines and AI assistants a second,
+differently-cadenced fresh dated paragraph — plausibly useful for
+"what's changed this week" / digest-style queries, a different query
+shape than the daily note or the FAQ serve. It is also deliberately a
+smaller, cheaper action than the FAQ page, appropriate while the FAQ's own
+effect (if any) is still unknown — this is additive polish on existing,
+working infrastructure, not a second big bet before the first one has had
+time to show a result.
+
+**Honesty check against the "will not do" list:** identical bar to the
+existing daily note, since it's the same code path and same source fields
+— no causal claim beyond what's in `model['estimator']`; a neutral
+fallback sentence when attribution isn't honestly available; no estimate
+is restated without being clearly the same already-published figure (not
+a new number). Passes the same test the daily note already passes in
+production.
+
+**Expected effect:** a plausible small effect on AI-assistant citation and
+return-visit value of `history.html` (currently ~5 hits/16 days) — not a
+measured prediction, and likely too small to isolate on its own at this
+site's traffic, same caveat as every prior findability action.
+
+**How it will be measured next cycle:** `history.html`'s hit count in
+`stats/hits`, and whether the page content (once live) correctly renders a
+real weekly comparison once there's 7+ days of history to compare against
+— the mechanism itself can be verified correct even before any traffic
+signal exists, the same two-part check this cycle ran on the FAQ page
+(implementation-correct vs. traffic-effect, kept separate).
+
+**Nothing here needs outward contact, spend, or a governance judgment
+call** — it's a code change inside an existing, already-approved
+mechanism, $0, no new data source, no new page, homepage untouched.

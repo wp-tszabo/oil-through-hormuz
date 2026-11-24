@@ -7584,3 +7584,235 @@ clean (88.12).
    whether the three-week dip (325->308->263) continues, stabilises, or
    reverses -- directly relevant to how long the band-gate, if adopted,
    stays active.
+
+## 89. 77th-cycle KR6 brief (2026-11-24): EIA/OPEC/PortWatch directly re-confirmed unchanged; no newer UKMTO reading found (two candidates checked and specifically rejected, not assumed negative); `signal-state.json` maintained for the first time under Research's new standing ownership (methodology.md section 88.9); no methodology change
+
+### 89.1 EIA re-confirmed directly: unchanged, 3Q26, released 2026-11-16
+
+Fetched `eia.gov`'s Global Energy Security Data supplement live this cycle
+(not relayed from a cached read). Table 4's latest column is still **3Q26**
+(the series runs 2Q25 through 3Q26), release date still **16 November
+2026**, no 4Q26 row or token present anywhere on the page. This matches
+`hormuz.json`'s own `source.release_date` field exactly (byte-for-byte
+consistent with what the live site already carries). 4Q26 remains due
+~February 2027 per the standing cadence estimate; no change to that
+expectation this cycle.
+
+### 89.2 OPEC MOMR: still Cloudflare-blocked, independently confirmed by header inspection, not just a status code
+
+Checked directly this cycle, twice: once via WebFetch (returned a generic
+"HTTP 402" from the fetch tool itself, flagged as potentially a proxy
+artifact rather than the origin's real response) and once via a direct
+`curl` with full response headers, which is the one that should be trusted
+here. The direct `curl` shows:
+
+```
+HTTP/2 403
+server: cloudflare
+cf-ray: a5f4db20ed205e53-IAD
+```
+
+— the same Cloudflare challenge signature logged every cycle since this
+block was first found. **32nd consecutive cycle blocked.** Logging the
+header-level detail here because the WebFetch tool's own "402" reading
+this cycle was a different number than the usual "403" and could have been
+mistaken for a new/different failure mode if not independently cross-checked
+at the transport level — it is not; it is the same standing block, and the
+discrepancy is in the fetch tool's error surface, not the origin server.
+
+### 89.3 IMF PortWatch tier-3: re-queried directly by Research (not relayed from a cached methodology section) — stall confirmed for a 7th consecutive cycle
+
+Queried the same public, unauthenticated ArcGIS FeatureServer endpoint used
+in sections 87.3/88.3 directly this cycle, rather than treating the prior
+section's reading as still current by assumption:
+
+```
+GET https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query
+    ?where=portname='Strait of Hormuz'&outFields=date,portname,n_total&orderByFields=date DESC&resultRecordCount=5&f=json
+```
+
+Top row returned: `{"date":"2026-11-15","portname":"Strait of Hormuz","n_total":2}`.
+**Max date is still 2026-11-15** — identical to every cycle's reading since
+2026-11-18, now the **seventh** consecutive cycle, spanning 9 real-world
+days (11-15 through 11-24) with zero new rows. Feed stall remains confirmed,
+unchanged verdict. No full-history re-pull this cycle (88.3 already did
+that; nothing has changed upstream to justify re-pulling 319+ identical
+rows). This is tier-3 internal validation use only, per the 2026-11-16
+owner decision: never republished, never the anchor, logged here with
+source, fetch date (2026-11-24), what it was checked against (the standing
+max-date reading from sections 86-88), and the result (unchanged stall).
+
+### 89.4 Tier-2 signal-reading: no newer UKMTO weekly transit reading found — two near-miss candidates checked and specifically rejected, not assumed negative
+
+Per the weekly plan's redirected priority order (section 86 carry-forward),
+tier-2 signal-reading is the primary active-search line this cycle. The
+single most important question carried forward from the 76th cycle is
+whether the 325→308→263 (through 18 Nov) UKMTO sequence has a newer data
+point, since that sequence is the entire evidentiary basis for the live
+band-gate (`signal-state.json`, `hormuz.json`'s published band). **Searched
+directly; found none.** Two candidates surfaced in search results and were
+each checked rather than taken at face value:
+
+1. A Gulf News piece, "Hormuz shipping 'below normal, but not stalled':
+   UKMTO," quoting "170 outbound and 155 inbound transits... as of Nov.
+   10." Fetched directly: dated 10 November 2026. **170+155=325** — this is
+   the *same* reading already counted as the first point in the logged
+   sequence (325, the week to ~10 Nov), not a new one. Logged in
+   `signal-log.md` 2026-11-24 so a future cycle doesn't re-count it as new.
+2. Lloyd's List Intelligence's Strait of Hormuz Brief, the other recurring
+   source for Hormuz traffic context. Searched directly: its most recent
+   edition is still 19 November (already logged, section 88.4), and the
+   series has moved to an every-other-Thursday cadence (22 Oct, 5 Nov, 19
+   Nov all two weeks apart) — the next edition is due ~3 December, not this
+   cycle. Confirmed by checking the search index for a 26 November edition
+   and finding none.
+
+A third item, a CBS News/wire story on an Iranian tanker seizure (the
+*Talara*) that read as potentially current, was opened and checked: its own
+"Updated on" timestamp and cross-referenced wire reporting (CENTCOM, USNI
+News, Lloyd's List, UPI) date the seizure to **14-15 November 2025** — a
+year before this cycle and before the conflict's 28 February 2026 start —
+not a current event. Discarded before being logged as a signal. This is
+the same caution class as the 75th cycle's 2025-dated MSCIO catch; logged
+in `signal-log.md` so a future cycle checks the *Talara*'s date before
+treating any story naming it as current.
+
+**No new tier-2 signal moves a numeric input or the regime classification
+this cycle** (still `disrupted`/`local`). Full detail, with links:
+`signal-log.md` 2026-11-24.
+
+### 89.5 `signal-state.json`: Research's first cycle maintaining it directly, per the 76th cycle's hand-off (methodology.md section 88.9, backlog.md "Now" row)
+
+Read the file's existing contents (as created by Build last cycle from
+values the CEO supplied directly): `gate_active: true`, `direction:
+"declining"`, reason citing the 325→308→263 sequence through 18 November.
+Checked it against this cycle's evidence (89.4 above): **no newer UKMTO
+reading exists, so the trend and the gate's determination are unchanged.**
+Rather than leave the file untouched and silently stale, updated it this
+cycle with: `as_of` advanced to 2026-11-24, and the `reason` field extended
+with an explicit note that it was re-confirmed this cycle and what was
+checked (the two candidates in 89.4, both rejected). `gate_active`,
+`direction`, and the substantive reason are unchanged, because the
+underlying evidence is unchanged — this is a reconfirmation, not a new
+determination. Added a second `source_entries` pointer to this cycle's
+signal-log row documenting the "nothing newer found" check, so the file's
+own provenance trail shows it was actively re-checked, not just carried
+forward by default.
+
+**This is now a standing per-cycle task for Research**, exactly as the
+76th cycle's hand-off specified: confirm the gate's determination against
+the latest UKMTO evidence every cycle, and update the file whether or not
+the determination itself changes, so the daily refresh job's one-cycle-stale
+read (per 88.9's design) never silently diverges from what Research
+actually found.
+
+### 89.6 Live `hormuz.json` and band-gate cross-check
+
+Re-fetched the site's own `site/data/hormuz.json` directly this cycle (not
+assumed from the prior cycle's PR description): `for_date: 2026-11-22`,
+`point: 10.6`, `band_low: 5.7`, `band_high: 19.8`, `suppressed: false`,
+`extrapolated: null`, `horizon_days: 53` (of 92). The band's own
+`band_basis` text names the exact gate mechanism and reason
+(`signal-state.json`'s content, word for word) that this cycle's 89.5 just
+reconfirmed. **The live page's band-gate explanation matches today's
+actual evidence state** — no discrepancy found between what the page says
+is driving the wider band and what Research's direct check this cycle
+actually supports.
+
+### 89.7 Recommended model action this cycle: no change (type (c)) — specific evidence-based reason
+
+**No methodology change recommended this cycle.** The band-gate mechanism
+adopted last cycle (section 88.10) is a standing design, not a one-time
+application; its correct operation this cycle is to **stay exactly as it
+is**, because the evidence that triggered it (the UKMTO decline) is itself
+unchanged — re-confirmed, not superseded, by 89.4's direct search. There is
+no new evidence this cycle that would justify: widening or narrowing the
+band further (the gate's own "never narrows" property means it would need
+a *third* confirmed opposite-direction reading to do anything beyond what
+is already live, and none was found); moving the point (still no stable,
+non-sign-flipping elasticity exists per section 88.5, and nothing this
+cycle changes that n=2 state); or revisiting the adopt-v2 decision itself
+(no new disrupted-regime transition has occurred; EIA 4Q26, the next real
+test, remains ~February 2027 out). **What would change this conclusion:**
+a newer UKMTO weekly reading (continuing, stabilising, or reversing the
+dip), a PortWatch feed resumption (which would reopen a much richer
+tier-3 validation window), or EIA's 4Q26 release. None of the three
+occurred this cycle.
+
+### 89.8 "Always show a current estimate": checked, clean
+
+Re-verified directly this cycle via the same `hormuz.json` fetch as 89.6:
+`for_date: 2026-11-22`, `suppressed: false`, `extrapolated: null`, horizon
+53/92 days. The page is live, current, and not blank. No action needed;
+checked per the standing requirement regardless of whether anything else
+changed this cycle.
+
+### 89.9 Backlog hand-off status: one of two gaps closed this cycle, one remains open for Build
+
+`backlog.md`'s "Now" section top row named two small gaps from the
+band-gate v2 PR (#47): (1) `build_change_note()` only compares `point`, so
+a band-only gate change reads as "no change" in that specific mechanism —
+**still open, Build's to fix, not touched this cycle** (it is code in
+`scripts/refresh_estimate.py`, outside Research's remit, and the band's own
+published paragraph already explains the gate directly, so this is a
+low-priority completeness gap, not an honesty gap); (2) `signal-state.json`
+maintenance — **closed this cycle**, see 89.5. Confirming explicitly, as
+instructed, rather than leaving it to be inferred from the file diff alone.
+
+### 89.10 Required summary for this cycle's KR6 brief
+
+- **Current prediction and band:** point **10.6**, band **[5.7, 19.8]**
+  (two-sided, band-gate active), `for_date` 2026-11-22, live and
+  re-verified this cycle (89.6). Anchored on EIA 3Q26 (9.1), horizon 53/92
+  days, not extrapolated.
+- **New signals logged this cycle:** `signal-log.md`'s 2026-11-24 section —
+  a direct, exhaustive-as-possible search for a newer UKMTO weekly reading
+  that found none (two near-miss candidates checked and rejected: a
+  duplicate 325 figure, and Lloyd's List's cadence pushing its next brief
+  past this cycle); a second stale (2025-dated) tanker-seizure story caught
+  and discarded; and a directly-queried PortWatch tier-3 re-confirmation.
+  None move the published figure (none were new facts; two were confirmed
+  absences and one was tier-3-only).
+- **Latest validation error against official figures:** unchanged from
+  section 81.3/81.4 — no new EIA release this cycle (89.1).
+- **Latest tier-3 validation result:** PortWatch, re-queried 2026-11-24
+  directly, max date still 2026-11-15 — **seventh consecutive identical
+  reading, stall remains confirmed** (89.3).
+
+### 89.11 Net effect and carry-forward
+
+**Delivery type: (c) — no model change, with a specific evidence-based
+reason, plus a concrete, completed hand-off task (89.5).** EIA and OPEC
+independently reconfirmed unchanged by direct fetch (89.1, 89.2); PortWatch
+queried directly rather than relayed, stall confirmed for a 7th cycle
+(89.3); tier-2 search found no new signal but two specific candidates were
+checked and ruled out rather than the absence being assumed (89.4);
+`signal-state.json` picked up as Research's standing file for the first
+time, reconfirmed against current evidence and updated with today's date
+and check (89.5); live `hormuz.json` cross-checked against the band-gate's
+stated reason and found consistent (89.6); no methodology change
+recommended, with the specific evidence gap stated (89.7); "always show a
+current estimate" checked clean (89.8); the backlog hand-off's two gaps
+resolved to one closed, one correctly left for Build (89.9). No category-3
+or category-4 issue found this cycle.
+
+**Carry-forward priority order for the next cycle:**
+
+1. **Keep checking for a newer UKMTO weekly reading every cycle** — it is
+   the single cheapest, most load-bearing test of whether the band-gate
+   should eventually turn off (a reading that resumes rising, matching the
+   model's phase assumption) or get a second confirming data point
+   (continued decline). Currently stale at 18 November; the gap is now 6
+   days as of this cycle and growing.
+2. **Keep maintaining `signal-state.json` every cycle**, per 89.5 — this is
+   now standing, not a one-off pickup.
+3. **EIA/OPEC/PortWatch**: keep re-probing every cycle, directly rather than
+   by assumption. PortWatch's stall is now 7 cycles/9 days; a resumption
+   would open a much richer tier-3 validation window than has existed since
+   the stall began.
+4. **UKMTO/MARAD network reachability**: due for its lighter retry around
+   the 79th cycle, per the standing ~every-5th-cycle cadence (section 86's
+   redirection) — not due this cycle, correctly not retried.
+5. **4Q26 (~February 2027)** remains the next real test of H1/H2/H3 and of
+   the band-gate's actual (non-proxy) performance. Nothing to do on this
+   front before then beyond continuing to log evidence as it arrives.

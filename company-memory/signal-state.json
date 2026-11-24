@@ -1,7 +1,7 @@
 {
-  "as_of": "2026-11-23",
+  "as_of": "2026-11-24",
   "gate_active": true,
   "direction": "declining",
-  "reason": "UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase",
-  "source_entries": ["signal-log.md#2026-11-21-ukmto-transit-synthesis"]
+  "reason": "UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase. Re-confirmed 2026-11-24 (77th cycle): no newer UKMTO weekly reading found despite a direct search (closest candidates checked and rejected -- a 10 Nov Gulf News figure of 170 outbound+155 inbound=325 is the same reading already counted as the sequence's first point, not a new one; Lloyd's List Intelligence's brief cadence moved to every-other-Thursday, next due ~3 Dec, so no newer edition exists yet). Trend and gate state unchanged from 2026-11-23.",
+  "source_entries": ["signal-log.md#2026-11-21-ukmto-transit-synthesis", "signal-log.md#2026-11-24-no-newer-ukmto-reading"]
 }
