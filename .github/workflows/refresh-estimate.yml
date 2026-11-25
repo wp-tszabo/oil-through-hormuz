@@ -47,7 +47,31 @@ jobs:
         id: commit
         run: |
           set -euo pipefail
-          if git diff --quiet -- site/; then
+          # Stage BOTH paths the script can write: site/ (public) and
+          # company-memory/shadow-predictions.jsonl (internal v2 band-gate
+          # shadow log, methodology.md section 88.9 -- appended every run).
+          # Root cause of the 2026-11-24 red run (run 45429633905) and of
+          # several days of silently-dropped shadow-log lines before it:
+          # only site/ was staged here, so shadow-predictions.jsonl was left
+          # as an unstaged change on a tracked file. On a day `git pull
+          # --rebase` actually had something to rebase, that dirty worktree
+          # made the rebase fail outright ("cannot pull with rebase: You
+          # have unstaged changes"), and the push -- with it the whole
+          # commit -- never happened, even though the commit step itself had
+          # already succeeded against the local branch. On a day there was
+          # nothing to rebase, git short-circuited, the job reported
+          # success, and the unstaged shadow-log line was discarded when the
+          # runner was torn down. Staging both paths here, and separately
+          # tracking whether site/ itself changed, fixes both failure modes
+          # while keeping the Pages deploy dispatch gated on site/ actually
+          # changing (no point deploying when nothing public moved).
+          git add site/ company-memory/shadow-predictions.jsonl
+          if git diff --cached --quiet -- site/; then
+            echo "site_changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "site_changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          if git diff --cached --quiet; then
             echo "No change to publish."
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -55,7 +79,6 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
           git config user.name  "hormuz-refresh-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add site/
           git commit -m "Refresh daily estimate ($(date -u +%Y-%m-%d))
 
           Automated refresh of the model estimate. Values derive only from
@@ -84,7 +107,7 @@ jobs:
         # ride out that flakiness; if it's a real, persistent failure the
         # retries still exhaust and curl still exits non-zero, so the job
         # still goes red exactly as designed.
-        if: steps.commit.outputs.changed == 'true'
+        if: steps.commit.outputs.site_changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
