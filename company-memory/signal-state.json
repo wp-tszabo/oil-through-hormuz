@@ -1,7 +1,7 @@
 {
-  "as_of": "2026-11-24",
+  "as_of": "2026-11-25",
   "gate_active": true,
   "direction": "declining",
-  "reason": "UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase. Re-confirmed 2026-11-24 (77th cycle): no newer UKMTO weekly reading found despite a direct search (closest candidates checked and rejected -- a 10 Nov Gulf News figure of 170 outbound+155 inbound=325 is the same reading already counted as the sequence's first point, not a new one; Lloyd's List Intelligence's brief cadence moved to every-other-Thursday, next due ~3 Dec, so no newer edition exists yet). Trend and gate state unchanged from 2026-11-23.",
-  "source_entries": ["signal-log.md#2026-11-21-ukmto-transit-synthesis", "signal-log.md#2026-11-24-no-newer-ukmto-reading"]
+  "reason": "UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase. Re-confirmed 2026-11-24 (77th cycle) and again 2026-11-25 (78th cycle): no newer UKMTO weekly reading found despite direct searches both cycles (candidates checked and rejected each time -- see signal-log.md). UKMTO/MARAD origin reachability still blocked (403) at the network layer this cycle; not yet due for its lighter retry (due ~79th cycle). Trend and gate state unchanged from 2026-11-23/24. New this cycle: IMF PortWatch's tier-3 feed resumed after a 7-cycle stall and now covers the exact window of UKMTO's reported decline (through 2026-11-22) -- it does NOT corroborate a continuing decline over that window (mild uptick, not a drop), but per the gate's own design only tier-2 primary readings can change gate_active/direction, so this tier-3 result is logged as a caution flag only and does not itself alter this file's determination.",
+  "source_entries": ["signal-log.md#2026-11-21-ukmto-transit-synthesis", "signal-log.md#2026-11-24-no-newer-ukmto-reading", "signal-log.md#2026-11-25-portwatch-resumed-no-corroboration"]
 }

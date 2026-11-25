@@ -18,8 +18,86 @@ until Phase 2 is approved.
 
 ## 1. Measured traffic (GoatCounter, hits not unique visitors)
 
-**Updated 2026-11-24 (77th cycle).** Read directly, `GET /api/v0/stats/total`
+**Updated 2026-11-25 (78th cycle).** Read directly, `GET /api/v0/stats/total`
 etc., token present and working (confirmed via `/api/v0/me`).
+
+- **Cumulative total: 175 hits over 2026-09-28 through 2026-11-25 (partial
+  day, 0 hits so far; `total_utc` 176 on the slightly different day-boundary
+  convention).** Up from 167 at the last reading (through 2026-11-24
+  partial) — +8 hits, all landing on 2026-11-24 (matches that day's own
+  `stats/total` row exactly).
+- **The last four *complete* weeks are unchanged: 28, 23, 33, 29 —
+  trailing-4-week total still 113.** No new complete week has closed (the
+  next one closes 2026-11-29); the week of 2026-11-16 re-confirmed at 29
+  again this cycle from the raw daily series (15+2+3+2+0+3+4). The plateau
+  reading from the last two cycles stands unchanged on the complete-week
+  evidence — it has neither broken nor been confirmed to hold, because no
+  new complete week exists yet to test it against.
+- **The week of 2026-11-23 is in progress (3 of 7 days — Mon/Tue/Wed read):
+  24 hits so far (16 + 8 + 0).** This is a hot start relative to most prior
+  weeks' first three days (week of 11-09: 15 of its eventual 33; week of
+  11-02: 6 of its eventual 23; week of 10-26: 13 of its eventual 28) but
+  comparable in kind to the week of 11-16's own hot start (20 of its
+  eventual 29) — that week opened hot on a single 15-hit day and then
+  settled back down to a fairly ordinary 29 by week's end. **Read plainly:
+  too early to call this either a break from the plateau or more of the
+  same** — one busy day (16 hits on 2026-11-23, in the same range as
+  11-16's 15-hit day) is doing almost all of the work, and the single
+  prior example of a hot start (11-16) ended up inside the existing 23-33
+  band once the week closed. The honest position is "wait for this week to
+  close on 2026-11-29," not read a trend into 3 days.
+  - **Where that hit data lands:** of the 24 hits so far this week, page
+    breakdown for 2026-11-22 through 2026-11-25 (the surrounding window,
+    28 hits, includes one extra day): `/` 21, `/history.html` 4,
+    `/sources.html` 3, `/faq.html` 0 — still homepage-dominant, nothing
+    unusual.
+  - **Referrers, same window:** no-referrer 14, `www.bing.com` 5,
+    `chatgpt.com` 4, `duckduckgo.com` 2. The `chatgpt.com` count (4) is
+    concentrated entirely on 2026-11-24 (checked day-by-day: 0 on
+    2026-11-22, 0 on 2026-11-23, 4 on 2026-11-24) — the single day the
+    weekly rollup (§9/§10 below) went live. **Checked whether this traces
+    to the rollup and it doesn't isolate that way**: of 2026-11-24's 8
+    total hits, 7 went to `/` and only 1 to `/history.html` (where the
+    rollup actually lives), so the chatgpt.com referrals that day
+    overwhelmingly landed on the homepage, not the page the new content is
+    on. Locations that day: Hungary 3, Italy 2, Canada/Finland/UK/US 1
+    each — no new or AI-assistant-shaped geography. Read as ordinary
+    variance in the chatgpt.com referrer bucket (7 in 16 days this cycle vs.
+    3 in each of the last two cycles' same-length windows — within the
+    range this bucket has shown before, not a step change), not a
+    measured rollup effect. See §5a below for the full two-part review.
+- **Top pages, 2026-11-09 through 2026-11-25 (16 days, the comparable
+  window to prior cycles): `/` 74, `/history.html` 6, `/sources.html` 5,
+  `/strait.html` 1, `/faq.html` 0.** Homepage still ~86% of traffic.
+  `/faq.html` remains at **zero** hits in this window — explicit, not an
+  artifact of the page being below a reporting cutoff (it would show as a
+  listed path at 0 the same way `/strait.html` shows at 1; it simply isn't
+  in the returned set at all because GoatCounter only lists paths with at
+  least one hit).
+- **Top referrers, same window:** no/empty referrer 30, `duckduckgo.com`
+  25, `www.bing.com` 14, `chatgpt.com` 7, "Yahoo" 3. Broadly the same mix
+  as last cycle, proportionally; absolute counts rose with the rise in
+  total hits.
+- **Top countries, same window:** United States 37, Hungary 12, United
+  Kingdom 9, Canada 7, South Korea 4, Vietnam 3, Australia 2, Switzerland 2,
+  Italy 2, then single hits from China, Finland, France, India, Iran,
+  Japan, New Zealand, Romania, Thailand — **18 countries in 16 days**, up
+  from 16 in the prior 16-day window. Continued real external reach, same
+  trend as every prior cycle.
+
+**One process note for the record, not a traffic-measurement concern:** this
+cycle's CEO review found and fixed a CI bug that had left the live site
+serving a stale `for_date` (2026-11-22) for about 3 days until just before
+this reading. That does not affect these hit counts — GoatCounter counts
+page loads regardless of what content the page served — but it means some
+of the 2026-11-23/24 visitors referenced above may have seen a stale
+headline figure rather than a current one. That is a data-freshness
+finding, not a growth one; flagged here only so this plan's numbers aren't
+read in isolation from it.
+
+*(Prior reading, 2026-11-24/77th cycle, kept for the trail:)* Read directly,
+`GET /api/v0/stats/total` etc., token present and working (confirmed via
+`/api/v0/me`).
 
 - **Cumulative total: 167 hits over 2026-09-28 through 2026-11-24 (partial
   day).** Up from 151 (through 2026-11-23 partial)/155 `total_utc` at the
@@ -240,6 +318,15 @@ even with a sitemap entry — and should not be read as the page
 underperforming. **Re-check again next cycle(s)** once it has had a more
 realistic window (1-2 full weeks) to be crawled.
 
+**78th-cycle re-check (2026-11-25), ~2 days live: still 0 hits.** Re-read
+directly — `/faq.html` does not appear at all in `stats/hits` for the
+2026-11-09 through 2026-11-25 window (GoatCounter only lists paths with at
+least 1 hit; `/strait.html` still shows at 1 in the same window, so this is
+a genuine zero, not a reporting cutoff artifact). Still the expected,
+honest reading at two days old, not a defect. **Re-check again once it has
+had a full 1-2 weeks live** — same standard as last cycle, not stretched
+into a finding either way yet.
+
 ---
 
 ### Original proposal (76th cycle, for the record)
@@ -379,6 +466,33 @@ support" test on every answer, since every answer *is* the hedge, not a
 headline competing with it. Flagging this explicitly rather than assuming
 it: if the CEO's own rubric run disagrees on any individual answer, drop or
 rewrite that answer, not the whole page.
+
+## 5a. 77th cycle's growth action — a weekly "what changed this week" rollup on `history.html` — reviewed 78th cycle, still too fresh for a verdict
+
+**78th-cycle review (2026-11-25), ~1 day after merge/deploy.** Implementation
+verified correct and live: the `<!-- GENERATED:weekly_change_note -->` block
+on `history.html` is present and rendering a real comparison (checked by
+direct fetch of the live page), currently reading "Over the past week
+(since 2026-11-17): The point estimate itself did not change, but the
+published range moved... This is the band-gate... activating" — a real,
+attributable, honestly-worded sentence drawn from the model's own recorded
+fields, exactly as designed.
+
+**Traffic verdict: no isolable effect, and explicitly too early to expect
+one** — same discipline as the FAQ review at the same age. `/history.html`
+shows 6 hits in the 16-day window ending 2026-11-25, against 5 in the
+comparable window a cycle ago — one more hit, not a measurable lift, and
+well within normal variance at this volume. The one notable nearby signal —
+a `chatgpt.com` referrer spike of 4 hits concentrated entirely on
+2026-11-24, the day the rollup went live — does not trace to the rollup
+itself: of that day's 8 total hits, 7 went to `/` and only 1 to
+`/history.html`, so the chatgpt.com referrals landed almost entirely on the
+homepage, not the page carrying the new content. Read plainly: this is the
+same kind of unattributable referrer variance this plan has already logged
+for `chatgpt.com` (3/16 days, twice before) and for unexplained spike days
+generally (2026-11-16's 15, 2026-11-23's 16) — not a rollup-driven effect.
+**Re-check again once the page has had a more realistic window (1-2 full
+weeks) to be crawled**, same standard applied to the FAQ page.
 
 ## 6. Numeric G3 target — proposed
 
@@ -525,8 +639,9 @@ something to pre-decide here.
 | 71st (2026-11-20, pre-Monetization-ownership) | Sitemap `<lastmod>` dates (PR #43) | Possible crawl-frequency signal improvement | Inconclusive — no attributable effect isolable from a flat traffic day (per 74th-cycle review) |
 | 74th (2026-11-21, pre-Monetization-ownership) | Feed-autodiscovery parity across all 5 pages (PR #44) | Marginal feed-reader/aggregator discoverability | Not yet reviewed for effect in a dedicated readout; folded into the general flat-to-29/week reading this cycle |
 | 75th (2026-11-22, pre-Monetization-ownership) | Live-generated OG/Twitter share description (PR #46) | Any future share of a link shows the live estimate+range, not placeholder text | No shares have happened yet (no outward contact); no effect measurable until one does |
-| 76th (2026-11-23, first Monetization-owned action) | FAQ page (`faq.html`, PR #48, shipped and deploy-verified live) | Small new-page hits; possibly more AI-assistant citation over weeks | **Reviewed 77th cycle (2026-11-24), ~1 day live: 0 hits to `/faq.html` so far.** Implementation verified correct (live, footer-linked, in sitemap) — too early for a traffic verdict, not a defect. The one nearby traffic spike (16 hits, 2026-11-23) does not trace to the FAQ (0 of those hits went to `/faq.html`; no new/FAQ-shaped referrer). Re-check again once the page has had 1-2 full weeks to be crawled. |
-| 77th (2026-11-24, this cycle) | Weekly "what changed this week" rollup on `history.html`, extending the existing daily change-note logic (G5) to a 7-day comparison (drafted below) | A second, differently-cadenced fresh dated paragraph for crawlers/assistants; plausible small effect on AI-assistant citation and return visits, not a measured prediction | To be reviewed next cycle once Build implements and it has been live at least a few days |
+| 76th (2026-11-23, first Monetization-owned action) | FAQ page (`faq.html`, PR #48, shipped and deploy-verified live) | Small new-page hits; possibly more AI-assistant citation over weeks | **Re-checked 78th cycle (2026-11-25), ~2 days live: still 0 hits to `/faq.html`.** Implementation remains correct and live (HTTP 200, confirmed this cycle). Still too early for a traffic verdict, not a defect — re-check again once it has had 1-2 full weeks to be crawled. |
+| 77th (2026-11-24) | Weekly "what changed this week" rollup on `history.html`, extending the existing daily change-note logic (G5) to a 7-day comparison | A second, differently-cadenced fresh dated paragraph for crawlers/assistants; plausible small effect on AI-assistant citation and return visits, not a measured prediction | **Reviewed 78th cycle (2026-11-25), ~1 day live: implementation verified correct and rendering a real comparison on the live page.** `/history.html` hits (6 in 16 days) essentially flat vs. the prior comparable window (5) — no measurable lift yet. A same-day `chatgpt.com` referrer spike (4 hits, all on 2026-11-24) does not trace to the rollup: 7 of that day's 8 hits went to `/`, only 1 to `/history.html`. Too early for a verdict; re-check again once it has had 1-2 full weeks to be crawled. See §5a. |
+| 78th (2026-11-25, this cycle) | **None proposed.** Both of the last two actions (FAQ, ~2 days live; weekly rollup, ~1 day live) are still too fresh to show any traffic effect — shipping a third change now would make it harder, not easier, to later tell which of three concurrent changes caused any future uptick. See §11. | — | — |
 
 ## 10. This cycle's (77th) growth-action proposal: a weekly change-note rollup on `history.html`
 
@@ -598,3 +713,43 @@ signal exists, the same two-part check this cycle ran on the FAQ page
 **Nothing here needs outward contact, spend, or a governance judgment
 call** — it's a code change inside an existing, already-approved
 mechanism, $0, no new data source, no new page, homepage untouched.
+
+## 11. 78th cycle (2026-11-25): no new growth action proposed this cycle
+
+**Decision: ship nothing new for growth this cycle.** The last two actions
+are both still live but unreviewable for a traffic effect:
+
+- The FAQ page (`faq.html`, 76th cycle) is ~2 days live, still 0 hits (§5).
+- The weekly change-note rollup (`history.html`, 77th cycle) is ~1 day
+  live, implementation-correct but with no isolable traffic signal yet
+  (§5a).
+
+**Why "none" rather than a third action:** both of these need 1-2 more full
+weeks before their effect (if any) can honestly be read, per this plan's
+own stated standard (§5, §5a, and the FAQ's original proposal in §5's
+"Original proposal" section). Shipping a third homepage-layout-neutral
+change now, before either of the first two has shown a result, would not
+speed up learning anything — at this site's traffic volume (single-digit
+hits/day to any one non-homepage page), three concurrent un-aged changes
+would make it *harder*, not easier, to attribute a future uptick to any one
+of them, the same lesson this plan has already applied to not reading a
+single hot day as a trend (§1). This is explicitly not "nothing to do" —
+§4 still lists two more unshipped ideas (the `sources.html` "ask it a
+question" cross-link, and the repeated "what the range means" callout)
+that remain candidates for a future cycle once there is room to attribute
+an effect to them individually.
+
+**What happens instead this cycle:** continued measurement only — the
+reading in §1, and the two reviews in §5/§5a. The current in-progress week
+(2026-11-23, 24 hits in 3 days, §1) and the FAQ/rollup traffic verdicts
+should all get a real read at the **next** cycle or two, once the week of
+2026-11-23 closes (2026-11-29) and the FAQ/rollup have had closer to the
+full 1-2 week crawl window this plan has consistently asked for before
+calling either a result. If both are still flat at that point, that is
+useful information about the ceiling of pure findability-content actions
+at this site's current reach, not a reason to have shipped a third thing
+sooner.
+
+**Honesty/governance check:** no copy drafted, no page touched, no spend,
+no outward contact — this section is a measurement-and-sequencing decision,
+not a publish.

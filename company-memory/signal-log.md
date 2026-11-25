@@ -254,3 +254,33 @@ cycle (9 real days, zero new rows), queried directly by Research this cycle
 rather than relayed. No tier-2 signal this cycle moves a numeric input or
 the regime classification (still `disrupted`/`local`). See `methodology.md`
 section 89 for the full KR6 brief, including the recommended model action.
+
+## 2026-11-25 (78th cycle) entries
+
+| Date of fact | Fact | Source (read directly) | Reliability | Status | Entered model? |
+|---|---|---|---|---|---|
+| n/a (search attempted, nothing newer than the 18 Nov UKMTO reading already logged) | **Searched directly for a UKMTO weekly transit reading newer than 263/week (through 18 November); none found this cycle.** Several news searches for Hormuz/UKMTO coverage dated around 24-25 November surfaced only already-logged items (the 10 Nov Gulf News 170+155=325 figure; the 19 Nov Lloyd's List Intelligence brief) or older incident stories (16-17 Nov tanker-attack coverage, already covered in substance by the regime classification). Direct UKMTO/MARAD origin checks (`ukmto.org`, `maritime.dot.gov`) returned HTTP 403 at the network layer, consistent with the standing ~every-5th-cycle reachability block (not due for retry until ~79th cycle per the carry-forward schedule). | Multiple searches attempted; `ukmto.org`/`maritime.dot.gov` checked directly (403) | n/a | **Not used — no newer reading exists to log.** | No. |
+| n/a (checked, both confirmed still unchanged) | EIA Global Energy Security Data Table 4 re-fetched directly (`eia.gov/outlooks/steo/report/energysecurity/article.php`): latest quarter still **3Q26**, release date still 16 November 2026. OPEC MOMR re-checked directly via `curl` with full headers: still Cloudflare 403 (`cf-ray` header present), consistent block. | [EIA Global Energy Security Data](https://www.eia.gov/outlooks/steo/report/energysecurity/article.php) (fetched directly); OPEC MOMR (`curl` direct, 403/Cloudflare) | High (primary publisher pages, fetched directly) | Confirmed unchanged. | No — reconfirmation only, no new row. |
+| 18-22 November 2026 (checked live 25 November 2026) | **IMF PortWatch tier-3 feed resumed after a 7-cycle/9-day stall.** Direct query of the same public, unauthenticated ArcGIS FeatureServer endpoint (`portname='Strait of Hormuz'`) now returns rows through **2026-11-22** (previously stuck at 2026-11-15 every cycle since 2026-11-18). Five new daily rows: 11-18=3, 11-19=3, 11-20=4, 11-21=4, 11-22=1 (`n_total`, the same AIS-derived daily-crossing-count field used in sections 86-89). A fuller pull back to 2026-10-25 shows the week-by-week daily average moved: Oct 25-31 avg 4.57/day -> Nov 1-7 avg 3.57/day -> Nov 8-14 avg 2.43/day (the trough) -> Nov 15-21 avg 2.86/day (a mild uptick) -> Nov 22 (partial week) 1. **This is the first PortWatch data covering the exact calendar window of UKMTO's own reported 308->263 decline (the week ending ~18 November)**, and it does **not** show a matching decline over that window — if anything, a mild rise from the prior week's trough. Tier-3, internal validation only, per the 2026-11-16 owner decision: never republished, never the anchor, never treated as a tier-2 "confirmed primary reading" for the band-gate's own trigger criteria (the gate's design and the live `hormuz.json` band_rule text both explicitly limit the trigger to tier-2 signals, "never PortWatch/tier-3"). Logged here and in `methodology.md` section 90 with source, fetch date, comparison and result per the standing tier-3 recording requirement. | Direct query, `https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query` (tier-3, internal-validation-only; never published) | High (primary endpoint, queried directly) | Confirmed (one primary source, read directly); feed-resumption fact itself is High confidence, the trend reading is Low-Medium given single-digit daily counts and a different measurement methodology than UKMTO's own weekly count. | No — tier-3 validation use only. Does not move the band-gate's own tier-2-only trigger, but is reported to the CEO as a reason for added caution, not confidence, in extrapolating the UKMTO dip into a longer decline. |
+
+## Net reading from this cycle's signals (2026-11-25)
+
+The single most load-bearing development this cycle is **not** a new tier-2
+transit reading (none found; UKMTO stays stale at 263/week through 18
+November, now 7 days old) but a **tier-3 feed resumption**: IMF PortWatch's
+Strait-of-Hormuz daily AIS-crossing count, stalled at 2026-11-15 for seven
+consecutive cycles, has resumed and now carries real data through
+2026-11-22 — the first tier-3 coverage of the exact week UKMTO's own count
+fell from 308 to 263. That resumed data does not corroborate a continuing
+decline over that window (daily average ticked up slightly from the prior
+week's trough, not down), though the metric is noisy (single-digit daily
+counts) and structurally different from UKMTO's own weekly transit count
+(a point already established in sections 84/88). Per the band-gate's own
+design, this tier-3 reading cannot and does not change the gate's
+determination (only confirmed tier-2 primary readings can), but it is
+reported as a reason for caution about the UKMTO dip's durability, not as
+evidence either way on the gate's current state. `signal-state.json` was
+re-confirmed and updated with today's check. No tier-2 signal this cycle
+moves a numeric input or the regime classification (still
+`disrupted`/`local`). See `methodology.md` section 90 for the full KR6
+brief, including the recommended model action and the tier-3 logging detail.
