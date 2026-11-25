@@ -14,7 +14,7 @@
     "provenance_caveat": "EIA analysis based on Vortexa tanker tracking data. We republish EIA's published analysis; we do not hold or license Vortexa data.",
     "publisher_caveat": "Since the end of February 2026, AIS signal data for ships transiting the Strait of Hormuz have become especially unreliable. For 2026 Hormuz volumes, tanker tracking data are being revised frequently based on the best available information."
   },
-  "retrieved_utc": "2026-11-23T15:54:20Z",
+  "retrieved_utc": "2026-11-25T02:13:13Z",
   "units": "million barrels per day",
   "series": [
     {
@@ -81,16 +81,16 @@
     "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
     "shape_function": "GPCI transit-share: the strait is assumed to carry the same share of Gulf producer crude output (GPCI) as in the latest published quarter; the estimate moves monthly with GPCI. Replaced persistence on 2026-09-23 (methodology.md section 19).",
     "estimate": {
-      "for_date": "2026-11-22",
+      "for_date": "2026-11-24",
       "point": 10.6,
       "band_low": 5.7,
       "band_high": 19.8,
-      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 3Q26: from persistence (9.1, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.873, applied in the direction production moved. Band-gate active (methodology.md section 88): a confirmed primary signal -- UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase -- points the opposite way, so the range widens to the two-sided [point/k, point*k] = [5.7, 19.8] (same k) rather than the usual one-sided construction; this never narrows the range, only ever widens it.",
+      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 3Q26: from persistence (9.1, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.873, applied in the direction production moved. Band-gate active (methodology.md section 88): a confirmed primary signal -- UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase. Re-confirmed 2026-11-24 (77th cycle): no newer UKMTO weekly reading found despite a direct search (closest candidates checked and rejected -- a 10 Nov Gulf News figure of 170 outbound+155 inbound=325 is the same reading already counted as the sequence's first point, not a new one; Lloyd's List Intelligence's brief cadence moved to every-other-Thursday, next due ~3 Dec, so no newer edition exists yet). Trend and gate state unchanged from 2026-11-23. -- points the opposite way, so the range widens to the two-sided [point/k, point*k] = [5.7, 19.8] (same k) rather than the usual one-sided construction; this never narrows the range, only ever widens it.",
       "anchor_period": "3Q26",
       "anchor_value": 9.1,
       "is_measurement": false,
       "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6.",
-      "horizon_days": 53,
+      "horizon_days": 55,
       "max_horizon_days": 92,
       "suppressed": false,
       "extrapolated": null
@@ -293,14 +293,15 @@
       "band_gate": {
         "active": true,
         "direction": "declining",
-        "reason": "UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase",
+        "reason": "UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase. Re-confirmed 2026-11-24 (77th cycle): no newer UKMTO weekly reading found despite a direct search (closest candidates checked and rejected -- a 10 Nov Gulf News figure of 170 outbound+155 inbound=325 is the same reading already counted as the sequence's first point, not a new one; Lloyd's List Intelligence's brief cadence moved to every-other-Thursday, next due ~3 Dec, so no newer edition exists yet). Trend and gate state unchanged from 2026-11-23.",
         "source_entries": [
-          "signal-log.md#2026-11-21-ukmto-transit-synthesis"
+          "signal-log.md#2026-11-21-ukmto-transit-synthesis",
+          "signal-log.md#2026-11-24-no-newer-ukmto-reading"
         ]
       }
     },
     "last_published": {
-      "for_date": "2026-11-22",
+      "for_date": "2026-11-24",
       "point": 10.6,
       "band_low": 5.7,
       "band_high": 19.8,
