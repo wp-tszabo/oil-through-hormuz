@@ -8028,3 +8028,265 @@ cycle.
 6. **4Q26 (~February 2027)** remains the next real test of H1/H2/H3 and of
    the band-gate's actual (non-proxy) performance. Nothing to force before
    then beyond continuing to log evidence as it arrives.
+
+## 91. 79th-cycle KR6 brief (2026-11-26): EIA/OPEC directly re-confirmed unchanged (with a WebFetch-summary error caught against raw HTML); the scheduled UKMTO/MARAD deeper retry fired — still blocked at the origin, not the proxy; no newer UKMTO reading found; a genuinely new tier-2 publisher class (UANI's "Iran Shipping Update" daily series) found but could not be read directly (403) so not used; PortWatch tier-3 unchanged since last cycle's resumption; no methodology change
+
+### 91.1 EIA re-confirmed directly: unchanged, 3Q26, released 2026-11-16 — and a tool-output error caught against the raw page
+
+Fetched `eia.gov`'s Global Energy Security Data supplement live this cycle
+two ways: once via WebFetch (natural-language summary) and once via a direct
+`curl` to a saved HTML file, grepped for ground truth. **The WebFetch
+summary this cycle was wrong and was caught before use**: it reported the
+supplement's own release date as ambiguous between "November 10, 2026" and
+"November 16, 2026." The raw HTML shows why: the page carries **two
+different release-date lines for two different products** — the parent
+Short-Term Energy Outlook banner ("Release Date: November 10, 2026 | ...
+Next Release Date: December 8, 2026") and, further down the same page, the
+Global Energy Security Data supplement's own byline ("Release Date:
+November 16, 2026"). This is the exact "two different schedules" trap
+methodology.md section 2.1 already named in writing — a tool summary
+conflated them where a prior cycle's human-equivalent reading did not.
+**Ground truth, independently confirmed from the raw HTML (`grep`, not a
+model gloss): Table 4's caption reads "2Q25–3Q26" verbatim, `4Q26` appears
+zero times anywhere on the page, `3Q26` appears 21 times, and the
+supplement's own release-date line is unambiguously "November 16, 2026."**
+This matches `hormuz.json`'s `source.release_date` field exactly. No change
+to the data; **the finding worth carrying forward is procedural**: when a
+fetch-and-summarize tool reports something surprising or internally
+inconsistent (two release dates on "the same page"), check the raw markup
+before treating it as a new fact, rather than propagating the tool's gloss.
+4Q26 remains due ~February 2027; no change to that expectation.
+
+### 91.2 OPEC MOMR: still Cloudflare-blocked, confirmed directly via curl headers
+
+```
+HTTP/2 403
+server: cloudflare
+cf-ray: a60555500d877071-IAD
+```
+
+Same standing Cloudflare challenge signature logged every cycle since this
+block was first found. **34th consecutive cycle blocked.**
+
+### 91.3 UKMTO/MARAD network reachability: the scheduled 79th-cycle deeper retry fired — still blocked at the origin, confirmed by header inspection on both
+
+Per the carry-forward note (90.11 item 5), this cycle is the one named for
+the ~every-5th-cycle lighter retry. Checked directly, not incidentally, with
+full response headers on both:
+
+```
+$ curl -sD- -o /dev/null https://www.ukmto.org/
+HTTP/2 403
+server: cloudflare
+cf-ray: a6055551bbb372e7-IAD
+set-cookie: __cf_bm=...; Domain=ukmto.org
+```
+
+```
+$ curl -sD- -o /dev/null https://www.maritime.dot.gov/
+HTTP/2 403
+server: AkamaiGHost
+content-length: 376
+```
+
+**Both block at the origin, not a proxy artifact**: UKMTO's response carries
+a live Cloudflare challenge cookie scoped to `ukmto.org` itself (not a proxy
+domain), and MARAD's carries an Akamai WAF signature distinct from
+Cloudflare's — two different vendors' edge defenses, both actively
+fingerprinted, which is consistent with a real bot/anti-scrape block at each
+site rather than a shared network-layer failure between here and both
+origins. (WebFetch was also tried on a UKMTO page and separately returned
+403, consistent with the curl reading, not a different failure mode.)
+**Verdict: still fully blocked, same as every retry since the block was
+first found (~25+ cycles ago).** No change to the standing
+~every-5th-cycle retry cadence; next retry due ~84th cycle.
+
+### 91.4 Tier-2 signal-reading: no newer UKMTO weekly reading found; one genuinely new publisher class found but could not be verified by direct read, so not used
+
+Searched directly and extensively this cycle for anything newer than the
+263/week (through 18 November) UKMTO reading already driving the band-gate,
+now **8 days stale**. Several candidates were surfaced and individually
+checked rather than taken on a search snippet:
+
+1. **UANI ("United Against Nuclear Iran") "Iran Shipping Update" — a daily
+   series, genuinely new to this log.** Search snippets describe a 18
+   November 2026 edition stating "435 Strait of Hormuz transits so far in
+   November" (a cumulative monthly count, a different construction from
+   UKMTO's weekly outbound+inbound sum, and from any of the four other
+   transit-count methodologies already catalogued in sections 84/88/90).
+   **Tried to fetch the source page directly** (`unitedagainstnucleariran.com/
+   node/46605`, `/node/46607`) and got **HTTP 403 Forbidden** on both —
+   genuinely blocked at the origin, not a paywall we tried to get around.
+   Per the tier-2 rule ("read, don't scrape" and "cite, never copy from an
+   unread source"), **this is not used**: a search engine's third-hand
+   paraphrase of a number we could not independently verify by reading the
+   primary page is exactly the kind of unconfirmed lead the rules are
+   designed to keep out, however directionally interesting the shape of it
+   is (another transit-count methodology, cumulative-month framing). Logged
+   here so a future cycle does not have to rediscover that this site blocks
+   direct fetches, and tries again anyway, a different way, if it matters
+   enough.
+2. A Lloyd's List piece, "Hormuz crisis supply response loses steam but
+   tanker rates hold firm" (`lloydslist.com/LL1158177/...`), surfaced in
+   search results describing weak recent VLCC loadings ("12.3m b/d... only
+   one lower week... since the start of the crisis"). **Checked directly:
+   paywalled (403), and no publication date could be confirmed** from the
+   snippet or the blocked page — its article-ID numbering (`LL1158xxx`)
+   sits after the dated September/October pieces already logged but that is
+   circumstantial, not a confirmed date. **Not used**, flagged as an
+   unconfirmed lead rather than silently discarded, because if dated to late
+   November it would be a second independent reading pointing the same
+   direction as the UKMTO dip (weak recent loadings) and would be worth a
+   follow-up if a date can ever be confirmed.
+3. The USNI "Hormuz Transits Hit Three-week High, VLCC Rates Explode" piece
+   — checked and confirmed dated **18 September 2026**, already superseded
+   by later data, not current. Discarded.
+4. The Lloyd's List "VLCCs and suezmaxes riding high as peace deal hikes
+   Hormuz flows" piece — checked and confirmed dated **6 July 2026**, not
+   current. Discarded.
+5. An Ahram Online "83 conflict incidents, 39 piracy attacks" piece —
+   checked and confirmed dated **31 August 2026** (reporting a UKMTO VRA
+   overview dated 28 August), not current. Discarded.
+6. Lloyd's List Intelligence's Strait of Hormuz Brief — confirmed still on
+   its every-other-Thursday cadence (19 Nov logged already; next edition
+   due ~3 December, not this cycle).
+7. A Kpler quote via Rudaw ("90% of pre-war levels... 15.3m b/d") —
+   confirmed this is the **same** figure already logged and analysed
+   2026-11-23 (methodology.md section 88), not a new reading.
+
+**No new tier-2 numeric signal entered the model this cycle.** The single
+most load-bearing open question — whether UKMTO's own count has continued
+falling, stabilised, or reversed since 18 November — remains unanswered,
+now 8 days stale, and UKMTO/MARAD's own sites remain unreachable (91.3),
+closing off the one route that would resolve it directly.
+
+### 91.5 IMF PortWatch tier-3: queried directly, unchanged since last cycle's resumption — stall again, now a 2nd consecutive cycle at the same max date
+
+```
+GET https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query
+    ?where=portname='Strait of Hormuz'&outFields=date,portname,n_total&orderByFields=date DESC&resultRecordCount=8&f=json
+```
+
+Top row: `{"date":"2026-11-22","n_total":1}`, identical to the 90.5 reading
+one cycle ago; no new rows for 11-23 through 11-25. Full 8-row return
+(11-15 through 11-22) matches 90.5 exactly, day for day. **Max date remains
+2026-11-22** — the feed that resumed last cycle after a 7-cycle stall has
+not advanced again yet. This is a short, single-cycle gap, not evidence of
+a second stall by itself; flagged for continued tracking next cycle rather
+than treated as a new finding. No change to the "no corroboration of a
+continuing UKMTO-matching decline" reading from 90.5 — no new window to
+compare. Tier-3, internal-validation-only, per the 2026-11-16 owner
+decision: never republished, never the anchor. Logged here with source,
+fetch date (2026-11-26), comparison (same UKMTO decline window already
+established), result (unchanged from last cycle, no new data to assess).
+
+### 91.6 `signal-state.json` updated
+
+Re-confirmed the file's existing determination against this cycle's
+evidence (91.4: no new UKMTO reading, one new-but-unverifiable candidate
+logged and explicitly not used; 91.5: PortWatch unchanged since resumption).
+`gate_active` and `direction` are unchanged — no new tier-2 primary reading
+exists to move them. Updated `as_of` to 2026-11-26, extended `reason` with
+today's checks (the UANI candidate found-but-unverified, the scheduled
+UKMTO/MARAD deeper retry's negative result, and PortWatch's unchanged
+max-date reading), and added a fourth `source_entries` pointer to today's
+signal-log row.
+
+### 91.7 Live `hormuz.json` cross-check
+
+Re-fetched `site/data/hormuz.json` directly this cycle: `for_date`
+**2026-11-24**, `point` 10.6, `band_low` 5.7, `band_high` 19.8, `suppressed`
+false, `extrapolated` null, `horizon_days` 55/92 — note: unchanged from the
+90.7 reading, consistent with the refresh job not yet having advanced the
+date again as of this cycle's fetch (not itself a defect; the daily refresh
+runs on its own schedule and this cycle's manual fetch is a point-in-time
+snapshot). The band-gate's own `band_rule`/`band_basis` text in the live
+file matches today's re-confirmed evidence state (91.4-91.6). No
+discrepancy found between what the live page says is driving the band and
+what Research's direct checks this cycle actually support.
+
+### 91.8 Recommended model action this cycle: no change (type (c)) — specific evidence-based reason
+
+**No methodology change recommended this cycle.** The band-gate stays
+exactly as designed: no new confirmed tier-2 primary reading exists to add
+a third data point, reverse the existing determination, or justify
+widening further (the gate is already at its maximum two-sided construction
+for n=2 confirming readings); the one new publisher class found this cycle
+(UANI) could not be verified by direct read and is explicitly not used, not
+silently assumed negative; PortWatch's tier-3 reading is unchanged and, by
+the gate's own design, could not move it even if it had changed. **What
+would change this conclusion:** a newer UKMTO weekly reading (the single
+most load-bearing open question, now 8 days stale); a confirmed date on the
+Lloyd's List LL1158177 piece, which if recent would be a second independent
+reading in the same direction; a way to read UANI's updates directly (e.g.
+if the 403 clears, or a mirrored/syndicated copy with a verifiable date and
+quote surfaces); a further PortWatch week; or EIA's 4Q26 release
+(~February 2027). None of these newly occurred this cycle.
+
+### 91.9 "Always show a current estimate": checked, clean
+
+`for_date` 2026-11-24, `suppressed: false`, `extrapolated: null`, horizon
+55/92 days. Live, current, not blank. No action needed.
+
+### 91.10 Required summary for this cycle's KR6 brief
+
+- **Current prediction and band:** point **10.6**, band **[5.7, 19.8]**
+  (two-sided, band-gate active), `for_date` 2026-11-24, horizon 55/92 days,
+  not extrapolated. Re-verified live this cycle (91.7).
+- **New signals logged this cycle:** `signal-log.md`'s 2026-11-26 section —
+  a direct, exhaustive search for a newer UKMTO reading that found none; a
+  genuinely new tier-2 publisher class (UANI's "Iran Shipping Update")
+  found but blocked (403) on direct read and explicitly not used; an
+  unconfirmed-date Lloyd's List piece flagged for future follow-up; four
+  other candidates checked and confirmed stale/already-logged; the
+  scheduled UKMTO/MARAD deeper reachability retry (still blocked, origin
+  confirmed via header fingerprinting); and a PortWatch tier-3 re-query
+  (unchanged since last cycle's resumption). None move the published
+  figure.
+- **Latest validation error against official figures:** unchanged — no new
+  EIA release this cycle (91.1); last scored error remains section
+  81.3/81.4's reading from the 3Q26 re-anchor.
+- **Latest tier-3 validation result:** PortWatch, re-queried 2026-11-26
+  directly, max date still 2026-11-22 — unchanged from last cycle, no new
+  comparison possible (91.5).
+
+### 91.11 Net effect and carry-forward
+
+**Delivery type: (c) — no model change, with a specific evidence-based
+reason.** EIA and OPEC independently reconfirmed unchanged by direct fetch,
+including catching and correcting a tool-summary error against the raw
+page rather than propagating it (91.1, 91.2); the scheduled UKMTO/MARAD
+deeper retry fired this cycle and both remain blocked at the origin, not a
+proxy artifact (91.3); tier-2 search found no new UKMTO reading, and a
+genuinely new publisher class was found but correctly withheld pending a
+readable primary source rather than used on a snippet (91.4); PortWatch
+queried directly, unchanged since last cycle's resumption (91.5);
+`signal-state.json` updated (91.6); live `hormuz.json` cross-checked and
+found consistent (91.7); no methodology change recommended, with the
+specific evidence gap stated (91.8); "always show a current estimate"
+checked clean (91.9). No category-3 or category-4 issue found this cycle.
+
+**Carry-forward priority order for the next cycle:**
+
+1. **Keep checking for a newer UKMTO weekly reading every cycle** — still
+   the single cheapest, most load-bearing test of the band-gate. Now 8 days
+   stale (18 November) and growing.
+2. **Try UANI's "Iran Shipping Update" again** — if its site becomes
+   readable (403 clears) or a verifiably-dated syndicated copy surfaces
+   elsewhere, it is a genuinely new, daily-cadence transit-count source
+   worth adding to the standing catalogue of disagreeing methodologies even
+   if it never qualifies as a second anchor.
+3. **Try to pin down the Lloyd's List LL1158177 piece's date** — if it
+   turns out to be recent (November), it would be a second independent
+   reading pointing the same direction as the UKMTO dip.
+4. **Keep maintaining `signal-state.json` every cycle.**
+5. **EIA/OPEC**: keep re-probing directly every cycle — and keep checking
+   raw markup, not just a summarizing tool's gloss, when anything looks
+   surprising (91.1's lesson).
+6. **PortWatch**: keep re-querying every cycle; a second resumption or a
+   second matching-window comparison would sharpen the caution-flag
+   reading further.
+7. **UKMTO/MARAD network reachability**: next scheduled deeper retry due
+   ~84th cycle (every-5th-cycle cadence), per 91.3.
+8. **4Q26 (~February 2027)** remains the next real test of H1/H2/H3 and of
+   the band-gate's actual (non-proxy) performance.
