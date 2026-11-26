@@ -14,7 +14,7 @@
     "provenance_caveat": "EIA analysis based on Vortexa tanker tracking data. We republish EIA's published analysis; we do not hold or license Vortexa data.",
     "publisher_caveat": "Since the end of February 2026, AIS signal data for ships transiting the Strait of Hormuz have become especially unreliable. For 2026 Hormuz volumes, tanker tracking data are being revised frequently based on the best available information."
   },
-  "retrieved_utc": "2026-11-25T15:31:37Z",
+  "retrieved_utc": "2026-11-26T15:06:20Z",
   "units": "million barrels per day",
   "series": [
     {
@@ -81,16 +81,16 @@
     "daily_estimate_authorised_by": "Owner decision, 2026-09-17, on PR #4 (GitHub comment 5716791659): publish the model's daily estimate as the headline, with the word 'estimated' in the title. Supersedes the CEO's prior recommendation to headline the measured quarter. See critical issue #5 and decisions-log.md.",
     "shape_function": "GPCI transit-share: the strait is assumed to carry the same share of Gulf producer crude output (GPCI) as in the latest published quarter; the estimate moves monthly with GPCI. Replaced persistence on 2026-09-23 (methodology.md section 19).",
     "estimate": {
-      "for_date": "2026-11-24",
+      "for_date": "2026-11-25",
       "point": 10.6,
       "band_low": 5.7,
       "band_high": 19.8,
-      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 3Q26: from persistence (9.1, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.873, applied in the direction production moved. Band-gate active (methodology.md section 88): a confirmed primary signal -- UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase. Re-confirmed 2026-11-24 (77th cycle) and again 2026-11-25 (78th cycle): no newer UKMTO weekly reading found despite direct searches both cycles (candidates checked and rejected each time -- see signal-log.md). UKMTO/MARAD origin reachability still blocked (403) at the network layer this cycle; not yet due for its lighter retry (due ~79th cycle). Trend and gate state unchanged from 2026-11-23/24. New this cycle: IMF PortWatch's tier-3 feed resumed after a 7-cycle stall and now covers the exact window of UKMTO's reported decline (through 2026-11-22) -- it does NOT corroborate a continuing decline over that window (mild uptick, not a drop), but per the gate's own design only tier-2 primary readings can change gate_active/direction, so this tier-3 result is logged as a caution flag only and does not itself alter this file's determination. -- points the opposite way, so the range widens to the two-sided [point/k, point*k] = [5.7, 19.8] (same k) rather than the usual one-sided construction; this never narrows the range, only ever widens it.",
+      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 3Q26: from persistence (9.1, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.873, applied in the direction production moved. Band-gate active (methodology.md section 88): a confirmed primary signal -- UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase. Re-confirmed 2026-11-24 (77th), 2026-11-25 (78th) and 2026-11-26 (79th cycle): no newer UKMTO weekly reading found despite direct searches each cycle (candidates checked and rejected each time -- see signal-log.md). 79th cycle: the scheduled ~every-5th-cycle deeper UKMTO/MARAD reachability retry fired and both remain blocked at the origin (ukmto.org: Cloudflare 403 with a live challenge cookie scoped to the domain itself; maritime.dot.gov: Akamai WAF 403) -- confirmed a real origin-level block on two different vendors' edge defenses, not a shared proxy artifact; next retry due ~84th cycle. A genuinely new tier-2 publisher class was found this cycle (UANI's 'Iran Shipping Update' daily series, a fifth distinct transit-count construction, reporting a cumulative '435 transits so far in November' as of its 18 Nov edition) but could not be verified by direct read (403 on the source itself) and is explicitly NOT used -- a search-engine paraphrase of an unread primary source does not meet the tier-2 bar. IMF PortWatch's tier-3 feed (resumed last cycle after a 7-cycle stall) is unchanged this cycle, max date still 2026-11-22, so no new comparison window exists; its prior reading (no corroboration of a continuing decline over the matching window) stands as a caution flag only, per the gate's tier-2-only trigger design. Trend and gate state unchanged from 2026-11-23 through 2026-11-25. -- points the opposite way, so the range widens to the two-sided [point/k, point*k] = [5.7, 19.8] (same k) rather than the usual one-sided construction; this never narrows the range, only ever widens it.",
       "anchor_period": "3Q26",
       "anchor_value": 9.1,
       "is_measurement": false,
       "label_required": "Must be presented as an estimate, never as a measurement, and never without the band. Rubric section 1.6.",
-      "horizon_days": 55,
+      "horizon_days": 56,
       "max_horizon_days": 92,
       "suppressed": false,
       "extrapolated": null
@@ -293,16 +293,17 @@
       "band_gate": {
         "active": true,
         "direction": "declining",
-        "reason": "UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase. Re-confirmed 2026-11-24 (77th cycle) and again 2026-11-25 (78th cycle): no newer UKMTO weekly reading found despite direct searches both cycles (candidates checked and rejected each time -- see signal-log.md). UKMTO/MARAD origin reachability still blocked (403) at the network layer this cycle; not yet due for its lighter retry (due ~79th cycle). Trend and gate state unchanged from 2026-11-23/24. New this cycle: IMF PortWatch's tier-3 feed resumed after a 7-cycle stall and now covers the exact window of UKMTO's reported decline (through 2026-11-22) -- it does NOT corroborate a continuing decline over that window (mild uptick, not a drop), but per the gate's own design only tier-2 primary readings can change gate_active/direction, so this tier-3 result is logged as a caution flag only and does not itself alter this file's determination.",
+        "reason": "UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase. Re-confirmed 2026-11-24 (77th), 2026-11-25 (78th) and 2026-11-26 (79th cycle): no newer UKMTO weekly reading found despite direct searches each cycle (candidates checked and rejected each time -- see signal-log.md). 79th cycle: the scheduled ~every-5th-cycle deeper UKMTO/MARAD reachability retry fired and both remain blocked at the origin (ukmto.org: Cloudflare 403 with a live challenge cookie scoped to the domain itself; maritime.dot.gov: Akamai WAF 403) -- confirmed a real origin-level block on two different vendors' edge defenses, not a shared proxy artifact; next retry due ~84th cycle. A genuinely new tier-2 publisher class was found this cycle (UANI's 'Iran Shipping Update' daily series, a fifth distinct transit-count construction, reporting a cumulative '435 transits so far in November' as of its 18 Nov edition) but could not be verified by direct read (403 on the source itself) and is explicitly NOT used -- a search-engine paraphrase of an unread primary source does not meet the tier-2 bar. IMF PortWatch's tier-3 feed (resumed last cycle after a 7-cycle stall) is unchanged this cycle, max date still 2026-11-22, so no new comparison window exists; its prior reading (no corroboration of a continuing decline over the matching window) stands as a caution flag only, per the gate's tier-2-only trigger design. Trend and gate state unchanged from 2026-11-23 through 2026-11-25.",
         "source_entries": [
           "signal-log.md#2026-11-21-ukmto-transit-synthesis",
           "signal-log.md#2026-11-24-no-newer-ukmto-reading",
-          "signal-log.md#2026-11-25-portwatch-resumed-no-corroboration"
+          "signal-log.md#2026-11-25-portwatch-resumed-no-corroboration",
+          "signal-log.md#2026-11-26-no-newer-ukmto-reading-uani-unverified"
         ]
       }
     },
     "last_published": {
-      "for_date": "2026-11-24",
+      "for_date": "2026-11-25",
       "point": 10.6,
       "band_low": 5.7,
       "band_high": 19.8,

@@ -1,6 +1,6 @@
 {
   "_comment": "Our own past daily model estimates for oil flow through the Strait of Hormuz -- OUR model's outputs, not a republished third-party series. See site/data/hormuz.json for the EIA figures the model is calibrated against, and sources.html/methodology.md for how the estimate and its range are built. Every entry is an estimate, never a measurement. 'suppressed': true means no daily figure was published that day because the estimate fell past our back-tested horizon -- this was retired 2026-10-08 (methodology.md section 39) in favour of always publishing a widened-band extrapolation, so it should only appear on rows dated before that change; point/band_low/band_high are null on those rows by design, not a missing-data accident. 'extrapolated': 'B' or 'C' means the row is a real published figure but past our back-tested horizon, with a correspondingly wider band (methodology.md section 39); null means a normal backtested estimate. Appended and idempotently updated in place by scripts/refresh_estimate.py via scripts/generate_history.py.",
-  "generated_utc": "2026-11-25T15:31:37Z",
+  "generated_utc": "2026-11-26T15:06:20Z",
   "entries": [
     {
       "for_date": "2026-09-16",
@@ -1180,6 +1180,25 @@
       "suppressed": false,
       "extrapolated": null,
       "horizon_days": 55,
+      "transit_share": 0.593,
+      "gpci_latest_month": "202610",
+      "gpci_latest": 17.85,
+      "band_gate_active": true
+    },
+    {
+      "for_date": "2026-11-25",
+      "retrieved_utc": "2026-11-26T15:06:20Z",
+      "point": 10.6,
+      "band_low": 5.7,
+      "band_high": 19.8,
+      "band_basis": "Re-derived each run from the estimator's own one-quarter-ahead back-test (model.estimator.backtest). Disrupted regime, Gulf production rising since 3Q26: from persistence (9.1, the anchor volume unchanged) to the estimator's worst measured miss, factor k=1.873, applied in the direction production moved. Band-gate active (methodology.md section 88): a confirmed primary signal -- UKMTO weekly transit count declined on 2 successive readings (325->308->263 through 18 Nov), confirmed primary source, opposite the model's current GPCI-implied rising phase. Re-confirmed 2026-11-24 (77th), 2026-11-25 (78th) and 2026-11-26 (79th cycle): no newer UKMTO weekly reading found despite direct searches each cycle (candidates checked and rejected each time -- see signal-log.md). 79th cycle: the scheduled ~every-5th-cycle deeper UKMTO/MARAD reachability retry fired and both remain blocked at the origin (ukmto.org: Cloudflare 403 with a live challenge cookie scoped to the domain itself; maritime.dot.gov: Akamai WAF 403) -- confirmed a real origin-level block on two different vendors' edge defenses, not a shared proxy artifact; next retry due ~84th cycle. A genuinely new tier-2 publisher class was found this cycle (UANI's 'Iran Shipping Update' daily series, a fifth distinct transit-count construction, reporting a cumulative '435 transits so far in November' as of its 18 Nov edition) but could not be verified by direct read (403 on the source itself) and is explicitly NOT used -- a search-engine paraphrase of an unread primary source does not meet the tier-2 bar. IMF PortWatch's tier-3 feed (resumed last cycle after a 7-cycle stall) is unchanged this cycle, max date still 2026-11-22, so no new comparison window exists; its prior reading (no corroboration of a continuing decline over the matching window) stands as a caution flag only, per the gate's tier-2-only trigger design. Trend and gate state unchanged from 2026-11-23 through 2026-11-25. -- points the opposite way, so the range widens to the two-sided [point/k, point*k] = [5.7, 19.8] (same k) rather than the usual one-sided construction; this never narrows the range, only ever widens it.",
+      "anchor_period": "3Q26",
+      "method": "gpci-transit-share",
+      "regime": "disrupted",
+      "regime_kind": "local",
+      "suppressed": false,
+      "extrapolated": null,
+      "horizon_days": 56,
       "transit_share": 0.593,
       "gpci_latest_month": "202610",
       "gpci_latest": 17.85,
