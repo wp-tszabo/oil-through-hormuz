@@ -319,3 +319,36 @@ feed is unchanged since last cycle's resumption (max date still
 checks. No tier-2 signal this cycle moves a numeric input or the regime
 classification (still `disrupted`/`local`). See `methodology.md` section 91
 for the full KR6 brief, including the recommended model action.
+
+## 2026-11-27 (80th cycle) entries
+
+| Date of fact | Fact | Source (read directly) | Reliability | Status | Entered model? |
+|---|---|---|---|---|---|
+| n/a (search attempted, nothing newer than the 18 Nov UKMTO reading already logged) | Searched directly for a UKMTO weekly transit reading newer than 263/week (through 18 November, now 9 days stale); none found this cycle. UKMTO/MARAD origins not re-probed (not due until ~84th cycle per the standing cadence). | Multiple direct searches this cycle | n/a | **Not used — no newer reading exists to log.** | No. |
+| n/a (block re-confirmed, extended to 8 further node IDs; no November mirror found) | UANI "Iran Shipping Update" (new publisher class flagged in the 79th-cycle entry): direct `curl` on node IDs 46609, 46611, 46613, 46615, 46617, 46619, 46621, 46623 (extrapolated past the known Nov 17/18/19 editions) all returned HTTP 403, confirming the block is general to the publisher, not just the two pages already tried. Checked Hellenic Shipping News, which has mirrored UANI editions from August/September; no November mirror exists yet, so no alternate readable route. | [unitedagainstnucleariran.com node IDs 46609-46623](https://www.unitedagainstnucleariran.com/node/46609) (all attempted, all 403) | **Not assessed — still cannot read the primary source.** | **Not used.** | No. |
+| 2026-11-19 (date confirmed via redirect; content unread) | USNI, "U.S. Expands Iranian Blockade As Ship Attacks Continue" — new article found via search (snippet: "16 attacks so far in November"). `curl` on `news.usni.org/?p=126726` returns an HTTP 301 redirect to `https://news.usni.org/2026/11/19/u-s-expands-iranian-blockade-as-ship-attacks-continue`, confirming the date from the permalink itself (a primary-source signal). The article body is Cloudflare-challenge-blocked (`cf-mitigated: challenge`) on both `curl` and WebFetch — not a flat 403, an interactive challenge — so the "16 attacks" figure is only a search-engine paraphrase of an unread primary source and does not meet the tier-2 bar. | [USNI News, Nov 19 2026 redirect target](https://news.usni.org/2026/11/19/u-s-expands-iranian-blockade-as-ship-attacks-continue) (date confirmed by redirect; body unread, Cloudflare challenge) | Date: High (primary permalink). Content/figure: **Not assessed — cannot read the article.** | **Not used — the only usable fact is the date; the attack-count figure is unverified.** Logged so a future cycle can retry the fetch. | No. |
+| n/a (checked, confirmed old) | A Lloyd's List title, "Hormuz transits collapsed last week after brief reopening" (`LL1157022`), surfaced in a UKMTO search. Checked against neighbouring article IDs (`LL1156485`, `LL1156949`, `LL1157290`) clustered near a Bloomberg piece dated 2026-04-20 — confirmed this is an **April 2026** archive item about an earlier reopening-collapse cycle, not a current signal. | Search result cross-referenced against dated neighbouring article IDs | n/a | **Screened out as old, not logged as a lead.** | No. |
+| n/a (still unconfirmed) | `LL1158177` ("Hormuz crisis supply response loses steam but tanker rates hold firm"), carried from the 79th-cycle entry: re-searched, still paywalled (403), still no confirmed publication date. | [Lloyd's List, LL1158177](https://www.lloydslist.com/LL1158177/Hormuz-crisis-supply-response-loses-steam-but-tanker-rates-hold-firm) (attempted, 403; date still unconfirmed) | **Not assessed — date unconfirmed.** | **Not used.** Still flagged for a future date check. | No. |
+| n/a (checked, both confirmed still unchanged) | EIA Global Energy Security Data Table 4 re-fetched directly and grepped against raw HTML: `4Q26` occurs 0 times, `3Q26` occurs 21 times, release-date line "November 16, 2026" verbatim. OPEC MOMR re-checked directly via `curl`: still Cloudflare 403 (`cf-ray` header present), 35th consecutive cycle blocked. | [EIA Global Energy Security Data](https://www.eia.gov/outlooks/steo/report/energysecurity/article.php) (fetched directly); OPEC MOMR (`curl` direct, 403/Cloudflare) | High (primary publisher pages, fetched directly) | Confirmed unchanged. | No — reconfirmation only, no new row. |
+| 2026-11-15 through 2026-11-22 (checked live 2026-11-27) | IMF PortWatch tier-3 re-queried directly; still capped at max date **2026-11-22**, the 3rd consecutive cycle with this cap (2026-11-25, -26, -27 — now 5 real days stale). Not yet at the 4-cycle/6-day threshold used to confirm the earlier 11-15 stall, but flagged as a possible second stall forming. No new UKMTO-matching comparison window this cycle. | Direct query, `https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query` (tier-3, internal-validation-only; never published) | High (primary endpoint, queried directly) | Confirmed (one primary source, read directly); unchanged cap, flagged as a possible new stall. | No — tier-3 validation use only. Does not move the band-gate. |
+
+## Net reading from this cycle's signals (2026-11-27)
+
+No new tier-2 numeric signal entered the model this cycle. The UKMTO
+263/week (through 18 November) reading driving the band-gate is now 9 days
+stale and the one direct route to a newer figure remains blocked (not due
+for retry until ~84th cycle). Two leads were actively pursued and both
+came up short of the tier-2 bar for different reasons: UANI's "Iran
+Shipping Update" series remains blocked at the origin with no alternate
+mirror for November content, and a new USNI article's publish date was
+confirmed via its own redirect but its attack-count figure could not be
+verified because the article body is Cloudflare-challenge-blocked. A
+third candidate (a Lloyd's List title about a transit collapse) was
+checked and correctly screened out as an April 2026 archive item rather
+than a current signal. EIA and OPEC were independently reconfirmed
+unchanged by direct fetch. IMF PortWatch's tier-3 feed is capped at
+2026-11-22 for a 3rd consecutive cycle, flagged as a possible second stall
+forming but not yet confirmed. No tier-2 signal this cycle moves a numeric
+input or the regime classification (still `disrupted`/`local`). See
+`methodology.md` section 92 for the full KR6 brief, including the
+recommended model action.
