@@ -1024,3 +1024,130 @@ question, not a Phase 2 question.
 no outward contact, no monetization work (no owner-approved Phase 2
 decision exists in `decisions-log.md` as of this cycle) — measurement,
 re-verification and sequencing judgment only.
+
+## 14. 81st cycle (2026-11-28): hold continues — none of the three pre-committed unlock conditions has landed yet, confirmed on fresh reads
+
+**Decision: ship nothing new for growth this cycle.** Same call as 78th
+through 80th. All three pre-committed unlock conditions (in-progress week
+closes 2026-11-29; FAQ full-week mark 2026-11-30; rollup full-week mark
+2026-12-01) are 1-3 days out, not reached. GoatCounter read directly this
+cycle with the configured token (`stats/total`, `stats/hits`, `stats/toprefs`,
+`stats/locations` all returned real data).
+
+**Fresh numbers this cycle:**
+
+- **Cumulative total: 178 hits** over 2026-09-28 through 2026-11-28
+  (`total`/`total_utc` both 178). Up from 177 last cycle — the one new hit
+  closed on 2026-11-27 (Friday), which last cycle saw as a still-partial 0;
+  it carried a `www.bing.com` referrer (confirmed in a narrow
+  2026-11-25-to-11-28 `toprefs` read: `duckduckgo.com` 1, `html.duckduckgo.com`
+  1, `www.bing.com` 1 — exactly the three single hits on 11-25/11-26/11-27,
+  no new source, not a spike).
+- **Trailing 4-week total: still 113 (28+23+33+29).** No new complete week
+  yet — the week of 2026-11-23 closes tomorrow, 2026-11-29.
+- **The in-progress week (2026-11-23) now has all five weekdays closed:
+  27 hits through day 5 (16+8+1+1+1)** — Friday (2026-11-27), partial at 0
+  last cycle, has now closed at 1. Day 6 (Saturday, today, 2026-11-28) is
+  partial at 0 so far, as expected for a day still in progress (re-derived
+  from the full daily series via `stats/total`, not assumed: 2026-11-23
+  through 2026-11-28 = 16, 8, 1, 1, 1, 0).
+  - **Day-5-closed comparison against all four prior weeks' own day-5
+    closed marks**, recomputed from the raw series this cycle: week of
+    10-26 = 23 (eventual 28); week of 11-02 = 16 (eventual 23); week of
+    11-09 = 24 (eventual 33); week of 11-16 = 22 (eventual 29). **This
+    week's 27 is now the highest day-5 mark of the five, on a fully closed
+    day-5 figure rather than last cycle's partial-day read of 26** — the
+    trajectory flagged last cycle as "plausibly above the plateau" has
+    held one more day, on firmer footing (closed days, not a partial one).
+  - **Days 6-7 addition in the four prior weeks, recomputed directly**:
+    10-26 added +5 (day6 4, day7 1) to reach 28; 11-02 added +7 (5+2) to
+    reach 23; 11-09 added +9 (3+6) to reach 33; 11-16 added +7 (3+4) to
+    reach 29. Range +5 to +9, average ~+7. Applied to this week's closed
+    day-5 figure of 27 (not a prediction, the same bounding arithmetic as
+    last cycle, now anchored to a closed number): a plausible eventual
+    range of **32-36**, which would put this week at or above the top of
+    the existing 23-33 band. Day 6 (today) reading 0 so far is not
+    informative yet — every one of the four prior weeks' day-6 figures
+    (4, 5, 3, 3) came from a day that, read mid-day, would also have shown
+    a partial low number; this is the same partial-day-undercount pattern
+    already flagged repeatedly in this plan, not a new finding.
+  - **Referrers, in-progress week (2026-11-23 through 2026-11-28, whole
+    week to date):** no-referrer 12, `www.bing.com` 5, `chatgpt.com` 4,
+    `duckduckgo.com` 3, `html.duckduckgo.com` 1. The `chatgpt.com` count is
+    re-confirmed still exactly the same 4 hits dated 2026-11-24 — the
+    narrower 2026-11-25-to-11-28 window shows zero `chatgpt.com` referrals.
+    `www.bing.com` ticked from 4 to 5 (the new 2026-11-27 hit), not a
+    spike.
+  - **Page breakdown, cumulative (since 2026-09-28): `/` 164,
+    `/history.html` 8, `/sources.html` 5, `/strait.html` 1 — total 178.**
+    `/faq.html` is absent from the full path list entirely, confirming it
+    remains a genuine zero (see below), not a reporting artefact.
+- **FAQ page (`faq.html`): still 0 hits, re-checked fresh, now ~5 days
+  live.** Absent from both the full-cumulative path list (178 hits across
+  only 4 paths, above) and a 19-day window (2026-11-09 through 2026-11-28:
+  `/` 77, `/history.html` 6, `/sources.html` 5, `/strait.html` 1, total 89
+  — no `/faq.html` row). **Full one-week mark is 2026-11-30, 2 days from
+  now — still not reached.**
+- **Weekly rollup on `history.html`: still flat, re-checked fresh, now ~4
+  days live.** `/history.html` shows 6 hits in the 2026-11-09 through
+  2026-11-28 (19-day) window — identical to the last three cycles' reads
+  of the same page (6, 6, 6) despite the window growing by a day each
+  time; the one new cumulative hit since last cycle (the 2026-11-27 bing
+  referral) went to `/` , not to `/history.html` (confirmed by the
+  cumulative page breakdown above). **Full one-week mark is 2026-12-01, 3
+  days from now — still not reached.**
+- **Top countries, 19-day window (2026-11-09 through 2026-11-28):**
+  identical list and counts to last cycle's 18-day read — United States
+  38, Hungary 12, United Kingdom 9, Canada 7, South Korea 4, Vietnam 3,
+  Australia 2, Switzerland 2, Italy 2, then 10 more single-hit countries,
+  18 countries total, unchanged. The window grew by a day but today
+  (2026-11-28) is still a partial day with 0 hits recorded so far, so no
+  new country entries — consistent, not a stall.
+
+**Why "none" again, confirmed rather than carried forward:** every one of
+this plan's own three pre-committed unlock conditions is checked fresh
+this cycle and **none has arrived**: the in-progress week closes tomorrow
+(2026-11-29), the FAQ's full-week mark is in 2 days (2026-11-30), the
+rollup's is in 3 days (2026-12-01). Nothing this cycle changes that
+timing or those conditions — the brief for this cycle asked explicitly
+whether anything had shifted the requirements, and nothing has: the three
+conditions are exactly as set in §12/§13, re-verified, not re-defined.
+Shipping a third homepage-layout-neutral change today, one cycle before
+all three resolve, would repeat the same attribution-blurring problem
+this plan has now declined four cycles running (§11-§13). **This is a
+confirmed hold, not a new judgment call** — the decision point itself
+(ship one of the two remaining §4 ideas, or record a flat FAQ/rollup
+result as a real finding about the ceiling of pure findability content at
+current reach) is the CEO's and owner's to make together with
+Monetization once the three marks land, not Monetization's to pre-empt.
+Flagging this plainly per this cycle's brief rather than deciding
+unilaterally: **the decision point has not arrived, but it is very close
+— the next cycle (on or after 2026-11-29) is the first one where it
+plausibly can.**
+
+**What would change the call next cycle:** if the week of 2026-11-23
+closes 2026-11-29 at or above 33 (breaking the plateau's top end — this
+cycle's day-5-closed arithmetic puts a plausible eventual range of 32-36,
+slightly firmer than last cycle's partial-day-based 31-35) or markedly
+below the 23-33 band, that is new information for the CEO independent of
+what ships. Once the week is closed and, in the cycle after that, the FAQ
+and rollup have also reached their full-week marks with both still
+showing no measurable effect, that is the point to either ship one of the
+two remaining §4 ideas (the `sources.html` "ask it a question" cross-link,
+or the repeated "what the range means" callout) or treat "pure
+findability content has a visible ceiling at this site's current reach"
+as a real finding for the Phase 2 threshold conversation, per §12's
+framing (unchanged this cycle).
+
+**Phase 2 evaluation threshold: no change.** The trailing 4-week average is
+still ~28/week (113/4) against the proposed ~1,000/week threshold —
+nowhere close. This cycle's numbers (including the firmer 32-36 eventual
+range for the in-progress week) do not move that conversation; even the
+upper end of that range is still two orders of magnitude below the
+threshold. This cycle's reads remain a growth-plateau/content-attribution
+question, not a Phase 2 question.
+
+**Honesty/governance check:** no copy drafted, no page touched, no spend,
+no outward contact, no monetization work (no owner-approved Phase 2
+decision exists in `decisions-log.md` as of this cycle, re-checked this
+cycle) — measurement, re-verification and sequencing judgment only.

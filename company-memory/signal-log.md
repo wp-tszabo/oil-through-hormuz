@@ -352,3 +352,33 @@ forming but not yet confirmed. No tier-2 signal this cycle moves a numeric
 input or the regime classification (still `disrupted`/`local`). See
 `methodology.md` section 92 for the full KR6 brief, including the
 recommended model action.
+
+## 2026-11-28 (81st cycle) entries
+
+| Date of fact | Fact | Source (read directly) | Reliability | Status | Entered model? |
+|---|---|---|---|---|---|
+| n/a (checked, confirmed older than existing reading) | Gulf News, "Hormuz shipping 'below normal, but not stalled': UKMTO" — fetched directly. Page carries no publication date, only "Last updated: November 10, 2026"; reports UKMTO's "latest weekly report counted 170 outbound and 155 inbound transits" (170+155=325) "as of Nov. 10." This is the **same 325 reading already in the model's own decline sequence (325→308→263 through 18 Nov)** — it predates, not supersedes, the existing 18 November reading. | [Gulf News](https://gulfnews.com/world/mena/hormuz-shipping-below-normal-but-not-stalled-1.500741839) (fetched directly) | High (primary UKMTO figure, but dated before the data already in the model) | **Confirmed older, not new.** | No. |
+| n/a (checked, confirmed older, no transit count) | Gulf News, "Hormuz attacks rise as Iran steps up pressure on shipping, UKMTO warns" — fetched directly. "Last updated: November 06, 2026"; underlying JMIC advisory dated 5 November; contains no UKMTO weekly transit count (only US-assisted-transit and independent-tracking figures already superseded). | [Gulf News](https://gulfnews.com/business/energy/hormuz-attacks-rise-as-iran-steps-up-pressure-on-shipping-ukmto-warns-1.500737866) (fetched directly) | n/a — no transit figure present | **Not used — no new figure.** | No. |
+| 2026-11-19 (date confirmed via redirect, carried from 80th cycle; content retried this cycle, still unread) | USNI, "U.S. Expands Iranian Blockade As Ship Attacks Continue" — retried directly this cycle rather than assumed still blocked. `curl` on the confirmed permalink returns `HTTP/2 403` with `cf-mitigated: challenge` and a live Cloudflare Turnstile challenge page (CSP references `challenges.cloudflare.com`). Challenge has not cleared. The "16 attacks so far in November" figure remains an unread search-engine paraphrase. | [USNI News, Nov 19 2026](https://news.usni.org/2026/11/19/u-s-expands-iranian-blockade-as-ship-attacks-continue) (retried, still Cloudflare-challenge-blocked) | Date: High (primary permalink). Content/figure: **Not assessed — still cannot read the article.** | **Not used.** | No. |
+| n/a (block re-confirmed on 2 further node IDs; no November mirror; further UANI content found only via third-party paraphrase) | UANI "Iran Shipping Update": direct `curl` on node IDs 46625 and 46630 (further extrapolated past the known Nov 17/18/19 editions) both returned HTTP 403. Hellenic Shipping News re-checked for a November mirror: still none (most recent mirrors remain August/September 2026). Search results surfaced further UANI content by third-party paraphrase only (an 18 Nov "435 transits over 14 days" month-to-date figure; a 13 Nov "135 transits in a 96-hour window" claim) — none independently read, none meet the tier-2 bar. | [unitedagainstnucleariran.com node IDs 46625, 46630](https://www.unitedagainstnucleariran.com/node/46625) (attempted, both 403) | **Not assessed — still cannot read the primary source.** | **Not used.** | No. |
+| n/a (checked, both confirmed still unchanged) | EIA Global Energy Security Data Table 4 re-fetched directly and grepped against raw HTML: `4Q26` occurs 0 times, `3Q26` occurs 21 times, release-date line "November 16, 2026" verbatim. OPEC MOMR re-checked directly via `curl`: still Cloudflare 403 (`cf-ray` header present), 36th consecutive cycle blocked. | [EIA Global Energy Security Data](https://www.eia.gov/outlooks/steo/report/energysecurity/article.php) (fetched directly); OPEC MOMR (`curl` direct, 403/Cloudflare) | High (primary publisher pages, fetched directly) | Confirmed unchanged. | No — reconfirmation only, no new row. |
+| 2026-11-15 through 2026-11-22 (checked live 2026-11-28) | IMF PortWatch tier-3 re-queried directly: max date still **2026-11-22**, now the **4th consecutive cycle** (2026-11-25, -26, -27, -28; 6 real days stale) — meets the company's own stall-confirmation threshold, so this is now treated as a **confirmed second feed stall** (tier-3, internal-validation-only; cannot and does not move the band-gate). Separately: row-by-row values for 11-18 and 11-19 shifted from `4` to `3`, and 11-20 shifted from `3` to `4`, versus the identical window read in the 79th cycle (§91.5) — a retroactive historical revision; the 8-day window sum is unchanged (18 in both readings). | Direct query, `https://services9.arcgis.com/weJ1QsnbMYJlCHdG/ArcGIS/rest/services/Daily_Chokepoints_Data/FeatureServer/0/query` (tier-3, internal-validation-only; never published) | High (primary endpoint, queried directly) | Confirmed (one primary source, read directly); stall now confirmed; historical revision noted. | No — tier-3 validation use only. Does not move the band-gate. |
+
+## Net reading from this cycle's signals (2026-11-28)
+
+No new tier-2 numeric signal entered the model this cycle. The UKMTO
+263/week (through 18 November) reading driving the band-gate is now 10
+days stale and the one direct route to a newer figure (UKMTO/MARAD
+origins) is not due for retry until ~84th cycle. Two Gulf News articles
+were actively fetched and confirmed to predate, not supersede, the
+existing reading; USNI's 19 November article was retried and remains
+Cloudflare-challenge-blocked; UANI remains unreadable at the origin with
+no alternate mirror. IMF PortWatch's tier-3 feed stall (max date capped at
+2026-11-22) is now confirmed at the 4-cycle/6-day threshold — a status
+change from "possible stall forming" to "confirmed stall" — and a
+historical-data revision was found within the already-compared window,
+logged for future back-test hygiene. By design, neither PortWatch finding
+can move the band-gate, which stays at point 10.6, band [5.7, 19.8]. No
+tier-2 signal this cycle moves a numeric input or the regime classification
+(still `disrupted`/`local`). See `methodology.md` section 93 for the full
+KR6 brief, including the recommended model action.
